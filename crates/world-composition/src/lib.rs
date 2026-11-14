@@ -2,6 +2,8 @@
 //! No retrieval, identity resolution, model call, commitment or world mutation.
 #![forbid(unsafe_code)]
 
+pub mod formation;
+
 use std::collections::{BTreeMap, BTreeSet};
 use world_language::{Id, MAX_REVISION};
 
@@ -261,6 +263,20 @@ impl Engine {
             .collect();
         self.at_ms = at_ms;
         Ok(self.refresh(self.affected(&claims)))
+    }
+
+    /// Form hypotheses from an already authorized, bounded input snapshot.
+    /// Does not register candidates or grant permissions.
+    pub fn form(
+        &self,
+        goal: &formation::Goal,
+        offers: &[formation::Offer],
+        budget: formation::Budget,
+    ) -> Result<formation::Formation, Error> {
+        if goal.scope != self.scope {
+            return Err(Error::ScopeMismatch);
+        }
+        formation::generate(goal, offers, budget)
     }
 
     pub fn evaluation(&self, id: &Id) -> Option<&Evaluation> {
