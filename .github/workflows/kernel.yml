@@ -23,6 +23,11 @@ jobs:
       - name: Resolve dependencies
         run: |
           if [ ! -f Cargo.lock ]; then cargo generate-lockfile; fi
+      - name: Record generated dependency lock
+        run: |
+          echo 'BEGIN_CARGO_LOCK'
+          cat Cargo.lock
+          echo 'END_CARGO_LOCK'
       - name: Test
         run: cargo test --workspace --locked
       - name: Lint
@@ -35,3 +40,15 @@ jobs:
         with:
           persist-credentials: false
       - run: cargo fmt --all -- --check
+  schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Validate original JSON Schema and fixtures
+        run: |
+          python3 -m venv /tmp/world-schema
+          /tmp/world-schema/bin/pip install jsonschema==4.26.0
+          /tmp/world-schema/bin/python scripts/validate_contract.py

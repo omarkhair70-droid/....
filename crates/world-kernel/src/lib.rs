@@ -181,7 +181,10 @@ impl Kernel {
                 );
             }
             Operation::ReviseWork(text) => {
-                let work = self.works.get_mut(command.work_id()).ok_or(Rejection::Denied)?;
+                let work = self
+                    .works
+                    .get_mut(command.work_id())
+                    .ok_or(Rejection::Denied)?;
                 if work.title == text.title && work.body == text.body {
                     return Err(Rejection::NoChange);
                 }
@@ -193,7 +196,10 @@ impl Kernel {
                 if !self.principals.contains(&text.recipient_id) || &text.recipient_id == actor {
                     return Err(Rejection::Denied);
                 }
-                let work = self.works.get_mut(command.work_id()).ok_or(Rejection::Denied)?;
+                let work = self
+                    .works
+                    .get_mut(command.work_id())
+                    .ok_or(Rejection::Denied)?;
                 if work.shares.contains_key(&text.share_id) {
                     return Err(Rejection::DuplicateShare);
                 }
@@ -214,8 +220,14 @@ impl Kernel {
                 work.revision = next;
             }
             Operation::RespondToShare(reply) => {
-                let work = self.works.get_mut(command.work_id()).ok_or(Rejection::Denied)?;
-                let share = work.shares.get_mut(&reply.share_id).ok_or(Rejection::Denied)?;
+                let work = self
+                    .works
+                    .get_mut(command.work_id())
+                    .ok_or(Rejection::Denied)?;
+                let share = work
+                    .shares
+                    .get_mut(&reply.share_id)
+                    .ok_or(Rejection::Denied)?;
                 if share.view.snapshot_revision != reply.snapshot_revision {
                     return Err(Rejection::WrongSnapshot);
                 }
@@ -228,8 +240,14 @@ impl Kernel {
                 work.revision = next;
             }
             Operation::RevokeShare(reference) => {
-                let work = self.works.get_mut(command.work_id()).ok_or(Rejection::Denied)?;
-                let share = work.shares.get_mut(&reference.share_id).ok_or(Rejection::Denied)?;
+                let work = self
+                    .works
+                    .get_mut(command.work_id())
+                    .ok_or(Rejection::Denied)?;
+                let share = work
+                    .shares
+                    .get_mut(&reference.share_id)
+                    .ok_or(Rejection::Denied)?;
                 if share.revoked {
                     return Err(Rejection::Revoked);
                 }
@@ -299,11 +317,8 @@ impl Kernel {
         let mut kernel = Self::new(principals);
         for record in records {
             let previous_count = kernel.history.len();
-            let receipt = kernel.submit(
-                &record.actor,
-                record.command.clone(),
-                record.recorded_at_ms,
-            )?;
+            let receipt =
+                kernel.submit(&record.actor, record.command.clone(), record.recorded_at_ms)?;
             if receipt != record.receipt || kernel.history.len() != previous_count + 1 {
                 return Err(Rejection::InvalidHistory);
             }

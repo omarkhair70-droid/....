@@ -174,7 +174,8 @@ impl Command {
             }
             Operation::RevokeShare(_) => true,
         };
-        if !valid || (matches!(&operation, Operation::CreateWork(_)) != (wire.expected_revision == 0))
+        if !valid
+            || (matches!(&operation, Operation::CreateWork(_)) != (wire.expected_revision == 0))
         {
             return Err(WireError::InvalidValue);
         }

@@ -19,7 +19,12 @@ fn contract_fixtures() {
     for case in fixtures["cases"].as_array().unwrap() {
         let raw = serde_json::to_string(&case["command"]).unwrap();
         let command = Command::parse(&raw);
-        assert_eq!(command.is_ok(), case["valid"].as_bool().unwrap(), "{}", case["name"]);
+        assert_eq!(
+            command.is_ok(),
+            case["valid"].as_bool().unwrap(),
+            "{}",
+            case["name"]
+        );
         if let Ok(command) = command {
             let roundtrip = Command::parse(&command.to_json().unwrap()).unwrap();
             assert!(roundtrip == command);
@@ -30,8 +35,16 @@ fn contract_fixtures() {
 #[test]
 fn duplicate_keys_are_rejected_before_json_mapping() {
     let raw = create().to_string();
-    let envelope = raw.replacen("\"schema_version\":\"0.1\"", "\"schema_version\":\"0.1\",\"schema_version\":\"0.1\"", 1);
-    let payload = raw.replacen("\"title\":\"عمل\"", "\"title\":\"عمل\",\"title\":\"آخر\"", 1);
+    let envelope = raw.replacen(
+        "\"schema_version\":\"0.1\"",
+        "\"schema_version\":\"0.1\",\"schema_version\":\"0.1\"",
+        1,
+    );
+    let payload = raw.replacen(
+        "\"title\":\"عمل\"",
+        "\"title\":\"عمل\",\"title\":\"آخر\"",
+        1,
+    );
     assert_ne!(envelope, raw);
     assert_ne!(payload, raw);
     assert!(Command::parse(&envelope).is_err());
