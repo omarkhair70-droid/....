@@ -21,3 +21,63 @@ function list(){const q=$('find').value.trim().toLowerCase(),target=$('works');t
 $('locale').onclick=()=>{if(!commitTitle())return;if(contextOpen)closeContext();lang=lang==='ar'?'en':'ar';translate();render();status(null);$('locale').focus()};
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!e.isComposing&&contextOpen&&!$('memory').open){e.preventDefault();closeContext()}});
 translate();render();
+
+/* Design-mode scene: explicit fictional circumstances. Never writes to work memory. */
+(() => {
+  const scene = new URLSearchParams(location.search).get('scene') === 'formation';
+  const copy = {
+    ar:{entry:'شاهد التكوين',mark:'معاينة فنية • ظروف افتراضية',exit:'ارجع للكتابة المحلية',context:'شيء لم يكن موجودًا',title:'مجموعة خزف من ورشة إلى مساحة عرض',premise:'طرفان لا يعملان معًا بعد. لو التقت ظروفهما، يمكن أن يتكوّن عمل جديد. غيّر موعد العمل نفسه وشاهد ما يبقى ممكنًا.',a:'ورشة خزف',ad:'تصنيع القطع · الأيام 3 إلى 21',b:'مساحة عرض',bd:'استقبال المجموعة · الأيام 11 إلى 27',start:'بداية نافذة العمل (10 أيام)',duration:'أقل مدة يحتاجها العمل',caption:'مساحة اللقاء',yes:'الوقت يسمح بتكوين مشترك',no:'الوقت لا يكفي بعد',none:'لا يوجد لقاء زمني',reason:(available,need,gap)=>available>=need?available+' أيام مشتركة من أصل '+need+' مطلوبة.':available+' أيام مشتركة؛ ينقص العمل '+gap+' أيام.',limit:'التوقيت وحده ليس دليلًا على القدرة أو الموافقة. لم يتغير ظرف أي طرف.',note:'هذه حياة افتراضية داخل معاينة التصميم. لا جهات حقيقية، لا بحث أو إرسال، لا تغيير في أعمالك المحفوظة.',reset:'استعد الظرف الأصلي',day:n=>'يوم '+n,days:n=>n+' أيام'},
+    en:{entry:'See a formation',mark:'Art direction preview · fictional circumstances',exit:'Return to local writing',context:'Something that did not exist',title:'A ceramic collection, from studio to exhibition',premise:'Two independent parties do not yet work together. Their circumstances could make a new work possible. Move the work in time and see what remains possible.',a:'Ceramic studio',ad:'Making the pieces · days 3 to 21',b:'Exhibition space',bd:'Receiving the collection · days 11 to 27',start:'Start of the 10-day work window',duration:'Minimum duration needed',caption:'Where they meet',yes:'Time allows a shared work',no:'Not enough time yet',none:'No overlap in time',reason:(available,need,gap)=>available>=need?available+' shared days; '+need+' required.':available+' shared days; '+gap+' more needed.',limit:'Timing alone is not evidence of capability or consent. Neither party’s circumstances changed.',note:'Fictional life in the design preview. No real organizations, search, messages, or changes to your saved work.',reset:'Restore original circumstances',day:n=>'Day '+n,days:n=>n+' days'}
+  };
+  const start = $('study-start'), duration = $('study-duration'), field = $('formation-field');
+  const x = day => 32 + (day-1)/30*736;
+  const band = (a,b,y) => 'M'+x(a)+' '+(y-22)+' H'+x(b)+' V'+(y+22)+' H'+x(a)+' Z';
+  const NS='http://www.w3.org/2000/svg';
+  const set = (id,attr,value)=>$(id).setAttribute(attr,String(value));
+  function translateStudy(){
+    const c=copy[lang];$('study-open').textContent=c.entry;
+    if(!scene)return;
+    for(const [id,k] of Object.entries({'study-mark':'mark','study-exit':'exit','study-context':'context','formation-title':'title','study-premise':'premise','party-a':'a','party-a-detail':'ad','party-b':'b','party-b-detail':'bd','start-label':'start','duration-label':'duration','outcome-caption':'caption','outcome-limit':'limit','study-disclaimer':'note','study-reset':'reset'}))$(id).textContent=c[k];
+  }
+  function draw(){
+    const c=copy[lang],s=Number(start.value),end=s+10,need=Number(duration.value);
+    const left=Math.max(3,11,s),right=Math.min(21,27,end),available=Math.max(0,right-left),gap=Math.max(0,need-available);
+    const fit=available>=need;
+    // The original party bands never move. The shared shape is the exact
+    // intersection of the three intervals; no decorative growth or invented event.
+    set('material-a','d',band(3,21,80));set('material-b','d',band(11,27,202));
+    const shape=available>0?'M'+x(left)+' 102 H'+x(right)+' V180 H'+x(left)+' Z':'';
+    set('meeting','d',shape);set('meeting-grain','d',shape);
+    set('work-aperture','x',x(s));set('work-aperture','width',x(end)-x(s));
+    set('aperture-edge','d','M'+x(s)+' 258 V270 H'+x(end)+' V258');
+    set('handle','transform','translate('+((x(s)+x(end))/2)+' 0)');
+    $('start-value').textContent=c.day(s);$('duration-value').textContent=c.days(need);
+    const outcome=$('emerged');outcome.dataset.fits=String(fit);
+    $('outcome-title').textContent=fit?c.yes:available?c.no:c.none;
+    $('outcome-reason').textContent=c.reason(available,need,gap);
+  }
+  function activate(){
+    if(!scene){translateStudy();return}
+    document.body.classList.add('formation-present');
+    $('birth').hidden=true;$('living').hidden=true;$('recall').hidden=true;$('study-open').hidden=true;
+    $('formation-study').hidden=false;
+    translateStudy();draw();
+  }
+  for(const day of [1,6,11,16,21,26,31]){
+    const tick=document.createElementNS(NS,'line');tick.setAttribute('x1',x(day));tick.setAttribute('x2',x(day));tick.setAttribute('y1','26');tick.setAttribute('y2','258');$('field-ticks').append(tick);
+    const label=document.createElementNS(NS,'text');label.setAttribute('x',x(day));label.setAttribute('y','18');label.textContent=String(day);$('time-labels').append(label);
+  }
+  start.addEventListener('input',draw);duration.addEventListener('input',draw);
+  $('study-reset').addEventListener('click',()=>{start.value='9';duration.value='7';draw()});
+  let dragging=null;
+  function coordinate(e){
+    const m=field.getScreenCTM();if(!m)return null;
+    return new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse()).x;
+  }
+  const grip=$('handle');
+  grip.addEventListener('pointerdown',event=>{if(event.button!==0)return;const pos=coordinate(event);if(pos===null)return;dragging={id:event.pointerId,offset:pos-x(Number(start.value))};grip.setPointerCapture(event.pointerId);event.preventDefault()});
+  grip.addEventListener('pointermove',event=>{if(!dragging||event.pointerId!==dragging.id)return;const pos=coordinate(event);if(pos===null)return;start.value=String(Math.max(1,Math.min(21,Math.round((pos-dragging.offset-32)/736*30+1))));draw()});
+  for(const type of ['pointerup','pointercancel','lostpointercapture'])grip.addEventListener(type,()=>{dragging=null});
+  $('locale').addEventListener('click',activate);
+  activate();
+})();

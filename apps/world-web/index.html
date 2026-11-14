@@ -6,11 +6,37 @@
 <title>World — local writing</title><link rel="stylesheet" href="world.css"><script src="world.js" defer></script>
 </head>
 <body>
-<header><span class="signature" aria-hidden="true">world<span>.</span></span><nav id="world-nav" aria-label="العالم"><button id="recall" hidden></button><button id="locale" lang="en">English</button></nav></header>
+<header><span class="signature" aria-hidden="true">world<span>.</span></span><nav id="world-nav" aria-label="العالم"><a class="study-link" id="study-open" href="?scene=formation"></a><button id="recall" hidden></button><button id="locale" lang="en">English</button></nav></header>
 <main>
 <section id="birth" class="birth" aria-labelledby="question"><p id="birth-kicker" class="eyebrow"></p><h1 id="question"></h1><form id="begin"><label id="seed-label" for="seed" class="sr"></label><textarea id="seed" rows="2" maxlength="240" required dir="auto"></textarea><div class="line"><button class="primary" id="start" type="submit"></button><span id="local-note" class="muted"></span></div></form></section>
 <section id="living" hidden aria-labelledby="work-heading"><div class="work-layout"><article class="work"><p class="eyebrow" id="work-kicker"></p><h1 id="work-heading" tabindex="-1" dir="auto"></h1><label id="title-label" for="work-title" class="sr"></label><input id="work-title" maxlength="240" dir="auto" hidden><label id="body-label" for="body" class="sr"></label><textarea id="body" rows="7" maxlength="12000" dir="auto"></textarea><div class="line work-actions"><button id="rename"></button><button id="compose" aria-controls="thought" aria-expanded="false"></button><button id="share" aria-controls="context" aria-expanded="false"></button><button id="save"></button></div><p class="muted" id="save-note"></p><section id="thought" hidden class="thought" aria-labelledby="thought-heading"><p class="eyebrow" id="thought-label"></p><h2 id="thought-heading"></h2><label for="thought-text" id="thought-input-label" class="sr"></label><textarea id="thought-text" maxlength="6000" rows="4" dir="auto"></textarea><div class="line"><button id="make" class="primary"></button><button id="discard"></button></div></section></article><aside id="context" hidden aria-labelledby="context-title"><div class="context-inner"><div class="line context-top"><p id="context-kicker" class="eyebrow"></p><button id="close-context" class="close"></button></div><h2 id="context-title"></h2><p id="context-help" class="muted"></p><div id="context-content"></div></div></aside></div></section>
 <p id="status" role="status" aria-live="polite"></p>
+<section id="formation-study" hidden aria-labelledby="formation-title" class="formation-study">
+  <div class="study-origin"><span id="study-mark"></span><a id="study-exit" href="?"></a></div>
+  <div class="study-heading"><p id="study-context"></p><h1 id="formation-title"></h1><p id="study-premise"></p></div>
+  <div class="composition">
+    <div class="material-title"><span class="material-index">01</span><div><h2 id="party-a"></h2><p id="party-a-detail"></p></div></div>
+    <div class="material-title second-material"><span class="material-index">02</span><div><h2 id="party-b"></h2><p id="party-b-detail"></p></div></div>
+    <svg id="formation-field" viewBox="0 0 800 310" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+      <defs><pattern id="grain" width="7" height="7" patternUnits="userSpaceOnUse"><path d="M0 7L7 0" stroke="#263b36" stroke-opacity=".14" stroke-width="1"/></pattern></defs>
+      <g id="field-ticks" class="field-ticks"></g>
+      <path id="material-a" class="material-a" d=""/>
+      <path id="material-b" class="material-b" d=""/>
+      <path id="meeting" class="meeting" d=""/>
+      <path id="meeting-grain" fill="url(#grain)" d=""/>
+      <rect id="work-aperture" class="work-aperture" y="26" height="232" rx="2"/>
+      <path id="aperture-edge" class="aperture-edge" d=""/>
+      <g id="handle" class="field-handle"><rect x="-16" y="260" width="32" height="37" rx="5"/><path d="M-5 275V285M5 275V285"/></g>
+      <g id="time-labels" class="time-labels"></g>
+    </svg>
+    <div class="temporal-edit" dir="auto">
+      <div class="time-control"><label for="study-start" id="start-label"></label><output for="study-start" id="start-value"></output><input id="study-start" type="range" min="1" max="21" value="9" step="1" dir="ltr"></div>
+      <div class="time-control"><label for="study-duration" id="duration-label"></label><output for="study-duration" id="duration-value"></output><input id="study-duration" type="range" min="1" max="10" value="7" step="1" dir="ltr"></div>
+    </div>
+    <div class="emerged" id="emerged" aria-live="polite"><div><p class="emerged-caption" id="outcome-caption"></p><h2 id="outcome-title"></h2></div><div><p id="outcome-reason"></p><p class="muted" id="outcome-limit"></p></div></div>
+    <div class="study-foot"><p id="study-disclaimer"></p><button id="study-reset" type="button"></button></div>
+  </div>
+</section>
 </main>
 <dialog id="memory" aria-labelledby="memory-title"><div class="line context-top"><h2 id="memory-title"></h2><button id="close-memory"></button></div><label for="find" id="find-label" class="sr"></label><input id="find" type="search" autocomplete="off"><div id="works"></div><div class="line memory-actions"><button id="new-work" class="primary"></button><button id="forget"></button></div><p id="memory-note" class="muted"></p></dialog>
 <template id="share-template"><label id="excerpt-label" for="excerpt"></label><textarea id="excerpt" rows="5" maxlength="6000" dir="auto"></textarea><label id="receiver-label" for="receiver"></label><input id="receiver" maxlength="240" dir="auto"><p id="share-limit" class="muted"></p><button id="prepare" class="primary"></button><div id="prepared" hidden><h3 id="prepared-title"></h3><p id="preview-name" dir="auto"></p><p id="preview-text" class="preview" dir="auto"></p><p id="prepared-note" class="muted"></p></div></template>

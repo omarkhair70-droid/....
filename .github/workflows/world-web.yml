@@ -39,7 +39,11 @@ jobs:
           browser="$(command -v google-chrome || command -v chromium)"
           "$browser" --headless --no-sandbox --disable-dev-shm-usage --user-data-dir="$(mktemp -d)" --window-size=1440,900 --virtual-time-budget=2000 --screenshot="$PWD/visual/01-first-encounter.png" http://127.0.0.1:8765/
           "$browser" --headless --no-sandbox --disable-dev-shm-usage --user-data-dir="$(mktemp -d)" --window-size=1440,1100 --virtual-time-budget=3000 --screenshot="$PWD/visual/02-work-synthetic.png" http://127.0.0.1:8765/tests/visual.html
+          "$browser" --headless --no-sandbox --disable-dev-shm-usage --user-data-dir="$(mktemp -d)" --window-size=1440,1100 --virtual-time-budget=2000 --screenshot="$PWD/visual/03-formation-review.png" "http://127.0.0.1:8765/?scene=formation"
           # Synthetic screenshots only. Emit chunks for review through logs.
+          echo 'BEGIN_FORMATION_PNG'
+          base64 -w 512 visual/03-formation-review.png
+          echo 'END_FORMATION_PNG'
           echo 'BEGIN_ENCOUNTER_PNG'
           base64 -w 512 visual/01-first-encounter.png
           echo 'END_ENCOUNTER_PNG'
