@@ -7,3 +7,12 @@ main{margin:0 auto;padding:0 clamp(16px,5.55vw,80px) 80px;max-width:1600px}.birt
 aside{min-width:0;border-inline-start:1px solid var(--rule);padding-inline-start:32px}.context-inner{max-width:380px}.context-top{justify-content:space-between;align-items:baseline}.context-top .eyebrow{margin-bottom:12px}aside label{display:block;font-size:.83rem;color:var(--quiet);margin-top:24px}aside input,aside textarea{margin-bottom:8px}.preview{white-space:pre-wrap;overflow-wrap:anywhere;border-inline-start:2px solid var(--blue);padding-inline-start:16px}#status{font-size:.84rem;color:var(--quiet);min-height:1.4em;margin:24px auto 0;max-width:640px}dialog{background:var(--paper);color:var(--ink);border:1px solid var(--quiet);padding:32px;width:min(640px,calc(100% - 32px));max-height:85vh;overflow:auto}dialog::backdrop{background:rgb(32 35 33 / 22%)}#works{margin:20px 0}.item{display:block;text-align:start;width:100%;border-bottom:1px solid var(--rule);overflow-wrap:anywhere;padding-block:12px;color:var(--ink)}.memory-actions{margin-block:24px}
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:959px){.work-layout,.work-layout:has(aside:not([hidden])){grid-template-columns:minmax(0,640px);gap:40px}aside{border-inline-start:0;border-top:1px solid var(--rule);padding:24px 0 0}.context-inner{max-width:none}.birth{margin-top:clamp(40px,16vh,135px)}}@media(max-width:480px){:root{font-size:17px}header{min-height:76px;padding-block:14px}main{padding-bottom:40px}.birth h1,h1{font-size:36px}.work-layout{margin-top:48px}.birth{margin-top:75px}dialog{padding:20px}.thought{padding-inline-start:12px}.line{gap:8px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* D01 visual review: preserve natural direction and let writing determine space. */
+html[dir=rtl] textarea:placeholder-shown,html[dir=rtl] input:placeholder-shown{text-align:right}
+html[dir=ltr] textarea:placeholder-shown,html[dir=ltr] input:placeholder-shown{text-align:left}
+.work-layout{margin-block-start:clamp(44px,9vh,90px)}
+.work textarea{min-height:132px}
+.thought textarea{min-height:88px}
+@supports(field-sizing:content){.birth textarea,.work textarea,aside textarea{field-sizing:content;resize:none;max-height:65vh}.birth textarea{min-height:78px}.work textarea{min-height:132px}.thought textarea{min-height:88px}aside textarea{min-height:92px}}
+@media(max-width:480px){.work-layout{margin-block-start:40px}}

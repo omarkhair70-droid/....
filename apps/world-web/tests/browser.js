@@ -8,17 +8,19 @@ const load=()=>new Promise(resolve=>{frame.addEventListener('load',resolve,{once
  let d=frame.contentDocument, $=id=>d.getElementById(id), click=id=>$(id).click(), set=(id,value)=>{$(id).value=value;$(id).dispatchEvent(new Event('input',{bubbles:true}))};
  assert(d.documentElement.dir==='rtl','initial direction');
  assert(!$('birth').hidden,'initial birth');
+ assert(frame.contentWindow.getComputedStyle($('seed')).textAlign==='right','Arabic empty input alignment');
  set('seed','Synthetic work');$('begin').requestSubmit();
  assert(!$('living').hidden&&$('work-heading').textContent==='Synthetic work','create');
  assert(localStorage.getItem('one-world.local.v1')===null,'no automatic save');
  set('body','Private line. Shared excerpt.');
  $('body').setSelectionRange(14,29);click('share');
  assert($('excerpt').value==='Shared excerpt.','selected disclosure');
+ assert($('share').getAttribute('aria-expanded')==='true','disclosure expanded state');
  set('receiver','Synthetic recipient');click('prepare');
  assert(!$('prepared').hidden&&$('preview-text').textContent==='Shared excerpt.','exact preview');
  assert(!$('preview-text').textContent.includes('Private'),'private omission');
  set('excerpt','Changed');assert($('prepared').hidden,'preview invalidated');
- click('close-context');click('compose');set('thought-text','New possibility');click('make');
+ d.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));assert($('context').hidden&&$('share').getAttribute('aria-expanded')==='false','Escape closes disclosure');click('compose');set('thought-text','New possibility');click('make');
  assert($('work-heading').textContent==='New possibility','new work');
  click('back-parent');assert($('body').value==='Private line. Shared excerpt.','original retained');
  click('locale');assert(d.documentElement.dir==='ltr','language transition');
@@ -28,6 +30,7 @@ const load=()=>new Promise(resolve=>{frame.addEventListener('load',resolve,{once
  await load();d=frame.contentDocument;
  assert($('body').value==='Private line. Shared excerpt.','restore');
  assert(d.documentElement.dir==='ltr','restore language');
+ assert($('save-note').textContent.startsWith('Saved on this device'),'canonical saved state');
  assert(d.documentElement.scrollWidth<=frame.clientWidth+1,'320px no horizontal overflow');
  click('recall');set('find','New possibility');assert($('works').querySelectorAll('button').length===1,'recall search');
  $('works').querySelector('button').click();assert($('work-heading').textContent==='New possibility','recall child');
