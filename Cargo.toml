@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/world-language", "crates/world-kernel"]
+members = ["crates/world-language", "crates/world-kernel", "crates/world-memory"]
 resolver = "3"
 
 [workspace.package]
@@ -11,3 +11,4 @@ publish = false
 [workspace.dependencies]
 serde = { version = "=1.0.228", features = ["derive"] }
 serde_json = { version = "=1.0.145", features = ["raw_value"] }
+postgres = "=0.19.14"

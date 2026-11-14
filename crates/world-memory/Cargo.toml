@@ -1,0 +1,11 @@
+[package]
+name = "world-memory"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+postgres.workspace = true
+world-language = { path = "../world-language" }
+world-kernel = { path = "../world-kernel" }

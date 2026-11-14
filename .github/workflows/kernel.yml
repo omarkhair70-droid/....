@@ -20,8 +20,12 @@ jobs:
           rustup show
           rustc --version
           cargo --version
-      - name: Fetch locked dependencies
-        run: cargo fetch --locked
+      - name: Resolve expanded workspace and record generated lock
+        run: |
+          cargo generate-lockfile
+          echo 'BEGIN_CARGO_LOCK'
+          cat Cargo.lock
+          echo 'END_CARGO_LOCK'
       - name: Test
         run: cargo test --workspace --locked
       - name: Lint
@@ -46,3 +50,40 @@ jobs:
           python3 -m venv /tmp/world-schema
           /tmp/world-schema/bin/pip install jsonschema==4.26.0
           /tmp/world-schema/bin/python scripts/validate_contract.py
+  postgres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:18.7
+        env:
+          POSTGRES_DB: world_ci
+          POSTGRES_USER: world_migrator
+          POSTGRES_PASSWORD: synthetic-ci-admin
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd "pg_isready -U world_migrator -d world_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Provision isolated runtime role and schema
+        env:
+          DB_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          docker exec -i "$DB_CONTAINER" psql -v ON_ERROR_STOP=1 -U world_migrator -d world_ci <<'SQL'
+          CREATE ROLE world_runtime LOGIN PASSWORD 'synthetic-ci-runtime' NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+          SQL
+          docker exec -i "$DB_CONTAINER" psql -v ON_ERROR_STOP=1 -U world_migrator -d world_ci < infra/postgres/001_world_memory.sql
+          docker exec -i "$DB_CONTAINER" psql -v ON_ERROR_STOP=1 -U world_migrator -d world_ci < infra/postgres/seed-ci.sql
+      - name: Database integration
+        env:
+          WORLD_TEST_DATABASE_URL: postgres://world_runtime:synthetic-ci-runtime@127.0.0.1:${{ job.services.postgres.ports[5432] }}/world_ci
+          WORLD_TEST_ADMIN_URL: postgres://world_migrator:synthetic-ci-admin@127.0.0.1:${{ job.services.postgres.ports[5432] }}/world_ci
+        run: |
+          cargo generate-lockfile
+          cargo test -p world-memory --locked --test postgres -- --ignored
