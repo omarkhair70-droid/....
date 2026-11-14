@@ -23,10 +23,21 @@ fn goal() -> Goal {
         minimum_duration_ms: 20,
         distinct_participants: true,
         slots: vec![
-            Slot { id: id(11), capability: id(21), proposed_role: "Implementation".into() },
-            Slot { id: id(12), capability: id(22), proposed_role: "Distribution".into() },
+            Slot {
+                id: id(11),
+                capability: id(21),
+                proposed_role: "Implementation".into(),
+            },
+            Slot {
+                id: id(12),
+                capability: id(22),
+                proposed_role: "Distribution".into(),
+            },
         ],
-        conditions: vec![Requirement { claim: id(80), hard: true }],
+        conditions: vec![Requirement {
+            claim: id(80),
+            hard: true,
+        }],
     }
 }
 
@@ -49,7 +60,10 @@ fn engine() -> Engine {
 }
 
 fn budget() -> Budget {
-    Budget { nodes: 100, results: 10 }
+    Budget {
+        nodes: 100,
+        results: 10,
+    }
 }
 
 #[test]
@@ -72,7 +86,10 @@ fn combines_complementary_offers_into_a_new_hypothesis() {
     assert_eq!(candidate.requirements.len(), 5);
     assert!(e.evaluation(&id(90)).is_none());
     e.register(candidate.clone()).unwrap();
-    assert_eq!(e.evaluation(&id(90)).unwrap().feasibility, Feasibility::Conditional);
+    assert_eq!(
+        e.evaluation(&id(90)).unwrap().feasibility,
+        Feasibility::Conditional
+    );
     for (n, condition) in candidate.requirements.iter().enumerate() {
         e.upsert(Evidence {
             id: id(500 + n as u64),
@@ -85,9 +102,13 @@ fn combines_complementary_offers_into_a_new_hypothesis() {
             valid_from_ms: 0,
             valid_until_ms: None,
             withdrawn: false,
-        }).unwrap();
+        })
+        .unwrap();
     }
-    assert_eq!(e.evaluation(&id(90)).unwrap().feasibility, Feasibility::SupportedUnderEvidence);
+    assert_eq!(
+        e.evaluation(&id(90)).unwrap().feasibility,
+        Feasibility::SupportedUnderEvidence
+    );
 }
 
 #[test]
@@ -101,7 +122,12 @@ fn excludes_insufficient_overlap_wrong_place_and_same_participant() {
         offer(33, 22, 41, window(30, 70)),
         wrong_place,
     ];
-    assert!(e.form(&goal(), &offers, budget()).unwrap().proposals.is_empty());
+    assert!(
+        e.form(&goal(), &offers, budget())
+            .unwrap()
+            .proposals
+            .is_empty()
+    );
     let mut g = goal();
     g.distinct_participants = false;
     let result = e.form(&g, &offers, budget()).unwrap();
@@ -137,14 +163,42 @@ fn budget_reports_incomplete_search_without_inventing_results() {
         offer(32, 22, 42, window(40, 90)),
         offer(33, 22, 43, window(30, 80)),
     ];
-    let a = e.form(&goal(), &offers, Budget { nodes: 1, results: 10 }).unwrap();
+    let a = e
+        .form(
+            &goal(),
+            &offers,
+            Budget {
+                nodes: 1,
+                results: 10,
+            },
+        )
+        .unwrap();
     assert!(a.limited);
     assert_eq!(a.visited, 1);
     assert!(a.proposals.is_empty());
-    let b = e.form(&goal(), &offers, Budget { nodes: 100, results: 1 }).unwrap();
+    let b = e
+        .form(
+            &goal(),
+            &offers,
+            Budget {
+                nodes: 100,
+                results: 1,
+            },
+        )
+        .unwrap();
     assert!(b.limited);
     assert_eq!(b.proposals.len(), 1);
-    assert_eq!(e.form(&goal(), &offers, Budget { nodes: 0, results: 1 }), Err(Error::Capacity));
+    assert_eq!(
+        e.form(
+            &goal(),
+            &offers,
+            Budget {
+                nodes: 0,
+                results: 1
+            }
+        ),
+        Err(Error::Capacity)
+    );
 }
 
 #[test]
@@ -153,11 +207,20 @@ fn rejects_mixed_scope_duplicate_identity_and_invalid_windows() {
     let o = offer(31, 21, 41, window(20, 70));
     let mut foreign = o.clone();
     foreign.scope = id(99);
-    assert_eq!(e.form(&goal(), &[o.clone(), foreign], budget()), Err(Error::ScopeMismatch));
-    assert_eq!(e.form(&goal(), &[o.clone(), o.clone()], budget()), Err(Error::IdentityConflict));
+    assert_eq!(
+        e.form(&goal(), &[o.clone(), foreign], budget()),
+        Err(Error::ScopeMismatch)
+    );
+    assert_eq!(
+        e.form(&goal(), &[o.clone(), o.clone()], budget()),
+        Err(Error::IdentityConflict)
+    );
     let mut invalid = o;
     invalid.window = window(80, 20);
-    assert_eq!(e.form(&goal(), &[invalid], budget()), Err(Error::InvalidValue));
+    assert_eq!(
+        e.form(&goal(), &[invalid], budget()),
+        Err(Error::InvalidValue)
+    );
     let mut g = goal();
     g.scope = id(99);
     assert_eq!(e.form(&g, &[], budget()), Err(Error::ScopeMismatch));
@@ -170,11 +233,26 @@ fn a_single_offer_is_not_implicitly_reused_and_hard_claim_wins() {
     g.distinct_participants = false;
     g.slots[1].capability = id(21);
     let a = offer(31, 21, 41, window(20, 70));
-    assert!(e.form(&g, std::slice::from_ref(&a), budget()).unwrap().proposals.is_empty());
-    g.conditions.push(Requirement { claim: a.capability_claim.clone(), hard: false });
+    assert!(
+        e.form(&g, std::slice::from_ref(&a), budget())
+            .unwrap()
+            .proposals
+            .is_empty()
+    );
+    g.conditions.push(Requirement {
+        claim: a.capability_claim.clone(),
+        hard: false,
+    });
     let b = offer(32, 21, 41, window(20, 70));
     let result = e.form(&g, &[a.clone(), b], budget()).unwrap();
     assert_eq!(result.proposals.len(), 2);
     let candidate = result.proposals[0].candidate(id(90));
-    assert!(candidate.requirements.iter().find(|r| r.claim == a.capability_claim).unwrap().hard);
+    assert!(
+        candidate
+            .requirements
+            .iter()
+            .find(|r| r.claim == a.capability_claim)
+            .unwrap()
+            .hard
+    );
 }

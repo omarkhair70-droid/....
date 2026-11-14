@@ -139,11 +139,7 @@ pub struct Formation {
     pub limited: bool,
 }
 
-pub(super) fn generate(
-    goal: &Goal,
-    offers: &[Offer],
-    budget: Budget,
-) -> Result<Formation, Error> {
+pub(super) fn generate(goal: &Goal, offers: &[Offer], budget: Budget) -> Result<Formation, Error> {
     if goal.slots.len() > MAX_SLOTS
         || offers.len() > MAX_OFFERS
         || goal.conditions.len() > MAX_BASE_REQUIREMENTS
@@ -167,7 +163,10 @@ pub(super) fn generate(
         || unique_slots.len() != goal.slots.len()
         || role_names.len() != goal.slots.len()
         || condition_ids.len() != goal.conditions.len()
-        || goal.slots.iter().any(|s| !valid_text(&s.proposed_role, 240))
+        || goal
+            .slots
+            .iter()
+            .any(|s| !valid_text(&s.proposed_role, 240))
     {
         return Err(Error::InvalidValue);
     }
@@ -202,7 +201,11 @@ pub(super) fn generate(
         slots,
         choices,
         budget,
-        result: Formation { proposals: Vec::new(), visited: 0, limited: false },
+        result: Formation {
+            proposals: Vec::new(),
+            visited: 0,
+            limited: false,
+        },
     };
     if !search.choices.iter().any(Vec::is_empty) {
         search.visit(goal.window, &mut Vec::new());
