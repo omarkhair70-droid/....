@@ -25,7 +25,12 @@ fn initial() -> Kernel {
     let mut k = Kernel::new([id(1), id(2), id(3)]);
     k.submit(
         &id(1),
-        command(100, 0, "CreateWork", json!({"title":"Original","body":"Private"})),
+        command(
+            100,
+            0,
+            "CreateWork",
+            json!({"title":"Original","body":"Private"}),
+        ),
         1,
     )
     .unwrap();
@@ -49,7 +54,12 @@ fn initial() -> Kernel {
 fn revise(k: &mut Kernel) {
     k.submit(
         &id(1),
-        command(102, 2, "ReviseWork", json!({"title":"Revised","body":"Private change"})),
+        command(
+            102,
+            2,
+            "ReviseWork",
+            json!({"title":"Revised","body":"Private change"}),
+        ),
         3,
     )
     .unwrap();
@@ -90,10 +100,16 @@ fn scoped_retry_is_stable_and_revocation_is_authoritative() {
     let r = reply(110, 1, "interested_in_discussion");
     revise(&mut k);
     assert_eq!(k.respond(&id(3), &r, 4), Err(Rejection::Denied));
-    assert_eq!(k.respond(&id(2), &reply(111, 3, "decline"), 4), Err(Rejection::WrongSnapshot));
+    assert_eq!(
+        k.respond(&id(2), &reply(111, 3, "decline"), 4),
+        Err(Rejection::WrongSnapshot)
+    );
     let before = k.respond(&id(2), &r, 4).unwrap();
     assert_eq!(k.respond(&id(2), &r, 5).unwrap(), before);
-    assert_eq!(k.respond(&id(2), &reply(110, 1, "decline"), 5), Err(Rejection::CommandCollision));
+    assert_eq!(
+        k.respond(&id(2), &reply(110, 1, "decline"), 5),
+        Err(Rejection::CommandCollision)
+    );
     k.submit(
         &id(1),
         command(112, 4, "RevokeShare", json!({"share_id":id(20)})),
@@ -109,13 +125,25 @@ fn scoped_retry_is_stable_and_revocation_is_authoritative() {
 fn versioned_records_round_trip_and_replay_after_serialization() {
     let mut k = initial();
     revise(&mut k);
-    k.respond(&id(2), &reply(110, 1, "request_change"), 4).unwrap();
-    let encoded: Vec<_> = k.history().iter().map(|record| record.to_json().unwrap()).collect();
-    let decoded: Vec<_> = encoded.iter().map(|raw| Recorded::parse(raw).unwrap()).collect();
+    k.respond(&id(2), &reply(110, 1, "request_change"), 4)
+        .unwrap();
+    let encoded: Vec<_> = k
+        .history()
+        .iter()
+        .map(|record| record.to_json().unwrap())
+        .collect();
+    let decoded: Vec<_> = encoded
+        .iter()
+        .map(|raw| Recorded::parse(raw).unwrap())
+        .collect();
     let mut recovered = Kernel::replay([id(1), id(2), id(3)], &decoded).unwrap();
     assert!(k.owner_view(&id(1), &id(10)) == recovered.owner_view(&id(1), &id(10)));
-    assert!(k.shared_view(&id(2), &id(10), &id(20)) == recovered.shared_view(&id(2), &id(10), &id(20)));
-    let receipt = recovered.respond(&id(2), &reply(110, 1, "request_change"), 50).unwrap();
+    assert!(
+        k.shared_view(&id(2), &id(10), &id(20)) == recovered.shared_view(&id(2), &id(10), &id(20))
+    );
+    let receipt = recovered
+        .respond(&id(2), &reply(110, 1, "request_change"), 50)
+        .unwrap();
     assert_eq!(receipt.snapshot_revision, 1);
     assert_eq!(recovered.history().len(), 4);
 }
@@ -130,7 +158,11 @@ fn corrupted_envelopes_and_inconsistent_history_are_rejected() {
     value = serde_json::from_str(&raw).unwrap();
     value["record_version"] = json!("9.9");
     assert!(Recorded::parse(&value.to_string()).is_err());
-    let duplicate = raw.replacen("\"record_version\":\"0.1\"", "\"record_version\":\"0.1\",\"record_version\":\"0.1\"", 1);
+    let duplicate = raw.replacen(
+        "\"record_version\":\"0.1\"",
+        "\"record_version\":\"0.1\",\"record_version\":\"0.1\"",
+        1,
+    );
     assert_ne!(raw, duplicate);
     assert!(Recorded::parse(&duplicate).is_err());
     let mut records = k.history().to_vec();

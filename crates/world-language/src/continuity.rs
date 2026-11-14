@@ -25,11 +25,14 @@ impl ScopedReply {
         if raw.len() > MAX_COMMAND_BYTES {
             return Err(WireError::TooLarge);
         }
-        let wire: ReplyWire =
-            serde_json::from_str(raw).map_err(|_| WireError::InvalidShape)?;
+        let wire: ReplyWire = serde_json::from_str(raw).map_err(|_| WireError::InvalidShape)?;
         if wire.schema_version != "0.1"
             || !(1..=MAX_REVISION).contains(&wire.payload.snapshot_revision)
-            || !wire.payload.comment.as_ref().is_none_or(|c| text_len(c, 0, 3_000))
+            || !wire
+                .payload
+                .comment
+                .as_ref()
+                .is_none_or(|c| text_len(c, 0, 3_000))
         {
             return Err(WireError::InvalidValue);
         }
@@ -112,8 +115,7 @@ impl StoredCommand {
         if raw.len() > MAX_RECORD_BYTES {
             return Err(WireError::TooLarge);
         }
-        let wire: RecordWire =
-            serde_json::from_str(raw).map_err(|_| WireError::InvalidShape)?;
+        let wire: RecordWire = serde_json::from_str(raw).map_err(|_| WireError::InvalidShape)?;
         if wire.record_version != "0.1" {
             return Err(WireError::InvalidValue);
         }

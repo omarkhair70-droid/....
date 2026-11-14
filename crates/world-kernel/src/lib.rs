@@ -3,7 +3,9 @@
 #![forbid(unsafe_code)]
 
 use std::collections::{BTreeMap, BTreeSet};
-use world_language::{Command, Id, MAX_REVISION, Operation, Response, ScopedReply, StoredCommand, WireError};
+use world_language::{
+    Command, Id, MAX_REVISION, Operation, Response, ScopedReply, StoredCommand, WireError,
+};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Rejection {
@@ -332,7 +334,9 @@ impl Kernel {
         let revision = self.admitted.get(&key).map_or(work.revision, |index| {
             self.history[*index].command.expected_revision()
         });
-        let command = request.bind(revision).map_err(|_| Rejection::CommandCollision)?;
+        let command = request
+            .bind(revision)
+            .map_err(|_| Rejection::CommandCollision)?;
         self.submit(actor, command, recorded_at_ms)?;
         Ok(ScopedReceipt {
             command_id: request.command_id().clone(),

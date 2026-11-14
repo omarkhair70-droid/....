@@ -9,3 +9,6 @@ Tests cover serialization/replay/retry, invalid history and wire fields, revocat
 
 ## Before PostgreSQL
 Define a versioned storage contract and transactional append with unique work+revision and actor+command ID, serialized command admission, explicit conflict/retry policy and a durable principal registry. Authorize reads and writes at the API boundary, use isolated DB and a minimally privileged role; do not persist real data until deletion, retention, backup/restore and access policies are reviewed. Need migrations, DB integration tests and failure recovery. No external effects, model calls, UI, or production deployment. The scope tests are a useful property check, not a proof of noninterference.
+
+## Contract checkpoint
+Added independent scoped-reply and stored-record JSON Schemas and 10 shape fixtures. The record revision arithmetic is checked by Rust, not expressible by this simple schema. Original command schema remains unchanged; the recipient must use the distinct scoped contract. Formatting fixes taken from actual CI diff; new head must pass checks. No database yet.

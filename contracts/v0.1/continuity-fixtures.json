@@ -1,0 +1,195 @@
+{
+  "description": "Independent shape fixtures, not admitted events",
+  "suites": [
+    {
+      "schema": "scoped-reply.schema.json",
+      "cases": [
+        {
+          "name": "scoped request",
+          "valid": true,
+          "value": {
+            "schema_version": "0.1",
+            "command_id": "00000000-0000-4000-8000-000000000001",
+            "work_id": "00000000-0000-4000-8000-000000000002",
+            "payload": {
+              "share_id": "00000000-0000-4000-8000-000000000003",
+              "snapshot_revision": 1,
+              "response": "request_change"
+            }
+          }
+        },
+        {
+          "name": "private revision injected",
+          "valid": false,
+          "value": {
+            "schema_version": "0.1",
+            "command_id": "00000000-0000-4000-8000-000000000001",
+            "work_id": "00000000-0000-4000-8000-000000000002",
+            "payload": {
+              "share_id": "00000000-0000-4000-8000-000000000003",
+              "snapshot_revision": 1,
+              "response": "request_change"
+            },
+            "expected_revision": 3
+          }
+        },
+        {
+          "name": "actor spoof",
+          "valid": false,
+          "value": {
+            "schema_version": "0.1",
+            "command_id": "00000000-0000-4000-8000-000000000001",
+            "work_id": "00000000-0000-4000-8000-000000000002",
+            "payload": {
+              "share_id": "00000000-0000-4000-8000-000000000003",
+              "snapshot_revision": 1,
+              "response": "request_change"
+            },
+            "actor_id": "00000000-0000-4000-8000-000000000004"
+          }
+        },
+        {
+          "name": "null comment",
+          "valid": false,
+          "value": {
+            "schema_version": "0.1",
+            "command_id": "00000000-0000-4000-8000-000000000001",
+            "work_id": "00000000-0000-4000-8000-000000000002",
+            "payload": {
+              "share_id": "00000000-0000-4000-8000-000000000003",
+              "snapshot_revision": 1,
+              "response": "request_change",
+              "comment": null
+            }
+          }
+        },
+        {
+          "name": "invented commitment",
+          "valid": false,
+          "value": {
+            "schema_version": "0.1",
+            "command_id": "00000000-0000-4000-8000-000000000001",
+            "work_id": "00000000-0000-4000-8000-000000000002",
+            "payload": {
+              "share_id": "00000000-0000-4000-8000-000000000003",
+              "snapshot_revision": 1,
+              "response": "contract_accepted"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "schema": "stored-record.schema.json",
+      "cases": [
+        {
+          "name": "record shape",
+          "valid": true,
+          "value": {
+            "record_version": "0.1",
+            "actor": "00000000-0000-4000-8000-000000000004",
+            "recorded_at_ms": 1,
+            "accepted_revision": 1,
+            "command": {
+              "schema_version": "0.1",
+              "command_id": "00000000-0000-4000-8000-000000000001",
+              "work_id": "00000000-0000-4000-8000-000000000002",
+              "expected_revision": 0,
+              "kind": "CreateWork",
+              "payload": {
+                "title": "عمل",
+                "body": "Synthetic private fixture"
+              }
+            }
+          }
+        },
+        {
+          "name": "unknown history version",
+          "valid": false,
+          "value": {
+            "record_version": "9.9",
+            "actor": "00000000-0000-4000-8000-000000000004",
+            "recorded_at_ms": 1,
+            "accepted_revision": 1,
+            "command": {
+              "schema_version": "0.1",
+              "command_id": "00000000-0000-4000-8000-000000000001",
+              "work_id": "00000000-0000-4000-8000-000000000002",
+              "expected_revision": 0,
+              "kind": "CreateWork",
+              "payload": {
+                "title": "عمل",
+                "body": "Synthetic private fixture"
+              }
+            }
+          }
+        },
+        {
+          "name": "forged extra field",
+          "valid": false,
+          "value": {
+            "record_version": "0.1",
+            "actor": "00000000-0000-4000-8000-000000000004",
+            "recorded_at_ms": 1,
+            "accepted_revision": 1,
+            "command": {
+              "schema_version": "0.1",
+              "command_id": "00000000-0000-4000-8000-000000000001",
+              "work_id": "00000000-0000-4000-8000-000000000002",
+              "expected_revision": 0,
+              "kind": "CreateWork",
+              "payload": {
+                "title": "عمل",
+                "body": "Synthetic private fixture"
+              }
+            },
+            "signature": "not a real signature"
+          }
+        },
+        {
+          "name": "nested malformed command",
+          "valid": false,
+          "value": {
+            "record_version": "0.1",
+            "actor": "00000000-0000-4000-8000-000000000004",
+            "recorded_at_ms": 1,
+            "accepted_revision": 1,
+            "command": {
+              "schema_version": "0.1",
+              "command_id": "00000000-0000-4000-8000-000000000001",
+              "work_id": "00000000-0000-4000-8000-000000000002",
+              "expected_revision": 0,
+              "kind": "CreateWork",
+              "payload": {
+                "title": "عمل",
+                "body": "Synthetic private fixture"
+              },
+              "actor_id": "00000000-0000-4000-8000-000000000004"
+            }
+          }
+        },
+        {
+          "name": "unsafe accepted revision",
+          "valid": false,
+          "value": {
+            "record_version": "0.1",
+            "actor": "00000000-0000-4000-8000-000000000004",
+            "recorded_at_ms": 1,
+            "accepted_revision": 9007199254740992,
+            "command": {
+              "schema_version": "0.1",
+              "command_id": "00000000-0000-4000-8000-000000000001",
+              "work_id": "00000000-0000-4000-8000-000000000002",
+              "expected_revision": 0,
+              "kind": "CreateWork",
+              "payload": {
+                "title": "عمل",
+                "body": "Synthetic private fixture"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
