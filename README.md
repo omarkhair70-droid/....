@@ -11,4 +11,7 @@ This branch begins the actual new product, not a design experiment. Its checked-
 - [Chapter 01 — Birth](docs/design/01-birth.md)
 - [Contributor instructions](AGENTS.md)
 
-Current status: product foundation / first-state design. No application implementation, runtime, or deployment has been approved by this commit. Architecture and visual language remain open. This branch is not production.
+- [Research synthesis and selected production baseline (Arabic)](docs/research/05-stack-and-production-decision-ar.md)
+- [World Language v0.1 contracts](contracts/v0.1/README.md)
+
+Current status: product foundation / first wire contract; engineering bootstrap pending. No application implementation, runtime, or deployment has been approved by this commit. Architecture and visual language remain open. This branch is not production.

@@ -1,0 +1,3 @@
+# World Language v0.1
+
+First wire contract for the actual kernel. JSON Schema validates shape only, never trust, authority, real-world truth, or domain state. Fixtures are independent synthetic shape checks; same IDs are deliberately reused across cases, not a sequence. See [production decision and semantic rules](../../docs/research/05-stack-and-production-decision-ar.md). No generated bindings or reducer yet. Validate via Draft202012Validator and equivalent Rust/TS contract tests before implementing. Reject unknown fields and duplicate JSON object keys at parsing boundary. Never accept caller-supplied actor identity. Snapshot revision refers to exact disclosed work meaning, distinct from current expected aggregate revision.

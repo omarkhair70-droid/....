@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "World Language v0.1 — inbound command",
+  "description": "Shape validation only. Actor identity is server-authenticated; permission, idempotency, referential and revision checks are kernel responsibilities.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "command_id",
+    "work_id",
+    "expected_revision",
+    "kind",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "command_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "work_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "expected_revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "kind": {
+      "enum": [
+        "CreateWork",
+        "ReviseWork",
+        "ShareWork",
+        "RespondToShare",
+        "RevokeShare"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "kind": {
+          "const": "CreateWork"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "body"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            },
+            "body": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 12000
+            }
+          }
+        },
+        "expected_revision": {
+          "const": 0
+        }
+      }
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "ReviseWork"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "body"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            },
+            "body": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 12000
+            }
+          }
+        },
+        "expected_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "ShareWork"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "share_id",
+            "recipient_id",
+            "title",
+            "scope_text",
+            "permission"
+          ],
+          "properties": {
+            "share_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "recipient_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            },
+            "scope_text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 6000
+            },
+            "permission": {
+              "const": "view_respond"
+            }
+          }
+        },
+        "expected_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "RespondToShare"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "share_id",
+            "snapshot_revision",
+            "response"
+          ],
+          "properties": {
+            "share_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "snapshot_revision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "response": {
+              "enum": [
+                "interested_in_discussion",
+                "decline",
+                "request_change"
+              ]
+            },
+            "comment": {
+              "type": "string",
+              "maxLength": 3000
+            }
+          }
+        },
+        "expected_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "RevokeShare"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "share_id"
+          ],
+          "properties": {
+            "share_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            }
+          }
+        },
+        "expected_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      }
+    }
+  ]
+}

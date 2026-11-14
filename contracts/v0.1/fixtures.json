@@ -1,0 +1,195 @@
+{
+  "description": "Independent wire-shape test cases; not a command sequence. No real identities. Valid syntax does not imply authorization.",
+  "cases": [
+    {
+      "name": "create",
+      "valid": true,
+      "command": {
+        "schema_version": "0.1",
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "work_id": "00000000-0000-4000-8000-000000000002",
+        "expected_revision": 0,
+        "kind": "CreateWork",
+        "payload": {
+          "title": "Synthetic work",
+          "body": "Fixture only"
+        }
+      }
+    },
+    {
+      "name": "revise",
+      "valid": true,
+      "command": {
+        "schema_version": "0.1",
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "work_id": "00000000-0000-4000-8000-000000000002",
+        "expected_revision": 1,
+        "kind": "ReviseWork",
+        "payload": {
+          "title": "Revised fixture",
+          "body": "Edited"
+        }
+      }
+    },
+    {
+      "name": "share",
+      "valid": true,
+      "command": {
+        "schema_version": "0.1",
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "work_id": "00000000-0000-4000-8000-000000000002",
+        "expected_revision": 1,
+        "kind": "ShareWork",
+        "payload": {
+          "share_id": "00000000-0000-4000-8000-000000000003",
+          "recipient_id": "00000000-0000-4000-8000-000000000004",
+          "title": "Shared excerpt",
+          "scope_text": "Fixture only",
+          "permission": "view_respond"
+        }
+      }
+    },
+    {
+      "name": "respond",
+      "valid": true,
+      "command": {
+        "schema_version": "0.1",
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "work_id": "00000000-0000-4000-8000-000000000002",
+        "expected_revision": 2,
+        "kind": "RespondToShare",
+        "payload": {
+          "share_id": "00000000-0000-4000-8000-000000000003",
+          "snapshot_revision": 1,
+          "response": "interested_in_discussion"
+        }
+      }
+    },
+    {
+      "name": "revoke",
+      "valid": true,
+      "command": {
+        "schema_version": "0.1",
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "work_id": "00000000-0000-4000-8000-000000000002",
+        "expected_revision": 3,
+        "kind": "RevokeShare",
+        "payload": {
+          "share_id": "00000000-0000-4000-8000-000000000003"
+        }
+      }
+    },
+    {
+      "name": "actor spoof",
+      "valid": false,
+      "command": {
+        "schema_version": "0.1",
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "work_id": "00000000-0000-4000-8000-000000000002",
+        "expected_revision": 0,
+        "kind": "CreateWork",
+        "payload": {
+          "title": "Synthetic work",
+          "body": "Fixture only"
+        },
+        "actor_id": "00000000-0000-4000-8000-000000000004"
+      }
+    },
+    {
+      "name": "creation revision",
+      "valid": false,
+      "command": {
+        "schema_version": "0.1",
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "work_id": "00000000-0000-4000-8000-000000000002",
+        "expected_revision": 1,
+        "kind": "CreateWork",
+        "payload": {
+          "title": "Synthetic work",
+          "body": "Fixture only"
+        }
+      }
+    },
+    {
+      "name": "response without snapshot",
+      "valid": false,
+      "command": {
+        "schema_version": "0.1",
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "work_id": "00000000-0000-4000-8000-000000000002",
+        "expected_revision": 2,
+        "kind": "RespondToShare",
+        "payload": {
+          "share_id": "00000000-0000-4000-8000-000000000003",
+          "response": "decline"
+        }
+      }
+    },
+    {
+      "name": "invented commitment",
+      "valid": false,
+      "command": {
+        "schema_version": "0.1",
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "work_id": "00000000-0000-4000-8000-000000000002",
+        "expected_revision": 2,
+        "kind": "RespondToShare",
+        "payload": {
+          "share_id": "00000000-0000-4000-8000-000000000003",
+          "snapshot_revision": 1,
+          "response": "contract_accepted"
+        }
+      }
+    },
+    {
+      "name": "share private fields",
+      "valid": false,
+      "command": {
+        "schema_version": "0.1",
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "work_id": "00000000-0000-4000-8000-000000000002",
+        "expected_revision": 1,
+        "kind": "ShareWork",
+        "payload": {
+          "share_id": "00000000-0000-4000-8000-000000000003",
+          "recipient_id": "00000000-0000-4000-8000-000000000004",
+          "title": "Shared excerpt",
+          "scope_text": "Fixture only",
+          "permission": "view_respond",
+          "private_notes": "not permitted"
+        }
+      }
+    },
+    {
+      "name": "unsafe revision",
+      "valid": false,
+      "command": {
+        "schema_version": "0.1",
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "work_id": "00000000-0000-4000-8000-000000000002",
+        "expected_revision": 9007199254740992,
+        "kind": "RespondToShare",
+        "payload": {
+          "share_id": "00000000-0000-4000-8000-000000000003",
+          "snapshot_revision": 1,
+          "response": "interested_in_discussion"
+        }
+      }
+    },
+    {
+      "name": "empty title",
+      "valid": false,
+      "command": {
+        "schema_version": "0.1",
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "work_id": "00000000-0000-4000-8000-000000000002",
+        "expected_revision": 0,
+        "kind": "CreateWork",
+        "payload": {
+          "title": "",
+          "body": "Fixture only"
+        }
+      }
+    }
+  ]
+}
