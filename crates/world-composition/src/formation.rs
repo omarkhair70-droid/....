@@ -4,6 +4,8 @@ use super::{Candidate, Error, Requirement, Role, valid_text};
 use std::collections::{BTreeMap, BTreeSet};
 use world_language::{Id, MAX_REVISION};
 
+pub mod timing;
+
 const MAX_SLOTS: usize = 8;
 const MAX_OFFERS: usize = 256;
 const MAX_BASE_REQUIREMENTS: usize = 16;
@@ -106,6 +108,7 @@ pub struct Proposal {
     intended_outcome: String,
     roles: Vec<Role>,
     requirements: Vec<Requirement>,
+    timing: timing::Basis,
 }
 
 impl Proposal {
@@ -119,6 +122,12 @@ impl Proposal {
 
     pub fn window(&self) -> Window {
         self.window
+    }
+
+    /// Explore a change in the proposed work's temporal conditions without
+    /// replacing its identity, changing evidence or committing an action.
+    pub fn preview_timing(&self, window: Window, minimum_duration_ms: u64) -> Result<timing::Preview, Error> {
+        self.timing.preview(&self.key, window, minimum_duration_ms)
     }
 
     /// Allocate a durable candidate ID at the trusted caller. This does not
@@ -298,6 +307,7 @@ impl<'a> Search<'a> {
             },
             place: self.goal.place.clone(),
             window,
+            timing: timing::Basis::new(self.goal, &self.slots, chosen),
             intended_outcome: self.goal.intended_outcome.clone(),
             roles,
             requirements: conditions
