@@ -6,38 +6,12 @@
 <title>World — local writing</title><link rel="stylesheet" href="world.css"><script src="world.js" defer></script>
 </head>
 <body>
-<header><span class="signature" aria-hidden="true">world<span>.</span></span><nav id="world-nav" aria-label="العالم"><a class="study-link" id="study-open" href="?scene=formation"></a><button id="recall" hidden></button><button id="locale" lang="en">English</button></nav></header>
+<header><span class="signature" aria-hidden="true">world<span>.</span></span><nav id="world-nav" aria-label="العالم"><button id="recall" hidden></button><button id="locale" lang="en">English</button></nav></header>
 <main>
 <section id="birth" class="birth" aria-labelledby="question"><p id="birth-kicker" class="eyebrow"></p><h1 id="question"></h1><form id="begin"><label id="seed-label" for="seed" class="sr"></label><textarea id="seed" rows="2" maxlength="240" required dir="auto"></textarea><div class="line"><button class="primary" id="start" type="submit"></button><span id="local-note" class="muted"></span></div></form></section>
 <section id="living" hidden aria-labelledby="work-heading"><div class="work-layout"><article class="work"><p class="eyebrow" id="work-kicker"></p><h1 id="work-heading" tabindex="-1" dir="auto"></h1><label id="title-label" for="work-title" class="sr"></label><input id="work-title" maxlength="240" dir="auto" hidden><label id="body-label" for="body" class="sr"></label><textarea id="body" rows="7" maxlength="12000" dir="auto"></textarea><div class="line work-actions"><button id="rename"></button><button id="compose" aria-controls="thought" aria-expanded="false"></button><button id="share" aria-controls="context" aria-expanded="false"></button><button id="save"></button></div><p class="muted" id="save-note"></p><section id="thought" hidden class="thought" aria-labelledby="thought-heading"><p class="eyebrow" id="thought-label"></p><h2 id="thought-heading"></h2><label for="thought-text" id="thought-input-label" class="sr"></label><textarea id="thought-text" maxlength="6000" rows="4" dir="auto"></textarea><div class="line"><button id="make" class="primary"></button><button id="discard"></button></div></section></article><aside id="context" hidden aria-labelledby="context-title"><div class="context-inner"><div class="line context-top"><p id="context-kicker" class="eyebrow"></p><button id="close-context" class="close"></button></div><h2 id="context-title"></h2><p id="context-help" class="muted"></p><div id="context-content"></div></div></aside></div></section>
 <p id="status" role="status" aria-live="polite"></p>
-<section id="formation-study" hidden aria-labelledby="formation-title" class="formation-study">
- <div class="atelier-top"><div><p id="study-mark"></p><h1 id="formation-title"></h1></div><a id="study-exit" href="?"></a></div>
- <div class="atelier-world">
-   <svg id="exhibition" viewBox="0 0 1080 560" role="group" aria-labelledby="exhibition-label" dir="ltr">
-     <title id="exhibition-label"></title>
-     <defs>
-       <linearGradient id="wall" x2="0" y2="1"><stop offset="0" stop-color="#efeee7"/><stop offset="1" stop-color="#d6d2c6"/></linearGradient>
-       <linearGradient id="floor" x2=".12" y2="1"><stop stop-color="#c8c3b6"/><stop offset="1" stop-color="#e6e1d6"/></linearGradient>
-       <linearGradient id="plinth-front" x2="0" y2="1"><stop stop-color="#e2ddd0"/><stop offset="1" stop-color="#b9b1a1"/></linearGradient>
-       <linearGradient id="clay-0"><stop stop-color="#674632"/><stop offset=".35" stop-color="#c3906c"/><stop offset=".63" stop-color="#d0a17d"/><stop offset="1" stop-color="#7d5139"/></linearGradient>
-       <linearGradient id="clay-1"><stop stop-color="#394c45"/><stop offset=".38" stop-color="#8ea597"/><stop offset=".7" stop-color="#a8b8a5"/><stop offset="1" stop-color="#4b6255"/></linearGradient>
-       <linearGradient id="clay-2"><stop stop-color="#907f66"/><stop offset=".32" stop-color="#ddd0b0"/><stop offset=".67" stop-color="#f0e3c6"/><stop offset="1" stop-color="#b7a48a"/></linearGradient>
-     </defs>
-     <rect id="room-wall" width="1080" height="560" fill="url(#wall)"/>
-     <path id="room-floor" d="M0 290H1080V560H0Z" fill="url(#floor)"/>
-     <g id="architecture"></g><g id="ceramics"></g>
-   </svg>
-   <p id="scene-instruction" class="atelier-instruction"></p>
- </div>
- <div class="exhibit-edit">
-   <div class="selection"><p class="small-label" id="selected-label"></p><h2 id="selected-piece"></h2><p id="selected-location"></p></div>
-   <div class="placement"><p class="small-label" id="place-label"></p><div id="place-actions" class="placement-actions"></div><p id="placement-status" role="status"></p></div>
-   <div class="object-select"><label for="piece-select" id="piece-label"></label><select id="piece-select"></select></div>
- </div>
- <div class="atelier-context"><div><p class="small-label" id="work-caption"></p><h2 id="work-outcome"></h2><p id="work-count"></p></div><div class="circumstances"><p id="party-a-detail"></p><p id="party-b-detail"></p><div class="date-edits"><label for="study-start" id="start-label"></label><input type="number" id="study-start" min="1" max="21" value="9" inputmode="numeric"><label for="study-duration" id="duration-label"></label><input type="number" id="study-duration" min="1" max="10" value="7" inputmode="numeric"></div><p id="outcome-title" role="status"></p></div></div>
- <div class="atelier-foot"><p id="study-disclaimer"></p><button id="study-reset" type="button"></button></div>
-</section>
+
 </main>
 <dialog id="memory" aria-labelledby="memory-title"><div class="line context-top"><h2 id="memory-title"></h2><button id="close-memory"></button></div><label for="find" id="find-label" class="sr"></label><input id="find" type="search" autocomplete="off"><div id="works"></div><div class="line memory-actions"><button id="new-work" class="primary"></button><button id="forget"></button></div><p id="memory-note" class="muted"></p></dialog>
 <template id="share-template"><label id="excerpt-label" for="excerpt"></label><textarea id="excerpt" rows="5" maxlength="6000" dir="auto"></textarea><label id="receiver-label" for="receiver"></label><input id="receiver" maxlength="240" dir="auto"><p id="share-limit" class="muted"></p><button id="prepare" class="primary"></button><div id="prepared" hidden><h3 id="prepared-title"></h3><p id="preview-name" dir="auto"></p><p id="preview-text" class="preview" dir="auto"></p><p id="prepared-note" class="muted"></p></div></template>
