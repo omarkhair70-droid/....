@@ -210,3 +210,6 @@ impl Command {
         serde_json::to_string(self)
     }
 }
+
+mod continuity;
+pub use continuity::{ScopedReply, StoredCommand};

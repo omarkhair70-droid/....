@@ -3,7 +3,7 @@
 #![forbid(unsafe_code)]
 
 use std::collections::{BTreeMap, BTreeSet};
-use world_language::{Command, Id, MAX_REVISION, Operation, Response};
+use world_language::{Command, Id, MAX_REVISION, Operation, Response, ScopedReply, StoredCommand, WireError};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Rejection {
@@ -33,6 +33,43 @@ pub struct Recorded {
     command: Command,
     recorded_at_ms: u64,
     receipt: Receipt,
+}
+
+impl Recorded {
+    /// Persist only behind a trusted storage boundary. Contains private data.
+    pub fn to_json(&self) -> Result<String, WireError> {
+        StoredCommand {
+            actor: self.actor.clone(),
+            command: self.command.clone(),
+            recorded_at_ms: self.recorded_at_ms,
+            accepted_revision: self.receipt.revision,
+        }
+        .to_json()
+    }
+
+    /// Shape checks only; replay verifies the historical domain transition.
+    pub fn parse(raw: &str) -> Result<Self, WireError> {
+        let record = StoredCommand::parse(raw)?;
+        let receipt = Receipt {
+            command_id: record.command.command_id().clone(),
+            work_id: record.command.work_id().clone(),
+            revision: record.accepted_revision,
+        };
+        Ok(Self {
+            actor: record.actor,
+            command: record.command,
+            recorded_at_ms: record.recorded_at_ms,
+            receipt,
+        })
+    }
+}
+
+/// Recipient-safe acknowledgement. No private aggregate revision appears.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ScopedReceipt {
+    pub command_id: Id,
+    pub share_id: Id,
+    pub snapshot_revision: u64,
 }
 
 #[derive(Clone, PartialEq, Eq)]
@@ -268,6 +305,40 @@ impl Kernel {
             receipt: receipt.clone(),
         });
         Ok(receipt)
+    }
+
+    /// Admit a response against the immutable disclosed snapshot while holding
+    /// exclusive access to the aggregate. Do not expose internal submit to a
+    /// recipient. A storage adapter must implement the same transaction boundary.
+    pub fn respond(
+        &mut self,
+        actor: &Id,
+        request: &ScopedReply,
+        recorded_at_ms: u64,
+    ) -> Result<ScopedReceipt, Rejection> {
+        let reply = request.reply();
+        let work = self.works.get(request.work_id()).ok_or(Rejection::Denied)?;
+        let share = work.shares.get(&reply.share_id).ok_or(Rejection::Denied)?;
+        if !self.principals.contains(actor) || share.revoked || &share.recipient != actor {
+            return Err(Rejection::Denied);
+        }
+        if share.view.snapshot_revision != reply.snapshot_revision {
+            return Err(Rejection::WrongSnapshot);
+        }
+        // For a retry, bind exactly the original internal revision before
+        // submit compares the complete typed command. Never use a new revision
+        // to accidentally turn a retry into another response.
+        let key = (actor.clone(), request.command_id().clone());
+        let revision = self.admitted.get(&key).map_or(work.revision, |index| {
+            self.history[*index].command.expected_revision()
+        });
+        let command = request.bind(revision).map_err(|_| Rejection::CommandCollision)?;
+        self.submit(actor, command, recorded_at_ms)?;
+        Ok(ScopedReceipt {
+            command_id: request.command_id().clone(),
+            share_id: reply.share_id.clone(),
+            snapshot_revision: reply.snapshot_revision,
+        })
     }
 
     /// Only the verified owner can retrieve the full text and share history.
