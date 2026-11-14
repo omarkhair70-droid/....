@@ -17,44 +17,53 @@ html[dir=ltr] textarea:placeholder-shown,html[dir=ltr] input:placeholder-shown{t
 @supports(field-sizing:content){.birth textarea,.work textarea,aside textarea{field-sizing:content;resize:none;max-height:65vh}.birth textarea{min-height:78px}.work textarea{min-height:132px}.thought textarea{min-height:88px}aside textarea{min-height:92px}}
 @media(max-width:480px){.work-layout{margin-block-start:40px}}
 
-/* One in-world composition for review: a temporal relation, not a new dashboard. */
-.study-link,.study-origin a{font-size:.8rem;color:var(--blue);text-underline-offset:4px;padding:.45rem .35rem;min-height:44px;display:inline-flex;align-items:center}
-body.formation-present{background:#efede5;color:#26312d}
-body.formation-present header{min-height:80px;padding-block:18px}
+
+/* The proposed work is the composition. Art direction in active review. */
+.study-link,.atelier-top a{font-size:.77rem;color:var(--blue);text-underline-offset:4px;padding:.45rem .35rem;min-height:44px;display:inline-flex;align-items:center}
+body.formation-present{background:#f4f1e9;color:#292d27}
+body.formation-present header{min-height:52px;padding-block:6px}
+body.formation-present header .signature{display:none}
+body.formation-present header nav{margin-inline-start:auto}
+body.formation-present main{padding:0 clamp(14px,3vw,46px) 42px;max-width:1480px}
 body.formation-present #status{display:none}
-.formation-study{max-width:1160px;margin:0 auto;padding-block:30px 60px;font-size:17px}
-.study-origin{display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:13px;color:#525b51;border-block-end:1px solid #c4c5b9;padding-block-end:8px}
-.study-heading{max-width:720px;margin-block:40px 38px}
-.study-heading>p:first-child{font-size:13px;letter-spacing:.07em;color:#525b51;margin:0 0 15px}
-.study-heading>h1{font-size:clamp(34px,4.35vw,58px);line-height:1.24;font-weight:500;margin:0 0 20px;letter-spacing:-.025em}
-.study-heading>p:last-child{font-size:18px;max-width:58ch;line-height:1.75;margin:0;color:#49534c}
-.composition{display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(20px,6vw,88px);align-items:start}
-.material-title{display:flex;gap:15px;align-items:start;border-block-start:2px solid #8e5e3e;padding-block-start:18px;min-width:0}
-.second-material{border-color:#46746c}
-.material-index{font-variant-numeric:tabular-nums;font-size:14px;color:#525b51}
-.material-title h2{font-size:clamp(20px,2vw,25px);margin:0 0 4px;font-weight:500}
-.material-title p{font-size:14px;margin:0;color:#525b51}
-#formation-field{display:block;width:100%;grid-column:1/-1;margin-block:12px 0;overflow:visible;direction:ltr;touch-action:pan-y}
-.material-a{fill:#a8714d;fill-opacity:.86}
-.material-b{fill:#54857b;fill-opacity:.88}
-.meeting{fill:#d4a849;fill-opacity:.86}
-.work-aperture{stroke:#26312d;stroke-width:1.4;stroke-dasharray:5 5;fill:#26312d;fill-opacity:.035;pointer-events:none}
-.aperture-edge{stroke:#26312d;stroke-width:2;fill:none;pointer-events:none}
-.field-ticks line{stroke:#c4c5b9;stroke-width:1}
-.time-labels text{fill:#525b51;font:11px system-ui,sans-serif;text-anchor:middle}
-.field-handle{cursor:ew-resize;touch-action:none}
-.field-handle rect{fill:#26312d}
-.field-handle path{stroke:#efede5;stroke-width:1.6;pointer-events:none}
-.temporal-edit{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,6vw,88px);padding-block:8px 32px;border-block-end:1px solid #c4c5b9}
-.time-control{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;font-size:14px}
-.time-control output{font-variant-numeric:tabular-nums;font-weight:600}
-.time-control input[type=range]{grid-column:1/-1;accent-color:#26312d;border:none;padding:0;min-height:44px;cursor:ew-resize}
-.emerged{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,6vw,88px);padding-block:28px 20px;align-items:start}
-.emerged-caption{font-size:13px;color:#525b51;margin:0 0 5px}
-.emerged h2{font-size:clamp(24px,3vw,38px);line-height:1.35;margin:0;max-width:22ch}
-.emerged p{margin-block:0 10px;line-height:1.65}
-.emerged[data-fits=false] h2{color:#844817}
-.study-foot{grid-column:1/-1;display:flex;justify-content:space-between;gap:16px;align-items:start;border-block-start:1px solid #c4c5b9;padding-block-start:12px}
-.study-foot p{font-size:13px;color:#525b51;max-width:66ch;margin:6px 0}
-.study-foot button{white-space:normal;text-align:start;font-size:14px;padding:6px 0}
-@media(max-width:600px){.formation-study{padding-block:6px 32px}.study-heading{margin-block:26px}.composition{column-gap:16px}.material-title{gap:7px}.material-title h2{font-size:19px}.material-title p{font-size:13px}.material-index{font-size:12px}.temporal-edit{grid-template-columns:1fr;gap:10px}.emerged{grid-template-columns:1fr;gap:10px;padding-block:20px}.study-foot{flex-direction:column}.time-labels text{font-size:19px}#formation-field{margin-block:12px}}
+.formation-study{max-width:1320px;margin:auto;font-size:16px}
+.atelier-top{display:flex;align-items:end;justify-content:space-between;gap:12px;padding:8px 0 16px}
+.atelier-top p{font-size:12px;color:#5c5f53;margin:0 0 3px}
+.atelier-top h1{font-size:clamp(26px,3vw,40px);line-height:1.26;font-weight:500;margin:0;letter-spacing:-.03em}
+.atelier-top a{color:#4a5043;flex-shrink:0}
+.atelier-world{position:relative;background:#dfdacf;overflow:hidden}
+#exhibition{display:block;width:100%;height:auto;max-height:65vh;min-height:250px;direction:ltr;touch-action:manipulation}
+.atelier-instruction{font-size:13px;color:#4b5147;margin:0;padding:9px 16px;border-top:1px solid #bcb5a7;background:#eae6dc}
+#architecture .surface{cursor:pointer}
+#architecture .surface:focus-visible .surface-top{stroke:#244fa8;stroke-width:3}
+.surface-top{fill:#f1ebdc;stroke:#a59d8d;stroke-width:1}
+.surface-face{fill:url(#plinth-front);stroke:#a59d8d;stroke-width:1}
+.surface-side{fill:#b6ad9b;stroke:#a59d8d;stroke-width:1}
+.surface-number{font:12px system-ui,sans-serif;fill:#4c4b41;text-anchor:middle}
+.slot-marker{fill:none;stroke:#8b8475;stroke-width:1;stroke-dasharray:3 3;opacity:.64}
+.pot{cursor:pointer;outline:none}
+.pot .pick-ring{fill:none;stroke:#244fa8;stroke-width:2;opacity:0}
+.pot.selected .pick-ring,.pot:focus-visible .pick-ring{opacity:1}
+.pot.selected .piece-body{stroke:#244fa8;stroke-width:1.5}
+.pot .pot-shadow{fill:#504536;opacity:.17}
+.pot .rim{fill:#524a3c;stroke:#e2c9a6;stroke-width:1.1}
+.pot .seam{fill:none;stroke:#554338;stroke-opacity:.25;stroke-width:1}
+.exhibit-edit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.7fr) minmax(0,.8fr);gap:24px;padding:19px 0 18px;border-bottom:1px solid #ccc5b6;align-items:start}
+.small-label{font-size:12px;color:#5c5f53;letter-spacing:.03em;margin:0 0 5px}
+.selection h2,.atelier-context h2{font-size:22px;line-height:1.35;margin:0 0 6px;font-weight:500}
+.selection>p:last-child,.placement>p:last-child,.object-select label{font-size:13px;color:#51564a;margin:0}
+.placement-actions{display:flex;gap:4px 15px;flex-wrap:wrap}
+.placement-actions button{font-size:14px;min-height:44px;padding:3px 5px;color:#244fa8;border-bottom:1px solid #9ea8b8}
+.placement-actions button[aria-current=true]{color:#42473d;border-color:#42473d}
+.placement-actions button:disabled{color:#64685c;cursor:default;text-decoration:none;border-color:#bcb5a7}
+.object-select select{font:inherit;font-size:14px;color:inherit;background:transparent;border:1px solid #817e70;min-height:44px;width:100%;margin-top:4px}
+.atelier-context{display:grid;grid-template-columns:1fr 1fr;gap:40px;padding:22px 0 16px}
+.atelier-context p{margin:0 0 6px;font-size:14px}
+.circumstances .date-edits{display:grid;grid-template-columns:1fr 65px;gap:4px 10px;align-items:center;margin:8px 0}
+.date-edits input{font-size:15px;min-height:38px;max-width:65px;padding:0 3px}
+.date-edits label{font-size:13px;color:#51564a}
+#outcome-title[data-fits=false]{color:#884617}
+.atelier-foot{display:flex;justify-content:space-between;gap:16px;border-top:1px solid #ccc5b6;padding-top:10px;align-items:start}
+.atelier-foot p{font-size:12px;color:#51564a;margin:6px 0;max-width:70ch}
+.atelier-foot button{font-size:13px;text-align:start;flex-shrink:0}
+@media(max-width:680px){.atelier-top{align-items:start}.atelier-top a{font-size:12px}.atelier-top h1{font-size:26px}#exhibition{max-height:none;min-height:0}.exhibit-edit{grid-template-columns:1fr;gap:12px;padding:15px 0}.object-select{max-width:100%}.atelier-context{grid-template-columns:1fr;gap:18px}.atelier-foot{flex-direction:column;gap:2px}.atelier-foot button{padding-inline-start:0}.atelier-instruction{font-size:12px;padding:8px 10px}}

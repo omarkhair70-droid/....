@@ -22,62 +22,121 @@ $('locale').onclick=()=>{if(!commitTitle())return;if(contextOpen)closeContext();
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!e.isComposing&&contextOpen&&!$('memory').open){e.preventDefault();closeContext()}});
 translate();render();
 
-/* Design-mode scene: explicit fictional circumstances. Never writes to work memory. */
+
+/* A single evolving work in the existing review surface. Fictional, local only. */
 (() => {
   const scene = new URLSearchParams(location.search).get('scene') === 'formation';
-  const copy = {
-    ar:{entry:'شاهد التكوين',mark:'معاينة فنية • ظروف افتراضية',exit:'ارجع للكتابة المحلية',context:'شيء لم يكن موجودًا',title:'مجموعة خزف من ورشة إلى مساحة عرض',premise:'طرفان لا يعملان معًا بعد. لو التقت ظروفهما، يمكن أن يتكوّن عمل جديد. غيّر موعد العمل نفسه وشاهد ما يبقى ممكنًا.',a:'ورشة خزف',ad:'تصنيع القطع · الأيام 3 إلى 21',b:'مساحة عرض',bd:'استقبال المجموعة · الأيام 11 إلى 27',start:'بداية نافذة العمل (10 أيام)',duration:'أقل مدة يحتاجها العمل',caption:'مساحة اللقاء',yes:'الوقت يسمح بتكوين مشترك',no:'الوقت لا يكفي بعد',none:'لا يوجد لقاء زمني',reason:(available,need,gap)=>available>=need?available+' أيام مشتركة من أصل '+need+' مطلوبة.':available+' أيام مشتركة؛ ينقص العمل '+gap+' أيام.',limit:'التوقيت وحده ليس دليلًا على القدرة أو الموافقة. لم يتغير ظرف أي طرف.',note:'هذه حياة افتراضية داخل معاينة التصميم. لا جهات حقيقية، لا بحث أو إرسال، لا تغيير في أعمالك المحفوظة.',reset:'استعد الظرف الأصلي',day:n=>'يوم '+n,days:n=>n+' أيام'},
-    en:{entry:'See a formation',mark:'Art direction preview · fictional circumstances',exit:'Return to local writing',context:'Something that did not exist',title:'A ceramic collection, from studio to exhibition',premise:'Two independent parties do not yet work together. Their circumstances could make a new work possible. Move the work in time and see what remains possible.',a:'Ceramic studio',ad:'Making the pieces · days 3 to 21',b:'Exhibition space',bd:'Receiving the collection · days 11 to 27',start:'Start of the 10-day work window',duration:'Minimum duration needed',caption:'Where they meet',yes:'Time allows a shared work',no:'Not enough time yet',none:'No overlap in time',reason:(available,need,gap)=>available>=need?available+' shared days; '+need+' required.':available+' shared days; '+gap+' more needed.',limit:'Timing alone is not evidence of capability or consent. Neither party’s circumstances changed.',note:'Fictional life in the design preview. No real organizations, search, messages, or changes to your saved work.',reset:'Restore original circumstances',day:n=>'Day '+n,days:n=>n+' days'}
+  const copy={
+    ar:{entry:'شاهد العمل',mark:'عمل مقترح · معاينة فنية افتراضية',title:'أثر الطين',exit:'الكتابة المحلية',exhibit:'تصوّر معماري لمجموعة خزفية',instruction:'اختر قطعة، ثم اختر سطح العرض الذي تريد وضعها عليه. يمكنك أيضًا استخدام الأزرار تحت العمل.',selected:'القطعة التي بين يديك',place:'ضعها في',piece:'اختر قطعة',surfaces:['سطح ١','سطح ٢','سطح ٣','التحضير'],types:['إناء طويل','وعاء مستدير','إناء واسع'],location:(name)=>'موضعها: '+name,full:'هذا السطح ممتلئ. انقل قطعة منه أولًا.',moved:'تغير موضع القطعة؛ باقي العمل كما كان.',caption:'مجموعة خزفية مشتركة',outcome:'معرض من ورشة خزف إلى مساحة عرض',count:(n)=>n+' من 9 قطع في العرض · '+(9-n)+' في التحضير',studio:'الورشة · التصنيع من يوم 3 إلى 21',gallery:'مساحة العرض · الاستقبال من يوم 11 إلى 27',start:'بداية نافذة العمل (10 أيام)',duration:'أقل مدة مطلوبة بالأيام',fit:(n,k)=>n>=k?'التوقيت: '+n+' أيام مشتركة، تكفي للمدة المقترحة.':'التوقيت: '+n+' أيام مشتركة، ينقص '+(k-n)+' أيام.',invalid:'التوقيت: أدخل قيمًا صحيحة داخل الحدود.',disclaimer:'التكوين والأطراف افتراضية. المجسم تصور للترتيب لا مخططًا تنفيذيًا بمقياس حقيقي. لا اتفاق أو حجز أو إرسال، ولا تغيير في أعمالك المحفوظة.',reset:'استعد التكوين الأصلي'},
+    en:{entry:'See the work',mark:'Proposed work · fictional design preview',title:'Traces of clay',exit:'Local writing',exhibit:'Spatial composition for a ceramic collection',instruction:'Choose a piece, then the surface where it should live. You can also use the controls below the work.',selected:'The piece in your hands',place:'Place it on',piece:'Choose a piece',surfaces:['Plinth 1','Plinth 2','Plinth 3','Preparation'],types:['Tall vessel','Round vessel','Wide vessel'],location:name=>'Placement: '+name,full:'This surface is full. Move a piece away first.',moved:'The piece moved; the rest of the work remains.',caption:'A shared ceramic collection',outcome:'An exhibition from a studio to a gallery',count:n=>n+' of 9 pieces on display · '+(9-n)+' in preparation',studio:'Studio · production days 3–21',gallery:'Gallery · reception days 11–27',start:'Start of the 10-day work window',duration:'Minimum duration in days',fit:(n,k)=>n>=k?'Timing: '+n+' shared days, sufficient for the proposed duration.':'Timing: '+n+' shared days; '+(k-n)+' more needed.',invalid:'Timing: enter valid values within the limits.',disclaimer:'The composition and parties are fictional. The spatial representation is illustrative, not a construction plan to scale. No agreement, booking, sending, or change to saved work.',reset:'Restore original composition'}
   };
-  const start = $('study-start'), duration = $('study-duration'), field = $('formation-field');
-  const x = day => 32 + (day-1)/30*736;
-  const band = (a,b,y) => 'M'+x(a)+' '+(y-22)+' H'+x(b)+' V'+(y+22)+' H'+x(a)+' Z';
-  const NS='http://www.w3.org/2000/svg';
-  const set = (id,attr,value)=>$(id).setAttribute(attr,String(value));
-  function translateStudy(){
+  const ns='http://www.w3.org/2000/svg', svg=$('exhibition'), pieces=$('ceramics'), architecture=$('architecture');
+  const make=(name,attrs,parent)=>{const n=document.createElementNS(ns,name);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));if(parent)parent.append(n);return n};
+  const original=[[0,0],[0,1],[1,0],[1,1],[1,2],[2,0],[2,1],[3,0],[3,1]];
+  const specs=[
+    {kind:0,glaze:0,h:119,w:51},{kind:1,glaze:2,h:84,w:63},{kind:2,glaze:1,h:60,w:73},
+    {kind:0,glaze:2,h:132,w:49},{kind:1,glaze:0,h:86,w:61},{kind:2,glaze:2,h:55,w:74},
+    {kind:0,glaze:1,h:106,w:49},{kind:1,glaze:1,h:78,w:64},{kind:2,glaze:0,h:58,w:72}
+  ];
+  let positions=original.map(p=>[...p]),chosen=7,notice='',locations=[];
+  const pots=[],surfaces=[],btns=[],options=[];
+  const narrow=matchMedia('(max-width:680px)');
+  function label(i){const c=copy[lang];return c.types[specs[i].kind]+' · '+String(i+1).padStart(2,'0')}
+  function put(target){
+    const before=positions[chosen];if(before[0]===target)return;
+    const used=new Set(positions.filter(p=>p[0]===target).map(p=>p[1]));
+    const limit=target===3?9:3;
+    let spot=0;while(spot<limit&&used.has(spot))spot++;
+    if(spot===limit){notice='full';refresh();return}
+    positions[chosen]=[target,spot];notice='moved';refresh();
+  }
+  function choose(i){chosen=i;notice='';refresh()}
+  function action(node,fn){node.addEventListener('click',fn);node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fn()}})}
+  for(let i=0;i<4;i++){
+    const g=make('g',{class:'surface',role:'button',tabindex:0,'data-surface':i},architecture);
+    const shadow=make('ellipse',{fill:'#625849',opacity:'.16'},g);
+    const face=make('path',{class:'surface-face'},g),side=make('path',{class:'surface-side'},g),top=make('path',{class:'surface-top'},g);
+    const slots=[];for(let j=0;j<(i===3?9:3);j++)slots.push(make('ellipse',{class:'slot-marker',rx:20,ry:6},g));
+    const number=make('text',{class:'surface-number'},g);
+    surfaces.push({g,shadow,face,side,top,slots,number});
+    action(g,()=>put(i));
+    const btn=document.createElement('button');btn.type='button';btn.dataset.destination=String(i);btn.addEventListener('click',()=>put(i));$('place-actions').append(btn);btns.push(btn)
+  }
+  for(let i=0;i<specs.length;i++){
+    const p=specs[i],w=p.w/2,h=p.h, kind=p.kind;
+    const g=make('g',{class:'pot',role:'button',tabindex:0,'data-piece':String(i+1)},pieces);
+    make('ellipse',{class:'pot-shadow',cx:5,cy:2,rx:w+8,ry:9},g);
+    make('ellipse',{class:'pick-ring',cx:0,cy:2,rx:w+7,ry:11},g);
+    const neck=kind===0?7:kind===1?14:w*.75;
+    const d=kind===0
+      ?'M'+(-neck)+' '+(-h)+' C'+(-neck-2)+' '+(-h*.72)+' '+(-w)+' '+(-h*.79)+' '+(-w)+' '+(-h*.43)+' C'+(-w)+' '+(-h*.13)+' '+(-w*.59)+' 0 0 0 C'+(w*.59)+' 0 '+w+' '+(-h*.13)+' '+w+' '+(-h*.43)+' C'+w+' '+(-h*.79)+' '+(neck+2)+' '+(-h*.72)+' '+neck+' '+(-h)+' Z'
+      :kind===1
+      ?'M'+(-neck)+' '+(-h)+' C'+(-w*.75)+' '+(-h*.87)+' '+(-w)+' '+(-h*.71)+' '+(-w)+' '+(-h*.42)+' C'+(-w)+' '+(-h*.09)+' '+(-w*.5)+' 0 0 0 C'+(w*.5)+' 0 '+w+' '+(-h*.09)+' '+w+' '+(-h*.42)+' C'+w+' '+(-h*.71)+' '+(w*.75)+' '+(-h*.87)+' '+neck+' '+(-h)+' Z'
+      :'M'+(-w)+' '+(-h)+' C'+(-w*.98)+' '+(-h*.42)+' '+(-w*.55)+' 0 0 0 C'+(w*.55)+' 0 '+(w*.98)+' '+(-h*.42)+' '+w+' '+(-h)+' Z';
+    make('path',{class:'piece-body',d,fill:'url(#clay-'+p.glaze+')',stroke:'#64503e','stroke-width':'.65'},g);
+    make('ellipse',{class:'rim',cx:0,cy:-h,rx:kind===2?w:neck,ry:kind===2?8:4.5},g);
+    if(kind!==2)for(const v of [.34,.41,.48])make('path',{class:'seam',d:'M'+(-w*.76)+' '+(-h*v)+' Q0 '+(-h*v+6)+' '+(w*.76)+' '+(-h*v)},g);
+    pots.push(g);action(g,()=>choose(i));
+    const opt=document.createElement('option');opt.value=String(i);$('piece-select').append(opt);options.push(opt);
+  }
+  function geometry(){
+    const mobile=narrow.matches;
+    const W=mobile?490:1080,H=mobile?720:560;
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    $('room-wall').setAttribute('width',W);$('room-wall').setAttribute('height',H);
+    $('room-floor').setAttribute('d','M0 '+(mobile?160:256)+'H'+W+'V'+H+'H0Z');
+    locations=mobile?[[125,232,210],[365,232,210],[245,436,265],[245,646,435]]:[[205,281,290],[540,281,290],[875,281,290],[540,486,690]];
+    surfaces.forEach((s,i)=>{
+      const [cx,y,width]=locations[i],x=cx-width/2,depth=i===3?30:39,height=i===3?22:76,slant=17,front=y+depth;
+      s.shadow.setAttribute('cx',cx+12);s.shadow.setAttribute('cy',front+height+7);s.shadow.setAttribute('rx',width*.55);s.shadow.setAttribute('ry',17);
+      s.face.setAttribute('d','M'+x+' '+front+'H'+(x+width)+'V'+(front+height)+'H'+x+'Z');
+      s.side.setAttribute('d','M'+(x+width)+' '+front+'l'+slant+' '+(-depth)+'v'+height+'l'+(-slant)+' '+depth+'Z');
+      s.top.setAttribute('d','M'+x+' '+front+'l'+slant+' '+(-depth)+'H'+(x+width+slant)+'l'+(-slant)+' '+depth+'Z');
+      s.number.setAttribute('x',cx);s.number.setAttribute('y',front+height/2+4);
+      s.slots.forEach((node,j)=>{const [px,py]=point(i,j);node.setAttribute('cx',px);node.setAttribute('cy',py)});
+    });
+    refresh();
+  }
+  function point(surface,slot){
+    const [cx,y,w]=locations[surface],limit=surface===3?9:3;
+    return [cx-w/2+12+(slot+.5)*(w-16)/limit,y+(surface===3?17:20)];
+  }
+  function validTime(input){if(input.value.trim()==='')return null;const v=Number(input.value);return Number.isInteger(v)&&v>=Number(input.min)&&v<=Number(input.max)?v:null}
+  function time(){
+    const c=copy[lang],s=validTime($('study-start')),k=validTime($('study-duration')),out=$('outcome-title');
+    if(s===null||k===null){out.textContent=c.invalid;out.dataset.fits='false';return}
+    const days=Math.max(0,Math.min(21,27,s+10)-Math.max(3,11,s));
+    out.textContent=c.fit(days,k);out.dataset.fits=String(days>=k);
+  }
+  function translateScene(){
     const c=copy[lang];$('study-open').textContent=c.entry;
     if(!scene)return;
-    for(const [id,k] of Object.entries({'study-mark':'mark','study-exit':'exit','study-context':'context','formation-title':'title','study-premise':'premise','party-a':'a','party-a-detail':'ad','party-b':'b','party-b-detail':'bd','start-label':'start','duration-label':'duration','outcome-caption':'caption','outcome-limit':'limit','study-disclaimer':'note','study-reset':'reset'}))$(id).textContent=c[k];
+    for(const [id,key] of Object.entries({'study-mark':'mark','formation-title':'title','study-exit':'exit','exhibition-label':'exhibit','scene-instruction':'instruction','selected-label':'selected','place-label':'place','piece-label':'piece','work-caption':'caption','work-outcome':'outcome','party-a-detail':'studio','party-b-detail':'gallery','start-label':'start','duration-label':'duration','study-disclaimer':'disclaimer','study-reset':'reset'}))$(id).textContent=c[key];
   }
-  function draw(){
-    const c=copy[lang],s=Number(start.value),end=s+10,need=Number(duration.value);
-    const left=Math.max(3,11,s),right=Math.min(21,27,end),available=Math.max(0,right-left),gap=Math.max(0,need-available);
-    const fit=available>=need;
-    // The original party bands never move. The shared shape is the exact
-    // intersection of the three intervals; no decorative growth or invented event.
-    set('material-a','d',band(3,21,80));set('material-b','d',band(11,27,202));
-    const shape=available>0?'M'+x(left)+' 102 H'+x(right)+' V180 H'+x(left)+' Z':'';
-    set('meeting','d',shape);set('meeting-grain','d',shape);
-    set('work-aperture','x',x(s));set('work-aperture','width',x(end)-x(s));
-    set('aperture-edge','d','M'+x(s)+' 258 V270 H'+x(end)+' V258');
-    set('handle','transform','translate('+((x(s)+x(end))/2)+' 0)');
-    $('start-value').textContent=c.day(s);$('duration-value').textContent=c.days(need);
-    const outcome=$('emerged');outcome.dataset.fits=String(fit);
-    $('outcome-title').textContent=fit?c.yes:available?c.no:c.none;
-    $('outcome-reason').textContent=c.reason(available,need,gap);
+  function refresh(){
+    if(!scene||!locations.length)return;
+    const c=copy[lang];
+    const counts=[0,0,0,0];positions.forEach(p=>counts[p[0]]++);
+    for(let i=0;i<pots.length;i++){
+      const [place,slot]=positions[i], [x,y]=point(place,slot);
+      // Smaller preparation objects in the visual staging area; not a scale drawing.
+      const scale=place===3?(narrow.matches?.62:.84):(narrow.matches?.83:1);
+      const g=pots[i];g.setAttribute('transform','translate('+x+' '+y+') scale('+scale+')');g.dataset.place=String(place);g.classList.toggle('selected',i===chosen);g.setAttribute('aria-pressed',String(i===chosen));g.setAttribute('aria-label',label(i)+' — '+c.surfaces[place]);options[i].textContent=label(i);
+    }
+    surfaces.forEach((s,i)=>{s.number.textContent=i===3?'…':String(i+1).padStart(2,'0');s.g.setAttribute('aria-label',c.surfaces[i]);s.slots.forEach((node,j)=>{node.style.visibility=positions.some(p=>p[0]===i&&p[1]===j)?'hidden':'visible'})});
+    btns.forEach((btn,i)=>{btn.textContent=c.surfaces[i]+' · '+counts[i]+(i===3?'':'/3');btn.setAttribute('aria-current',String(positions[chosen][0]===i));btn.disabled=positions[chosen][0]===i});
+    $('piece-select').value=String(chosen);$('selected-piece').textContent=label(chosen);$('selected-location').textContent=c.location(c.surfaces[positions[chosen][0]]);
+    $('placement-status').textContent=notice?c[notice]:'';
+    $('work-count').textContent=c.count(9-counts[3]);time();
   }
   function activate(){
-    if(!scene){translateStudy();return}
-    document.body.classList.add('formation-present');
-    $('birth').hidden=true;$('living').hidden=true;$('recall').hidden=true;$('study-open').hidden=true;
-    $('formation-study').hidden=false;
-    translateStudy();draw();
+    translateScene();if(!scene)return;
+    document.body.classList.add('formation-present');$('birth').hidden=true;$('living').hidden=true;$('recall').hidden=true;$('study-open').hidden=true;$('formation-study').hidden=false;
+    geometry();
   }
-  for(const day of [1,6,11,16,21,26,31]){
-    const tick=document.createElementNS(NS,'line');tick.setAttribute('x1',x(day));tick.setAttribute('x2',x(day));tick.setAttribute('y1','26');tick.setAttribute('y2','258');$('field-ticks').append(tick);
-    const label=document.createElementNS(NS,'text');label.setAttribute('x',x(day));label.setAttribute('y','18');label.textContent=String(day);$('time-labels').append(label);
-  }
-  start.addEventListener('input',draw);duration.addEventListener('input',draw);
-  $('study-reset').addEventListener('click',()=>{start.value='9';duration.value='7';draw()});
-  let dragging=null;
-  function coordinate(e){
-    const m=field.getScreenCTM();if(!m)return null;
-    return new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse()).x;
-  }
-  const grip=$('handle');
-  grip.addEventListener('pointerdown',event=>{if(event.button!==0)return;const pos=coordinate(event);if(pos===null)return;dragging={id:event.pointerId,offset:pos-x(Number(start.value))};grip.setPointerCapture(event.pointerId);event.preventDefault()});
-  grip.addEventListener('pointermove',event=>{if(!dragging||event.pointerId!==dragging.id)return;const pos=coordinate(event);if(pos===null)return;start.value=String(Math.max(1,Math.min(21,Math.round((pos-dragging.offset-32)/736*30+1))));draw()});
-  for(const type of ['pointerup','pointercancel','lostpointercapture'])grip.addEventListener(type,()=>{dragging=null});
-  $('locale').addEventListener('click',activate);
+  $('piece-select').addEventListener('change',()=>choose(Number($('piece-select').value)));
+  $('study-start').addEventListener('input',time);$('study-duration').addEventListener('input',time);
+  $('study-reset').addEventListener('click',()=>{positions=original.map(p=>[...p]);chosen=7;notice='';$('study-start').value='9';$('study-duration').value='7';refresh()});
+  $('locale').addEventListener('click',activate);narrow.addEventListener('change',()=>{if(scene)geometry()});
   activate();
 })();
