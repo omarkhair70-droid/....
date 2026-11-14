@@ -804,6 +804,7 @@ name = "world-memory"
 version = "0.1.0"
 dependencies = [
  "postgres",
+ "serde_json",
  "world-kernel",
  "world-language",
 ]

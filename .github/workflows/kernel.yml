@@ -20,12 +20,8 @@ jobs:
           rustup show
           rustc --version
           cargo --version
-      - name: Update workspace lock and record generated lock
-        run: |
-          cargo fetch
-          echo 'BEGIN_CARGO_LOCK'
-          cat Cargo.lock
-          echo 'END_CARGO_LOCK'
+      - name: Fetch locked dependencies
+        run: cargo fetch --locked
       - name: Test
         run: cargo test --workspace --locked
       - name: Lint
@@ -85,5 +81,5 @@ jobs:
           WORLD_TEST_DATABASE_URL: postgres://world_runtime:synthetic-ci-runtime@127.0.0.1:${{ job.services.postgres.ports[5432] }}/world_ci
           WORLD_TEST_ADMIN_URL: postgres://world_migrator:synthetic-ci-admin@127.0.0.1:${{ job.services.postgres.ports[5432] }}/world_ci
         run: |
-          cargo fetch
+          cargo fetch --locked
           cargo test -p world-memory --locked --test postgres -- --ignored

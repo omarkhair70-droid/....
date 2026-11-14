@@ -54,26 +54,52 @@ fn assert_access_boundary(mem: &mut Memory) {
     assert_eq!(owner.body["body"], "Private");
     let denied = access.handle("synthetic-recipient", Request::OwnerView(WORK), 5);
     assert_eq!(denied.status, 404);
-    let missing = access.handle("synthetic-recipient", Request::OwnerView(id(99).as_str()), 5);
+    let missing = access.handle(
+        "synthetic-recipient",
+        Request::OwnerView(id(99).as_str()),
+        5,
+    );
     assert_eq!(denied.body, missing.body);
     let unauth = access.handle("invalid", Request::OwnerCommand("not json"), 5);
     assert_eq!(unauth.status, 401);
     let outage = access.handle("synthetic-outage", Request::OwnerView(WORK), 5);
     assert_eq!(outage.status, 503);
 
-    let request = || Request::SharedView { work: WORK, share: SHARE };
+    let request = || Request::SharedView {
+        work: WORK,
+        share: SHARE,
+    };
     let scoped = access.handle("synthetic-recipient", request(), 5);
     assert_eq!(scoped.status, 200);
     assert_eq!(scoped.body["scope_text"], "Discussion");
-    let mut keys: Vec<_> = scoped.body.as_object().unwrap().keys().map(String::as_str).collect();
+    let mut keys: Vec<_> = scoped
+        .body
+        .as_object()
+        .unwrap()
+        .keys()
+        .map(String::as_str)
+        .collect();
     keys.sort_unstable();
-    assert_eq!(keys, ["responses", "scope_text", "share_id", "snapshot_revision", "title"]);
+    assert_eq!(
+        keys,
+        [
+            "responses",
+            "scope_text",
+            "share_id",
+            "snapshot_revision",
+            "title"
+        ]
+    );
     assert!(!scoped.body.to_string().contains("Private"));
     let stranger = access.handle("synthetic-stranger", request(), 5);
     assert_eq!(stranger.status, 404);
     assert_eq!(stranger.body, denied.body);
 
-    let spoof = SCOPED_RAW.replacen("{", r#"{"actor_id":"00000000-0000-4000-8000-000000000002","#, 1);
+    let spoof = SCOPED_RAW.replacen(
+        "{",
+        r#"{"actor_id":"00000000-0000-4000-8000-000000000002","#,
+        1,
+    );
     let blocked = access.handle("synthetic-stranger", Request::ScopedReply(&spoof), 5);
     assert_eq!(blocked.status, 400);
     let stranger_reply = access.handle("synthetic-stranger", Request::ScopedReply(SCOPED_RAW), 5);
@@ -181,7 +207,14 @@ fn durable_history_scoped_access_and_concurrent_writes() {
         let mut access = Access::new(&mut mem, &FixtureVerifier);
         let retry = access.handle("synthetic-recipient", Request::ScopedReply(SCOPED_RAW), 7);
         assert_eq!(retry.status, 404);
-        let view = access.handle("synthetic-recipient", Request::SharedView { work: WORK, share: SHARE }, 7);
+        let view = access.handle(
+            "synthetic-recipient",
+            Request::SharedView {
+                work: WORK,
+                share: SHARE,
+            },
+            7,
+        );
         assert_eq!(view.status, 404);
         assert_eq!(retry.body, view.body);
     }
