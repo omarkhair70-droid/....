@@ -1,0 +1,37 @@
+name: World kernel
+on:
+  push:
+    branches: ["production/kernel-foundation"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  kernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Toolchain
+        run: |
+          rustup show
+          rustc --version
+          cargo --version
+      - name: Resolve dependencies
+        run: |
+          if [ ! -f Cargo.lock ]; then cargo generate-lockfile; fi
+      - name: Test
+        run: cargo test --workspace --locked
+      - name: Lint
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
+  formatting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - run: cargo fmt --all -- --check
