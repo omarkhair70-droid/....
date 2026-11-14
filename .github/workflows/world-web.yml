@@ -29,7 +29,7 @@ jobs:
           profile="$(mktemp -d)"
           "$browser" --headless --no-sandbox --disable-dev-shm-usage --user-data-dir="$profile" --virtual-time-budget=10000 --dump-dom http://127.0.0.1:8765/tests/browser.html > /tmp/world-web-result.html
           cat /tmp/world-web-result.html
-          grep -F 'PASS: local workflow, isolation, restore, RTL/LTR, 320px' /tmp/world-web-result.html
+          grep -F 'PASS: local world, exact disclosure, distinct contributions, continuity, RTL/LTR, 320px' /tmp/world-web-result.html
       - name: Capture actual browser surfaces
         run: |
           mkdir -p visual
