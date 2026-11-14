@@ -3,6 +3,7 @@
 #![forbid(unsafe_code)]
 
 pub mod formation;
+pub mod knowledge;
 
 use std::collections::{BTreeMap, BTreeSet};
 use world_language::{Id, MAX_REVISION};
