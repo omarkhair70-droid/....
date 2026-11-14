@@ -1,10 +1,11 @@
 //! Deterministic composition semantics over already authorized evidence.
-//! No retrieval, identity resolution, model call, commitment or world mutation.
+//! No external retrieval, identity verification, model call, commitment or world mutation.
 #![forbid(unsafe_code)]
 
 pub mod archive;
 pub mod formation;
 pub mod knowledge;
+pub mod retrieval;
 
 use std::collections::{BTreeMap, BTreeSet};
 use world_language::{Id, MAX_REVISION};
