@@ -12,3 +12,6 @@ Bounds: 10k evidence, 1k candidates, 32 requirements and 16 roles each; text len
 
 ## Verification
 Six synthetic Rust tests cover four knowledge states, expiry/future activation, scoped evidence and identity rejection, optional conditions, idempotent replay, targeted invalidation and comparison against full recomputation over fixed-seed changes. New tests have not run at authoring time. No new third-party dependencies; Cargo must add workspace metadata to the lockfile. CI temporarily resolves with cargo fetch and emits the generated lock for capture, then restore locked mode. Prior identity/retention/backup/security gates remain open; no real data, merge or deployment.
+
+## Verification checkpoint
+Source head ba4bc86956952c49c390bf98208f4a88792922f4, run 43646582555: all six new composition tests and sixteen existing non-database tests passed (22 total), including fixed-seed incremental/full recomputation equivalence. Schema and Clippy passed. Applied all eight hunks directly from rustfmt job 132605643807 and copied the 91-entry generated lock from kernel job 132605643802. Restored locked builds. The corrected head requires a fresh run; prior database and authority boundary production gates remain open. No real evidence, external model or deployment.

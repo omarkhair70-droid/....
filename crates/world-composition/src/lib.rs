@@ -184,7 +184,10 @@ impl Engine {
             || !candidate.requirements.iter().any(|r| r.hard)
             || unique.len() != candidate.requirements.len()
             || roles.len() != candidate.roles.len()
-            || candidate.roles.iter().any(|r| !valid_text(&r.proposed_role, 240))
+            || candidate
+                .roles
+                .iter()
+                .any(|r| !valid_text(&r.proposed_role, 240))
         {
             return Err(Error::InvalidValue);
         }

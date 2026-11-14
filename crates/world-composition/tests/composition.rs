@@ -57,10 +57,16 @@ fn assert_consistent(engine: &Engine) {
 fn missing_and_conflicting_evidence_are_not_false() {
     let mut e = engine();
     e.register(candidate(10, &[100])).unwrap();
-    assert_eq!(e.evaluation(&id(10)).unwrap().conditions[0].knowledge, Knowledge::Unknown);
+    assert_eq!(
+        e.evaluation(&id(10)).unwrap().conditions[0].knowledge,
+        Knowledge::Unknown
+    );
     let yes = evidence(200, 100, Polarity::Supports);
     e.upsert(yes.clone()).unwrap();
-    assert_eq!(e.evaluation(&id(10)).unwrap().feasibility, Feasibility::SupportedUnderEvidence);
+    assert_eq!(
+        e.evaluation(&id(10)).unwrap().feasibility,
+        Feasibility::SupportedUnderEvidence
+    );
     let no = evidence(201, 100, Polarity::Opposes);
     e.upsert(no).unwrap();
     let v = e.evaluation(&id(10)).unwrap();
@@ -71,7 +77,10 @@ fn missing_and_conflicting_evidence_are_not_false() {
     withdrawn.revision = 2;
     withdrawn.withdrawn = true;
     e.upsert(withdrawn).unwrap();
-    assert_eq!(e.evaluation(&id(10)).unwrap().feasibility, Feasibility::BlockedUnderEvidence);
+    assert_eq!(
+        e.evaluation(&id(10)).unwrap().feasibility,
+        Feasibility::BlockedUnderEvidence
+    );
     assert_consistent(&e);
 }
 
@@ -101,10 +110,16 @@ fn time_windows_activate_and_expire_without_new_evidence() {
     dated.valid_until_ms = Some(30);
     assert!(e.upsert(dated).unwrap().changed.is_empty());
     assert_eq!(e.advance_to(20).unwrap().changed, vec![id(10)]);
-    assert_eq!(e.evaluation(&id(10)).unwrap().feasibility, Feasibility::SupportedUnderEvidence);
+    assert_eq!(
+        e.evaluation(&id(10)).unwrap().feasibility,
+        Feasibility::SupportedUnderEvidence
+    );
     assert!(e.advance_to(29).unwrap().evaluated.is_empty());
     assert_eq!(e.advance_to(30).unwrap().changed, vec![id(10)]);
-    assert_eq!(e.evaluation(&id(10)).unwrap().conditions[0].knowledge, Knowledge::Unknown);
+    assert_eq!(
+        e.evaluation(&id(10)).unwrap().conditions[0].knowledge,
+        Knowledge::Unknown
+    );
     assert_eq!(e.advance_to(29), Err(Error::InvalidValue));
     assert_consistent(&e);
 }
@@ -133,7 +148,10 @@ fn scope_version_and_identity_rejections_leave_state_unchanged() {
     let mut c = candidate(11, &[100]);
     c.scope = id(99);
     assert_eq!(e.register(c), Err(Error::ScopeMismatch));
-    assert_eq!(e.register(candidate(10, &[101])), Err(Error::IdentityConflict));
+    assert_eq!(
+        e.register(candidate(10, &[101])),
+        Err(Error::IdentityConflict)
+    );
     assert_eq!(e.recompute_all(), baseline);
     assert_consistent(&e);
 }
@@ -142,13 +160,19 @@ fn scope_version_and_identity_rejections_leave_state_unchanged() {
 fn optional_opposition_does_not_block_and_empty_conditions_are_invalid() {
     let mut e = engine();
     assert_eq!(e.register(candidate(10, &[])), Err(Error::InvalidValue));
-    assert_eq!(e.register(candidate(10, &[100, 100])), Err(Error::InvalidValue));
+    assert_eq!(
+        e.register(candidate(10, &[100, 100])),
+        Err(Error::InvalidValue)
+    );
     let mut c = candidate(10, &[100, 101]);
     c.requirements[1].hard = false;
     e.register(c).unwrap();
     e.upsert(evidence(200, 100, Polarity::Supports)).unwrap();
     e.upsert(evidence(201, 101, Polarity::Opposes)).unwrap();
-    assert_eq!(e.evaluation(&id(10)).unwrap().feasibility, Feasibility::Conditional);
+    assert_eq!(
+        e.evaluation(&id(10)).unwrap().feasibility,
+        Feasibility::Conditional
+    );
     assert_consistent(&e);
 }
 
@@ -164,7 +188,11 @@ fn incremental_results_match_recomputation_over_fixed_sequence() {
         let mut item = evidence(
             200 + n,
             100 + (seed >> 32) % 4,
-            if seed & 1 == 0 { Polarity::Supports } else { Polarity::Opposes },
+            if seed & 1 == 0 {
+                Polarity::Supports
+            } else {
+                Polarity::Opposes
+            },
         );
         item.valid_from_ms = n;
         item.valid_until_ms = Some(n + 20);
