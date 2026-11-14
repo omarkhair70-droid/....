@@ -2,6 +2,8 @@
 //! No transport, identity provider, external effects, or production credentials.
 #![forbid(unsafe_code)]
 
+pub mod access;
+
 use postgres::{Client, IsolationLevel, Transaction};
 use world_kernel::{Kernel, OwnerView, Receipt, Recorded, Rejection, ScopedReceipt, SharedView};
 use world_language::{Command, Id, Operation, ScopedReply, StoredCommand};
