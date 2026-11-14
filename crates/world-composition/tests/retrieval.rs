@@ -36,7 +36,10 @@ fn bilingual_search_preserves_exact_source_bytes_and_order() {
     let best = &result.hits[0];
     assert_eq!(best.matched_terms, 2);
     assert_eq!(best.citation.source, id(10));
-    assert_eq!(best.citation.excerpt, a.text[best.citation.start..best.citation.end]);
+    assert_eq!(
+        best.citation.excerpt,
+        a.text[best.citation.start..best.citation.end]
+    );
     assert!(!result.limited);
     let short = corpus.search(&grants, "engineering", 1).unwrap();
     assert!(short.limited);
@@ -64,36 +67,61 @@ fn long_unicode_sources_return_valid_bounded_original_spans() {
     let s = source(10, &text);
     let grant = grants(&[10]);
     let corpus = Corpus::new(&grant, vec![s]).unwrap();
-    let hit = corpus.search(&grant, "engineering", 4).unwrap().hits.pop().unwrap();
+    let hit = corpus
+        .search(&grant, "engineering", 4)
+        .unwrap()
+        .hits
+        .pop()
+        .unwrap();
     assert!(hit.citation.excerpt.len() <= 2048);
-    assert_eq!(hit.citation.excerpt, text[hit.citation.start..hit.citation.end]);
+    assert_eq!(
+        hit.citation.excerpt,
+        text[hit.citation.start..hit.citation.end]
+    );
 }
 
 #[test]
 fn name_and_exact_identifier_conflicts_never_merge_entities() {
     let all = grants(&[10, 11]);
     let only = grants(&[11]);
-    let mut corpus = Corpus::new(
-        &all,
-        vec![source(10, "شركة الأفق"), source(11, "شركة الافق")],
-    ).unwrap();
+    let mut corpus =
+        Corpus::new(&all, vec![source(10, "شركة الأفق"), source(11, "شركة الافق")]).unwrap();
     for hit in corpus.search(&all, "الافق", 4).unwrap().hits {
-        let entity = if hit.citation.source == id(10) { id(100) } else { id(101) };
-        corpus.add_hint(&all, IdentityHint {
-            entity,
-            scope: id(1),
-            name: hit.citation.excerpt.clone(),
-            identifier: Some(("registry:synthetic".into(), "123".into())),
-            citation: hit.citation,
-        }).unwrap();
+        let entity = if hit.citation.source == id(10) {
+            id(100)
+        } else {
+            id(101)
+        };
+        corpus
+            .add_hint(
+                &all,
+                IdentityHint {
+                    entity,
+                    scope: id(1),
+                    name: hit.citation.excerpt.clone(),
+                    identifier: Some(("registry:synthetic".into(), "123".into())),
+                    citation: hit.citation,
+                },
+            )
+            .unwrap();
     }
-    let result = corpus.identify(&all, IdentityQuery::Name("شركة الافق")).unwrap();
+    let result = corpus
+        .identify(&all, IdentityQuery::Name("شركة الافق"))
+        .unwrap();
     assert_eq!(result.entity_ids, vec![id(100), id(101)]);
-    let exact = corpus.identify(&all, IdentityQuery::Identifier {
-        namespace: "registry:synthetic", value: "123",
-    }).unwrap();
+    let exact = corpus
+        .identify(
+            &all,
+            IdentityQuery::Identifier {
+                namespace: "registry:synthetic",
+                value: "123",
+            },
+        )
+        .unwrap();
     assert_eq!(result.entity_ids, exact.entity_ids);
-    let visible = corpus.identify(&only, IdentityQuery::Name("شركة الافق")).unwrap();
+    let visible = corpus
+        .identify(&only, IdentityQuery::Name("شركة الافق"))
+        .unwrap();
     assert_eq!(visible.entity_ids, vec![id(101)]);
     assert_eq!(visible.hints.len(), 1);
 }
@@ -101,17 +129,36 @@ fn name_and_exact_identifier_conflicts_never_merge_entities() {
 #[test]
 fn invalid_source_or_fabricated_identity_excerpt_is_rejected() {
     let all = grants(&[10]);
-    assert!(matches!(Corpus::new(&all, vec![source(11, "hidden")]), Err(Error::Denied)));
+    assert!(matches!(
+        Corpus::new(&all, vec![source(11, "hidden")]),
+        Err(Error::Denied)
+    ));
     assert!(matches!(
         Corpus::new(&all, vec![source(10, "a"), source(10, "b")]),
         Err(Error::Duplicate)
     ));
     let mut corpus = Corpus::new(&all, vec![source(10, "name")]).unwrap();
-    let mut citation = corpus.search(&all, "name", 1).unwrap().hits.pop().unwrap().citation;
+    let mut citation = corpus
+        .search(&all, "name", 1)
+        .unwrap()
+        .hits
+        .pop()
+        .unwrap()
+        .citation;
     citation.excerpt = "fake".into();
-    assert_eq!(corpus.add_hint(&all, IdentityHint {
-        entity: id(100), scope: id(1), name: "name".into(), identifier: None, citation,
-    }), Err(Error::Invalid));
+    assert_eq!(
+        corpus.add_hint(
+            &all,
+            IdentityHint {
+                entity: id(100),
+                scope: id(1),
+                name: "name".into(),
+                identifier: None,
+                citation,
+            }
+        ),
+        Err(Error::Invalid)
+    );
     let mut foreign = grants(&[10]);
     foreign.scope = id(2);
     assert_eq!(corpus.search(&foreign, "name", 1), Err(Error::Scope));

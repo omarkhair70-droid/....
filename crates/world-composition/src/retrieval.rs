@@ -85,7 +85,10 @@ impl Corpus {
             if source.scope != grants.scope {
                 return Err(Error::Scope);
             }
-            if !grants.versions.contains(&(source.id.clone(), source.revision)) {
+            if !grants
+                .versions
+                .contains(&(source.id.clone(), source.revision))
+            {
                 return Err(Error::Denied);
             }
             if !(1..=MAX_REVISION).contains(&source.revision)
@@ -120,7 +123,9 @@ impl Corpus {
     }
 
     fn visible(&self, grants: &Grants, source: &Source) -> bool {
-        grants.versions.contains(&(source.id.clone(), source.revision))
+        grants
+            .versions
+            .contains(&(source.id.clone(), source.revision))
     }
 
     fn exact_citation(&self, grants: &Grants, citation: &Citation) -> Result<(), Error> {
@@ -204,9 +209,11 @@ impl Corpus {
         if hint.name.len() > MAX_QUERY_BYTES || tokens(&hint.name).is_empty() {
             return Err(Error::Invalid);
         }
-        if hint.identifier.as_ref().is_some_and(|(ns, val)| {
-            !valid_key(ns) || !valid_key(val)
-        }) {
+        if hint
+            .identifier
+            .as_ref()
+            .is_some_and(|(ns, val)| !valid_key(ns) || !valid_key(val))
+        {
             return Err(Error::Invalid);
         }
         if self.identities.contains(&hint) {
@@ -247,10 +254,10 @@ impl Corpus {
         };
         let mut hints = Vec::new();
         for hint in &self.identities {
-            if !grants.versions.contains(&(
-                hint.citation.source.clone(),
-                hint.citation.source_revision,
-            )) {
+            if !grants
+                .versions
+                .contains(&(hint.citation.source.clone(), hint.citation.source_revision))
+            {
                 continue;
             }
             let matches = match &query {
@@ -273,7 +280,10 @@ impl Corpus {
                 .then_with(|| a.name.cmp(&b.name))
                 .then_with(|| a.identifier.cmp(&b.identifier))
         });
-        let entity_ids = hints.iter().map(|h| h.entity.clone()).collect::<BTreeSet<_>>();
+        let entity_ids = hints
+            .iter()
+            .map(|h| h.entity.clone())
+            .collect::<BTreeSet<_>>();
         Ok(IdentityMatches {
             entity_ids: entity_ids.into_iter().collect(),
             hints,
