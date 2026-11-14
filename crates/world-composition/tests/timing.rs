@@ -56,7 +56,10 @@ fn fixture() -> (Goal, Vec<Offer>, Engine) {
 }
 
 fn budget() -> Budget {
-    Budget { nodes: 100, results: 10 }
+    Budget {
+        nodes: 100,
+        results: 10,
+    }
 }
 
 #[test]
@@ -71,10 +74,16 @@ fn direct_change_preserves_the_formation_and_original_conditions() {
     assert_eq!(preview.after.overlap, Some(window(50, 70)));
     assert!(!preview.after.fits);
     assert_eq!(preview.after.shortfall_ms, 5);
-    assert_eq!(preview.after.latest_start.origins, vec![Origin::ProposedWork]);
+    assert_eq!(
+        preview.after.latest_start.origins,
+        vec![Origin::ProposedWork]
+    );
     assert_eq!(
         preview.after.earliest_end.origins,
-        vec![Origin::Contribution { slot: id(11), offer: id(31) }]
+        vec![Origin::Contribution {
+            slot: id(11),
+            offer: id(31)
+        }]
     );
     assert_eq!(original.window(), window(40, 70));
     assert_eq!(original.candidate(id(80)), candidate);
@@ -91,7 +100,9 @@ fn absent_overlap_is_not_a_new_match_or_an_error_to_hide() {
     assert_eq!(preview.after.available_ms, 0);
     assert_eq!(preview.after.shortfall_ms, 20);
     assert!(!preview.after.fits);
-    let retry = original.preview_timing(goal.window, goal.minimum_duration_ms).unwrap();
+    let retry = original
+        .preview_timing(goal.window, goal.minimum_duration_ms)
+        .unwrap();
     assert_eq!(retry.before, retry.after);
     assert!(retry.after.fits);
 }
@@ -105,7 +116,10 @@ fn ties_preserve_all_limiting_conditions_and_are_deterministic() {
     offers.reverse();
     let b = engine.form(&goal, &offers, budget()).unwrap();
     let p = a.proposals[0].preview_timing(window(40, 70), 30).unwrap();
-    assert_eq!(p, b.proposals[0].preview_timing(window(40, 70), 30).unwrap());
+    assert_eq!(
+        p,
+        b.proposals[0].preview_timing(window(40, 70), 30).unwrap()
+    );
     assert_eq!(p.after.latest_start.origins.len(), 3);
     assert_eq!(p.after.earliest_end.origins.len(), 3);
     assert!(p.after.fits);
@@ -139,5 +153,11 @@ fn counterfactual_matches_full_reformation_for_fixed_assignment() {
         Err(Error::InvalidValue)
     );
     // Even an impossible requested duration is a meaningful exploration.
-    assert!(!original.preview_timing(window(10, 20), 30).unwrap().after.fits);
+    assert!(
+        !original
+            .preview_timing(window(10, 20), 30)
+            .unwrap()
+            .after
+            .fits
+    );
 }

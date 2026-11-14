@@ -126,7 +126,11 @@ impl Proposal {
 
     /// Explore a change in the proposed work's temporal conditions without
     /// replacing its identity, changing evidence or committing an action.
-    pub fn preview_timing(&self, window: Window, minimum_duration_ms: u64) -> Result<timing::Preview, Error> {
+    pub fn preview_timing(
+        &self,
+        window: Window,
+        minimum_duration_ms: u64,
+    ) -> Result<timing::Preview, Error> {
         self.timing.preview(&self.key, window, minimum_duration_ms)
     }
 
