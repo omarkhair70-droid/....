@@ -3,6 +3,7 @@
 #![forbid(unsafe_code)]
 
 pub mod access;
+pub mod expression;
 mod research;
 
 use postgres::{Client, IsolationLevel, Transaction};

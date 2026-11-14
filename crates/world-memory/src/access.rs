@@ -1,7 +1,7 @@
 //! Transport-independent request boundary. Only trusted server code supplies
 //! a verifier, a route and a recorded time. No production verifier is included.
 
-use crate::{Memory, MemoryError};
+use crate::{Memory, MemoryError, expression};
 use serde_json::{Value, json};
 use world_kernel::{OwnerView, Rejection, SharedView};
 use world_language::{Command, Id, ScopedReply};
@@ -23,6 +23,8 @@ pub enum Request<'a> {
     OwnerCommand(&'a str),
     ScopedReply(&'a str),
     OwnerView(&'a str),
+    OwnerExpression(&'a str),
+    SharedExpression { work: &'a str, share: &'a str },
     SharedView { work: &'a str, share: &'a str },
 }
 
@@ -83,6 +85,26 @@ impl<'a, V: IdentityVerifier> Access<'a, V> {
                         "share_id":receipt.share_id,
                         "snapshot_revision":receipt.snapshot_revision
                     })),
+                    Err(err) => memory_error(err),
+                }
+            }
+            Request::OwnerExpression(raw) => {
+                let Ok(work) = Id::parse(raw) else {
+                    return error(400, "invalid_request");
+                };
+                match self.memory.owner_view(&actor, &work) {
+                    Ok(Some(view)) => ok(expression::owner(&view)),
+                    Ok(None) => error(404, "not_found"),
+                    Err(err) => memory_error(err),
+                }
+            }
+            Request::SharedExpression { work, share } => {
+                let (Ok(work), Ok(share)) = (Id::parse(work), Id::parse(share)) else {
+                    return error(400, "invalid_request");
+                };
+                match self.memory.shared_view(&actor, &work, &share) {
+                    Ok(Some(view)) => ok(expression::shared(&view)),
+                    Ok(None) => error(404, "not_found"),
                     Err(err) => memory_error(err),
                 }
             }

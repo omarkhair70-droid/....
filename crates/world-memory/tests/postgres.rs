@@ -51,6 +51,36 @@ const SCOPED_RAW: &str = r#"{"schema_version":"0.1","command_id":"00000000-0000-
 
 fn assert_access_boundary(mem: &mut Memory) {
     let mut access = Access::new(mem, &FixtureVerifier);
+    let expressed = access.handle("synthetic-owner", Request::OwnerExpression(WORK), 5);
+    assert_eq!(expressed.status, 200);
+    assert_eq!(expressed.body["subject"]["kind"], "work");
+    let denied_expression = access.handle(
+        "synthetic-recipient",
+        Request::OwnerExpression(WORK),
+        5,
+    );
+    assert_eq!(denied_expression.status, 404);
+    let disclosed = access.handle(
+        "synthetic-recipient",
+        Request::SharedExpression {
+            work: WORK,
+            share: SHARE,
+        },
+        5,
+    );
+    assert_eq!(disclosed.status, 200);
+    assert_eq!(disclosed.body["subject"]["kind"], "disclosure");
+    assert!(disclosed.body.get("revision").is_none());
+    let outsider = access.handle(
+        "synthetic-stranger",
+        Request::SharedExpression {
+            work: WORK,
+            share: SHARE,
+        },
+        5,
+    );
+    assert_eq!(outsider.status, 404);
+    assert_eq!(outsider.body, denied_expression.body);
     let owner = access.handle("synthetic-owner", Request::OwnerView(WORK), 5);
     assert_eq!(owner.status, 200);
     assert_eq!(owner.body["body"], "Private");
