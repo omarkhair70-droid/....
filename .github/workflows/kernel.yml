@@ -20,14 +20,8 @@ jobs:
           rustup show
           rustc --version
           cargo --version
-      - name: Resolve dependencies
-        run: |
-          if [ ! -f Cargo.lock ]; then cargo generate-lockfile; fi
-      - name: Record generated dependency lock
-        run: |
-          echo 'BEGIN_CARGO_LOCK'
-          cat Cargo.lock
-          echo 'END_CARGO_LOCK'
+      - name: Fetch locked dependencies
+        run: cargo fetch --locked
       - name: Test
         run: cargo test --workspace --locked
       - name: Lint
