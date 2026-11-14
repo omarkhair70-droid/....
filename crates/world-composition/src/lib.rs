@@ -4,6 +4,7 @@
 
 pub mod archive;
 pub mod formation;
+pub mod ingestion;
 pub mod knowledge;
 pub mod retrieval;
 

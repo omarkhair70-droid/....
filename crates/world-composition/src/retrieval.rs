@@ -128,7 +128,7 @@ impl Corpus {
             .contains(&(source.id.clone(), source.revision))
     }
 
-    fn exact_citation(&self, grants: &Grants, citation: &Citation) -> Result<(), Error> {
+    pub(crate) fn exact_citation(&self, grants: &Grants, citation: &Citation) -> Result<(), Error> {
         self.check_scope(grants)?;
         if !grants
             .versions
