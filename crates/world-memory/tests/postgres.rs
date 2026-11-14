@@ -35,12 +35,20 @@ fn durable_history_scoped_access_and_concurrent_writes() {
     assert!(admin_url.contains("127.0.0.1:"));
     let mut admin = connection(&admin_url);
     let mut mem = Memory::new(connection(&runtime_url));
-    let create = command(100, 0, "CreateWork", r#"{"title":"Original","body":"Private"}"#);
+    let create = command(
+        100,
+        0,
+        "CreateWork",
+        r#"{"title":"Original","body":"Private"}"#,
+    );
     let first = mem.submit_owner(&id(1), create.clone(), 1).unwrap();
     drop(mem);
     let mut mem = Memory::new(connection(&runtime_url));
     assert_eq!(mem.submit_owner(&id(1), create, 99).unwrap(), first);
-    assert_eq!(mem.owner_view(&id(1), &id(10)).unwrap().unwrap().body, "Private");
+    assert_eq!(
+        mem.owner_view(&id(1), &id(10)).unwrap().unwrap().body,
+        "Private"
+    );
     assert!(mem.owner_view(&id(2), &id(10)).unwrap().is_none());
     let share = command(
         101,
@@ -70,13 +78,19 @@ fn durable_history_scoped_access_and_concurrent_writes() {
     let outcomes: Vec<_> = handles.into_iter().map(|h| h.join().unwrap()).collect();
     assert_eq!(outcomes.iter().filter(|r| r.is_ok()).count(), 1);
     assert_eq!(
-        outcomes.iter().filter(|r| **r == Err(MemoryError::Domain(Rejection::StaleRevision))).count(),
+        outcomes
+            .iter()
+            .filter(|r| **r == Err(MemoryError::Domain(Rejection::StaleRevision)))
+            .count(),
         1
     );
     let reply = ScopedReply::parse(
         r#"{"schema_version":"0.1","command_id":"00000000-0000-4000-8000-000000000110","work_id":"00000000-0000-4000-8000-00000000000a","payload":{"share_id":"00000000-0000-4000-8000-000000000014","snapshot_revision":1,"response":"request_change"}}"#,
     ).unwrap();
-    assert_eq!(mem.respond(&id(3), &reply, 4), Err(MemoryError::Domain(Rejection::Denied)));
+    assert_eq!(
+        mem.respond(&id(3), &reply, 4),
+        Err(MemoryError::Domain(Rejection::Denied))
+    );
     let receipt = mem.respond(&id(2), &reply, 4).unwrap();
     assert_eq!(receipt.snapshot_revision, 1);
     drop(mem);
@@ -88,25 +102,68 @@ fn durable_history_scoped_access_and_concurrent_writes() {
     assert!(mem.shared_view(&id(3), &id(10), &id(20)).unwrap().is_none());
     mem.submit_owner(
         &id(1),
-        command(120, 4, "RevokeShare", r#"{"share_id":"00000000-0000-4000-8000-000000000014"}"#),
+        command(
+            120,
+            4,
+            "RevokeShare",
+            r#"{"share_id":"00000000-0000-4000-8000-000000000014"}"#,
+        ),
         6,
-    ).unwrap();
+    )
+    .unwrap();
     assert!(mem.shared_view(&id(2), &id(10), &id(20)).unwrap().is_none());
-    assert_eq!(mem.respond(&id(2), &reply, 7), Err(MemoryError::Domain(Rejection::Denied)));
-    let count: i64 = admin.query_one("SELECT count(*) FROM world_private.events", &[]).unwrap().get(0);
+    assert_eq!(
+        mem.respond(&id(2), &reply, 7),
+        Err(MemoryError::Domain(Rejection::Denied))
+    );
+    let count: i64 = admin
+        .query_one("SELECT count(*) FROM world_private.events", &[])
+        .unwrap()
+        .get(0);
     assert_eq!(count, 5);
     let mut restricted = connection(&runtime_url);
-    assert!(restricted.execute("DELETE FROM world_private.events", &[]).is_err());
-    assert!(restricted.execute("UPDATE world_private.principals SET principal_id = principal_id", &[]).is_err());
+    assert!(
+        restricted
+            .execute("DELETE FROM world_private.events", &[])
+            .is_err()
+    );
+    assert!(
+        restricted
+            .execute(
+                "UPDATE world_private.principals SET principal_id = principal_id",
+                &[]
+            )
+            .is_err()
+    );
     // Inject an insert failure after successful domain admission, then prove
     // the transaction did not advance the cursor or publish new state.
-    admin.batch_execute("ALTER TABLE world_private.events ADD CONSTRAINT test_fail CHECK (seq < 6)").unwrap();
-    let next = command(121, 5, "ReviseWork", r#"{"title":"After failure","body":"Private"}"#);
-    assert_eq!(mem.submit_owner(&id(1), next.clone(), 8), Err(MemoryError::Database));
-    assert_eq!(mem.owner_view(&id(1), &id(10)).unwrap().unwrap().revision, 5);
-    admin.batch_execute("ALTER TABLE world_private.events DROP CONSTRAINT test_fail").unwrap();
+    admin
+        .batch_execute("ALTER TABLE world_private.events ADD CONSTRAINT test_fail CHECK (seq < 6)")
+        .unwrap();
+    let next = command(
+        121,
+        5,
+        "ReviseWork",
+        r#"{"title":"After failure","body":"Private"}"#,
+    );
+    assert_eq!(
+        mem.submit_owner(&id(1), next.clone(), 8),
+        Err(MemoryError::Database)
+    );
+    assert_eq!(
+        mem.owner_view(&id(1), &id(10)).unwrap().unwrap().revision,
+        5
+    );
+    admin
+        .batch_execute("ALTER TABLE world_private.events DROP CONSTRAINT test_fail")
+        .unwrap();
     assert_eq!(mem.submit_owner(&id(1), next, 8).unwrap().revision, 6);
     // Simulated privileged truncation: head/log mismatch must stop reads and writes.
-    admin.execute("DELETE FROM world_private.events WHERE seq = 6", &[]).unwrap();
-    assert!(matches!(mem.owner_view(&id(1), &id(10)), Err(MemoryError::CorruptHistory)));
+    admin
+        .execute("DELETE FROM world_private.events WHERE seq = 6", &[])
+        .unwrap();
+    assert!(matches!(
+        mem.owner_view(&id(1), &id(10)),
+        Err(MemoryError::CorruptHistory)
+    ));
 }

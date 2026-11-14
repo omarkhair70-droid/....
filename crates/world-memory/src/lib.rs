@@ -54,9 +54,7 @@ impl Memory {
             .build_transaction()
             .isolation_level(IsolationLevel::ReadCommitted)
             .start()?;
-        tx.batch_execute(
-            "SET LOCAL lock_timeout = '5s'; SET LOCAL statement_timeout = '15s';",
-        )?;
+        tx.batch_execute("SET LOCAL lock_timeout = '5s'; SET LOCAL statement_timeout = '15s';")?;
         // Every adapter operation takes the same lock before reading the log.
         // Read Committed gives later statements the latest committed version.
         let head: i64 = tx
