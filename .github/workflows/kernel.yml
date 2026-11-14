@@ -20,8 +20,12 @@ jobs:
           rustup show
           rustc --version
           cargo --version
-      - name: Fetch locked dependencies
-        run: cargo fetch --locked
+      - name: Update workspace lock and record generated lock
+        run: |
+          cargo fetch
+          echo 'BEGIN_CARGO_LOCK'
+          cat Cargo.lock
+          echo 'END_CARGO_LOCK'
       - name: Test
         run: cargo test --workspace --locked
       - name: Lint
@@ -75,11 +79,12 @@ jobs:
           CREATE ROLE world_runtime LOGIN PASSWORD 'synthetic-ci-runtime' NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
           SQL
           docker exec -i "$DB_CONTAINER" psql -v ON_ERROR_STOP=1 -U world_migrator -d world_ci < infra/postgres/001_world_memory.sql
+          docker exec -i "$DB_CONTAINER" psql -v ON_ERROR_STOP=1 -U world_migrator -d world_ci < infra/postgres/002_research_archives.sql
           docker exec -i "$DB_CONTAINER" psql -v ON_ERROR_STOP=1 -U world_migrator -d world_ci < infra/postgres/seed-ci.sql
       - name: Database integration
         env:
           WORLD_TEST_DATABASE_URL: postgres://world_runtime:synthetic-ci-runtime@127.0.0.1:${{ job.services.postgres.ports[5432] }}/world_ci
           WORLD_TEST_ADMIN_URL: postgres://world_migrator:synthetic-ci-admin@127.0.0.1:${{ job.services.postgres.ports[5432] }}/world_ci
         run: |
-          cargo fetch --locked
+          cargo fetch
           cargo test -p world-memory --locked --test postgres -- --ignored

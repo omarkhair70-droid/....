@@ -13,7 +13,8 @@ const MAX_CLAIMS: usize = 2_000;
 const MAX_EVIDENCE: usize = 4_000;
 const MAX_EXCERPT_BYTES: usize = 4_096;
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Source {
     pub id: Id,
     pub revision: u64,
@@ -24,7 +25,8 @@ pub struct Source {
     pub text: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Claim {
     pub id: Id,
     pub scope: Id,
@@ -32,7 +34,8 @@ pub struct Claim {
     pub proposition: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Citation {
     pub source: Id,
     pub source_revision: u64,
@@ -42,7 +45,8 @@ pub struct Citation {
     pub excerpt: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Assertion {
     pub evidence: Evidence,
     pub citation: Citation,

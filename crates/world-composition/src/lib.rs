@@ -2,6 +2,7 @@
 //! No retrieval, identity resolution, model call, commitment or world mutation.
 #![forbid(unsafe_code)]
 
+pub mod archive;
 pub mod formation;
 pub mod knowledge;
 
@@ -13,13 +14,15 @@ const MAX_CANDIDATES: usize = 1_000;
 const MAX_REQUIREMENTS: usize = 32;
 const MAX_ROLES: usize = 16;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Polarity {
     Supports,
     Opposes,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Evidence {
     pub id: Id,
     pub revision: u64,
@@ -58,7 +61,8 @@ pub struct Role {
     pub proposed_role: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Requirement {
     pub claim: Id,
     pub hard: bool,

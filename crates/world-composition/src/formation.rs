@@ -10,7 +10,8 @@ const MAX_BASE_REQUIREMENTS: usize = 16;
 const MAX_NODES: usize = 10_000;
 const MAX_RESULTS: usize = 64;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Window {
     pub start_ms: u64,
     pub end_ms: u64,
@@ -28,14 +29,16 @@ impl Window {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Slot {
     pub id: Id,
     pub capability: Id,
     pub proposed_role: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Goal {
     pub id: Id,
     pub revision: u64,
@@ -51,7 +54,8 @@ pub struct Goal {
     pub conditions: Vec<Requirement>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Offer {
     pub id: Id,
     pub revision: u64,
@@ -65,13 +69,15 @@ pub struct Offer {
     pub availability_claim: Id,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Budget {
     pub nodes: usize,
     pub results: usize,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Assignment {
     pub slot: Id,
     pub offer: Id,
@@ -81,7 +87,8 @@ pub struct Assignment {
 
 /// Structural identity, scoped to a goal/work version. No generated UUID is
 /// masquerading as an existing work identifier.
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct FormationKey {
     pub scope: Id,
     pub work: Id,

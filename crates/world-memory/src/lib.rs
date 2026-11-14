@@ -3,6 +3,7 @@
 #![forbid(unsafe_code)]
 
 pub mod access;
+mod research;
 
 use postgres::{Client, IsolationLevel, Transaction};
 use world_kernel::{Kernel, OwnerView, Receipt, Recorded, Rejection, ScopedReceipt, SharedView};
@@ -18,6 +19,7 @@ pub enum MemoryError {
     Database,
     CommitUncertain,
     CorruptHistory,
+    InvalidArchive,
     Capacity,
     Domain(Rejection),
 }
@@ -49,7 +51,7 @@ impl Memory {
 
     fn transact<T>(
         &mut self,
-        apply: impl FnOnce(&mut Kernel) -> Result<T, MemoryError>,
+        apply: impl FnOnce(&mut Kernel, &mut Transaction<'_>) -> Result<T, MemoryError>,
     ) -> Result<T, MemoryError> {
         let mut tx = self
             .client
@@ -67,7 +69,7 @@ impl Memory {
             .try_get(0)?;
         let (mut kernel, bytes) = load(&mut tx, head)?;
         let before = kernel.history().len();
-        let result = apply(&mut kernel)?;
+        let result = apply(&mut kernel, &mut tx)?;
         let after = kernel.history().len();
         if after == before + 1 {
             let next = head.checked_add(1).ok_or(MemoryError::Capacity)?;
@@ -123,7 +125,7 @@ impl Memory {
         if matches!(command.operation(), Operation::RespondToShare(_)) {
             return Err(Rejection::Denied.into());
         }
-        self.transact(|kernel| Ok(kernel.submit(actor, command, recorded_at_ms)?))
+        self.transact(|kernel, _tx| Ok(kernel.submit(actor, command, recorded_at_ms)?))
     }
 
     pub fn respond(
@@ -132,7 +134,7 @@ impl Memory {
         request: &ScopedReply,
         recorded_at_ms: u64,
     ) -> Result<ScopedReceipt, MemoryError> {
-        self.transact(|kernel| Ok(kernel.respond(actor, request, recorded_at_ms)?))
+        self.transact(|kernel, _tx| Ok(kernel.respond(actor, request, recorded_at_ms)?))
     }
 
     pub fn owner_view(
@@ -140,7 +142,7 @@ impl Memory {
         actor: &Id,
         work_id: &Id,
     ) -> Result<Option<OwnerView>, MemoryError> {
-        self.transact(|kernel| Ok(kernel.owner_view(actor, work_id)))
+        self.transact(|kernel, _tx| Ok(kernel.owner_view(actor, work_id)))
     }
 
     pub fn shared_view(
@@ -149,7 +151,7 @@ impl Memory {
         work_id: &Id,
         share_id: &Id,
     ) -> Result<Option<SharedView>, MemoryError> {
-        self.transact(|kernel| Ok(kernel.shared_view(actor, work_id, share_id)))
+        self.transact(|kernel, _tx| Ok(kernel.shared_view(actor, work_id, share_id)))
     }
 }
 

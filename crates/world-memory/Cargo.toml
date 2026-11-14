@@ -10,3 +10,4 @@ postgres.workspace = true
 world-language = { path = "../world-language" }
 world-kernel = { path = "../world-kernel" }
 serde_json.workspace = true
+world-composition = { path = "../world-composition" }
