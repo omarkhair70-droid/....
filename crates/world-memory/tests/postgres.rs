@@ -54,11 +54,7 @@ fn assert_access_boundary(mem: &mut Memory) {
     let expressed = access.handle("synthetic-owner", Request::OwnerExpression(WORK), 5);
     assert_eq!(expressed.status, 200);
     assert_eq!(expressed.body["subject"]["kind"], "work");
-    let denied_expression = access.handle(
-        "synthetic-recipient",
-        Request::OwnerExpression(WORK),
-        5,
-    );
+    let denied_expression = access.handle("synthetic-recipient", Request::OwnerExpression(WORK), 5);
     assert_eq!(denied_expression.status, 404);
     let disclosed = access.handle(
         "synthetic-recipient",

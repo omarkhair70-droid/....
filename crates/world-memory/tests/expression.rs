@@ -40,7 +40,10 @@ fn meaning_changes_without_replacing_work_identity() {
     let after = expression::owner(&view);
     assert_eq!(before["subject"], after["subject"]);
     assert_eq!(before["title"], after["title"]);
-    assert_eq!(before["disclosures"][0]["text"], after["disclosures"][0]["text"]);
+    assert_eq!(
+        before["disclosures"][0]["text"],
+        after["disclosures"][0]["text"]
+    );
     assert_ne!(before["text"], after["text"]);
     assert_eq!(after["actions"][0]["expected_revision"], 3);
 }
