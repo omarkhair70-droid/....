@@ -49,7 +49,9 @@ pub fn import_text(
     bytes: &[u8],
 ) -> Result<Source, Error> {
     if current.scope != permit.scope
-        || !current.versions.contains(&(permit.source.clone(), permit.revision))
+        || !current
+            .versions
+            .contains(&(permit.source.clone(), permit.revision))
         || now_ms >= permit.expires_at_ms
     {
         return Err(Error::Denied);
@@ -200,7 +202,10 @@ impl Extraction {
                 .citations
                 .iter()
                 .enumerate()
-                .map(|(index, citation)| Excerpt { index, text: &citation.excerpt })
+                .map(|(index, citation)| Excerpt {
+                    index,
+                    text: &citation.excerpt,
+                })
                 .collect(),
             max_proposals: self.spec.max_proposals,
         })
@@ -232,7 +237,10 @@ impl Extraction {
         let mut seen = BTreeSet::new();
         let mut result = Vec::new();
         for item in output.proposals {
-            let citation = self.citations.get(item.excerpt_index).ok_or(Error::Invalid)?;
+            let citation = self
+                .citations
+                .get(item.excerpt_index)
+                .ok_or(Error::Invalid)?;
             if item.proposition.trim().is_empty() || item.proposition.chars().count() > 2_000 {
                 return Err(Error::Invalid);
             }
