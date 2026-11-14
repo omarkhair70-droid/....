@@ -1,0 +1,32 @@
+name: World web
+on:
+  push:
+    paths:
+      - 'apps/world-web/**'
+      - '.github/workflows/world-web.yml'
+  pull_request:
+    paths:
+      - 'apps/world-web/**'
+      - '.github/workflows/world-web.yml'
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Syntax and browser journey
+        run: |
+          node --check apps/world-web/world.js
+          node --check apps/world-web/tests/browser.js
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory apps/world-web >/tmp/world-web-http.log 2>&1 &
+          trap 'kill $!' EXIT
+          for n in {1..20}; do curl -fsS http://127.0.0.1:8765/ >/dev/null && break; sleep 1; done
+          browser="$(command -v google-chrome || command -v chromium)"
+          profile="$(mktemp -d)"
+          "$browser" --headless --no-sandbox --disable-dev-shm-usage --user-data-dir="$profile" --virtual-time-budget=10000 --dump-dom http://127.0.0.1:8765/tests/browser.html > /tmp/world-web-result.html
+          cat /tmp/world-web-result.html
+          grep -F 'PASS: local workflow, isolation, restore, RTL/LTR, 320px' /tmp/world-web-result.html
