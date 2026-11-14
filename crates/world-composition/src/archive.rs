@@ -2,7 +2,7 @@
 //! Restoration is historical, never a fresh verification of the outside world.
 use super::formation::{Budget, Formation, FormationKey, Goal, Offer};
 use super::knowledge::{Assertion, Claim, Knowledge, Source};
-use super::{Evaluation, Error};
+use super::{Error, Evaluation};
 use std::collections::{BTreeMap, BTreeSet};
 use world_language::{Id, MAX_REVISION};
 
@@ -103,9 +103,14 @@ impl Archive {
         self.check_shape()?;
         if authority.scope != self.goal.scope
             || self.sources.iter().any(|s| {
-                !authority.source_versions.contains(&(s.id.clone(), s.revision))
+                !authority
+                    .source_versions
+                    .contains(&(s.id.clone(), s.revision))
             })
-            || self.assertions.iter().any(|a| !authority.reviewers.contains(&a.reviewer))
+            || self
+                .assertions
+                .iter()
+                .any(|a| !authority.reviewers.contains(&a.reviewer))
         {
             return Err(ArchiveError::Denied);
         }
@@ -121,16 +126,24 @@ impl Archive {
             if !sources.insert(&source.id) {
                 return Err(ArchiveError::Invalid);
             }
-            ledger.add_source(source.clone()).map_err(|_| ArchiveError::Admission)?;
+            ledger
+                .add_source(source.clone())
+                .map_err(|_| ArchiveError::Admission)?;
         }
         let mut claims = BTreeSet::new();
         for claim in &self.claims {
             if !claims.insert(&claim.id) {
                 return Err(ArchiveError::Invalid);
             }
-            ledger.add_claim(claim.clone()).map_err(|_| ArchiveError::Admission)?;
+            ledger
+                .add_claim(claim.clone())
+                .map_err(|_| ArchiveError::Admission)?;
         }
-        if self.goal.conditions.iter().any(|r| !claims.contains(&r.claim))
+        if self
+            .goal
+            .conditions
+            .iter()
+            .any(|r| !claims.contains(&r.claim))
             || self.offers.iter().any(|o| {
                 !claims.contains(&o.capability_claim) || !claims.contains(&o.availability_claim)
             })
@@ -142,7 +155,9 @@ impl Archive {
             if !assertions.insert(&assertion.evidence.id) {
                 return Err(ArchiveError::Invalid);
             }
-            ledger.admit(assertion.clone()).map_err(|_| ArchiveError::Admission)?;
+            ledger
+                .admit(assertion.clone())
+                .map_err(|_| ArchiveError::Admission)?;
         }
         let mut engine = ledger.build_engine().map_err(|_| ArchiveError::Admission)?;
         let formation = engine

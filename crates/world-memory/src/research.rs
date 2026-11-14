@@ -62,7 +62,8 @@ impl Memory {
             if count >= MAX_ARCHIVES || size + raw.len() as i64 > MAX_TOTAL_BYTES {
                 return Err(MemoryError::Capacity);
             }
-            let revision = i64::try_from(owner.revision).map_err(|_| MemoryError::InvalidArchive)?;
+            let revision =
+                i64::try_from(owner.revision).map_err(|_| MemoryError::InvalidArchive)?;
             tx.execute(
                 "INSERT INTO world_private.research_archives
                  (work_id, archive_id, actor_id, work_revision, record_text)
@@ -82,14 +83,18 @@ impl Memory {
         archive_id: &Id,
     ) -> Result<Option<Restored>, MemoryError> {
         self.transact(|kernel, tx| {
-            if kernel.owner_view(&authority.actor, &authority.scope).is_none() {
+            if kernel
+                .owner_view(&authority.actor, &authority.scope)
+                .is_none()
+            {
                 return Err(Rejection::Denied.into());
             }
             let Some(row) = tx.query_opt(
                 "SELECT actor_id, work_revision, record_text FROM world_private.research_archives
                  WHERE work_id = $1 AND archive_id = $2",
                 &[&authority.scope.as_str(), &archive_id.as_str()],
-            )? else {
+            )?
+            else {
                 return Ok(None);
             };
             let actor: String = row.try_get(0)?;

@@ -135,22 +135,40 @@ fn durable_history_scoped_access_and_concurrent_writes() {
     mem.save_research(&authority, &archive).unwrap();
     let mut change = archive.clone();
     change.snapshot_at_ms = 21;
-    assert_eq!(mem.save_research(&authority, &change), Err(MemoryError::Domain(Rejection::CommandCollision)));
+    assert_eq!(
+        mem.save_research(&authority, &change),
+        Err(MemoryError::Domain(Rejection::CommandCollision))
+    );
     authority.actor = id(2);
-    assert!(matches!(mem.read_research(&authority, &archive.archive_id), Err(MemoryError::Domain(Rejection::Denied))));
+    assert!(matches!(
+        mem.read_research(&authority, &archive.archive_id),
+        Err(MemoryError::Domain(Rejection::Denied))
+    ));
     authority.actor = id(1);
     authority.source_versions.clear();
-    assert!(matches!(mem.read_research(&authority, &archive.archive_id), Err(MemoryError::Domain(Rejection::Denied))));
+    assert!(matches!(
+        mem.read_research(&authority, &archive.archive_id),
+        Err(MemoryError::Domain(Rejection::Denied))
+    ));
     authority.source_versions = research_fixture::fixture().1.source_versions;
 
     drop(mem);
     let mut mem = Memory::new(connection(&runtime_url));
     assert_eq!(mem.submit_owner(&id(1), create, 99).unwrap(), first);
-    let restored = mem.read_research(&authority, &archive.archive_id).unwrap().unwrap();
+    let restored = mem
+        .read_research(&authority, &archive.archive_id)
+        .unwrap()
+        .unwrap();
     assert_eq!(restored.snapshot_at_ms, 20);
     assert_eq!(restored.work_revision, 1);
-    assert_eq!(restored.evaluations[&id(221)].feasibility, world_composition::Feasibility::SupportedUnderEvidence);
-    assert_eq!(restored.formation.proposals[0].key(), &archive.selections[0].key);
+    assert_eq!(
+        restored.evaluations[&id(221)].feasibility,
+        world_composition::Feasibility::SupportedUnderEvidence
+    );
+    assert_eq!(
+        restored.formation.proposals[0].key(),
+        &archive.selections[0].key
+    );
 
     assert_eq!(
         mem.owner_view(&id(1), &id(10)).unwrap().unwrap().body,
@@ -240,13 +258,22 @@ fn durable_history_scoped_access_and_concurrent_writes() {
         assert_eq!(retry.body, view.body);
     }
     // Old work revision remains explicitly historical, not current.
-    let restored = mem.read_research(&authority, &archive.archive_id).unwrap().unwrap();
+    let restored = mem
+        .read_research(&authority, &archive.archive_id)
+        .unwrap()
+        .unwrap();
     assert_eq!(restored.work_revision, 1);
     mem.save_research(&authority, &archive).unwrap();
     let mut stale_archive = archive.clone();
     stale_archive.archive_id = id(222);
-    assert_eq!(mem.save_research(&authority, &stale_archive), Err(MemoryError::Domain(Rejection::StaleRevision)));
-    let archives: i64 = admin.query_one("SELECT count(*) FROM world_private.research_archives", &[]).unwrap().get(0);
+    assert_eq!(
+        mem.save_research(&authority, &stale_archive),
+        Err(MemoryError::Domain(Rejection::StaleRevision))
+    );
+    let archives: i64 = admin
+        .query_one("SELECT count(*) FROM world_private.research_archives", &[])
+        .unwrap()
+        .get(0);
     assert_eq!(archives, 1);
     let count: i64 = admin
         .query_one("SELECT count(*) FROM world_private.events", &[])
@@ -254,7 +281,11 @@ fn durable_history_scoped_access_and_concurrent_writes() {
         .get(0);
     assert_eq!(count, 5);
     let mut restricted = connection(&runtime_url);
-    assert!(restricted.execute("DELETE FROM world_private.research_archives", &[]).is_err());
+    assert!(
+        restricted
+            .execute("DELETE FROM world_private.research_archives", &[])
+            .is_err()
+    );
     assert!(
         restricted
             .execute("DELETE FROM world_private.events", &[])
