@@ -78,11 +78,7 @@ pub struct Knowledge {
 }
 
 impl Knowledge {
-    pub fn new(
-        scope: Id,
-        at_ms: u64,
-        reviewers: BTreeSet<Id>,
-    ) -> Result<Self, AdmissionError> {
+    pub fn new(scope: Id, at_ms: u64, reviewers: BTreeSet<Id>) -> Result<Self, AdmissionError> {
         if at_ms > MAX_REVISION || reviewers.len() > MAX_SOURCES {
             return Err(AdmissionError::Invalid);
         }

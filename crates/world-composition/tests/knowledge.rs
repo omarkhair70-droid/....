@@ -148,11 +148,19 @@ fn snapshot_rebuild_excludes_withdrawn_scope_and_preserves_uncertainty() {
     k.admit(contrary).unwrap();
     let mut e = k.build_engine().unwrap();
     e.register(candidate()).unwrap();
-    assert_eq!(e.evaluation(&id(50)).unwrap().conditions[0].knowledge, State::Contested);
-    let mut without_access =
-        Knowledge::new(id(1), 20, BTreeSet::new()).unwrap().build_engine().unwrap();
+    assert_eq!(
+        e.evaluation(&id(50)).unwrap().conditions[0].knowledge,
+        State::Contested
+    );
+    let mut without_access = Knowledge::new(id(1), 20, BTreeSet::new())
+        .unwrap()
+        .build_engine()
+        .unwrap();
     without_access.register(candidate()).unwrap();
-    assert_eq!(without_access.evaluation(&id(50)).unwrap().conditions[0].knowledge, State::Unknown);
+    assert_eq!(
+        without_access.evaluation(&id(50)).unwrap().conditions[0].knowledge,
+        State::Unknown
+    );
 }
 
 #[test]
