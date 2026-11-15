@@ -49,8 +49,15 @@ function hasVault(){try{return vault().length>0}catch{return false}}
 function es(k){$('status').textContent=et(k)}
 const t=k=>text[lang][k], put=(id,k)=>{$(id).textContent=t(k)}, status=k=>{$('status').textContent=k?t(k):''}, current=()=>works.find(w=>w.id===active);
 const str=(v,n)=>typeof v==='string'&&v.length<=n;
-function valid(v){return v&&v.version===1&&['ar','en'].includes(v.lang)&&Array.isArray(v.works)&&v.works.length<=100&&new Set(v.works.map(w=>w?.id)).size===v.works.length&&v.works.every(w=>w&&str(w.id,80)&&str(w.title,240)&&w.title.trim()&&str(w.body,12000)&&str(w.idea,6000)&&typeof w.ideaOpen==='boolean'&&(w.parent===null||str(w.parent,80))&&(w.origin===undefined||validOrigin(w.origin,w.parent))&&(w.mind===undefined||validMind(w.mind))&&(w.basis===undefined||validBasis(w.basis,w.parent)))&&(v.active===null||v.works.some(w=>w.id===v.active))}
-try{const raw=localStorage.getItem(KEY);if(raw&&raw.length<=2400000){const v=JSON.parse(raw);if(valid(v)){lang=v.lang;works=v.works.map(w=>({id:w.id,title:w.title,body:w.body,idea:w.idea,ideaOpen:w.ideaOpen,parent:w.parent,...(w.origin?{origin:{sourceId:w.origin.sourceId,start:w.origin.start,end:w.origin.end,excerpt:w.origin.excerpt}}:{}),...(w.mind?{mind:{marks:w.mind.marks.map(m=>({id:m.id,kind:m.kind,topic:m.topic,start:m.start,end:m.end,excerpt:m.excerpt})),dismissed:[...w.mind.dismissed]}}:{}),...(w.basis?{basis:w.basis.map(p=>({workId:p.workId,mark:{id:p.mark.id,kind:p.mark.kind,topic:p.mark.topic,start:p.mark.start,end:p.mark.end,excerpt:p.mark.excerpt}}))}:{})}));active=v.active}}}catch{}
+// A birth is an immutable historical snapshot, not a contract or identity claim.
+const validBirth=b=>!!b&&Object.keys(b).length===5&&['local-review','file-reply'].includes(b.kind)&&str(b.first,6000)&&!!b.first.trim()&&str(b.second,6000)&&!!b.second.trim()&&str(b.emergence,6000)&&(b.kind==='file-reply'?b.emergence==='':!!b.emergence.trim())&&str(b.id,80)&&!!b.id;
+const birthOf=(kind,offer,emergence='')=>({kind,first:offer.exposed,second:offer.reply,emergence,id:offer.id});
+const lifeWords={
+ ar:{invitation:'ده عمل بدأ من لقاء. تقدر تغيّره من غير ما تمس الكلمات اللي ولد منها.',title:'من أين بدأ هذا الشيء؟',local:'أثر محفوظ من دورين في معاينة محلية، وليس اتفاقًا أو إثبات هوية.',file:'أثر تبادل بالملف، وليس لقاءً حيًا أو إثبات هوية.',first:'الكلمات التي غادرت',second:'الكلمات التي عادت',emergence:'ما تكوّن في تلك اللحظة',parent:'استحضر العمل الأول',missing:'العمل الأول غير موجود هنا',child:'عمل وُلد من لقاء',voice:'حوّل ما قلته إلى فكرة',voiceNote:'استمع واكتب خلاصتك، أو راجع النص المحلي إن كان متاحًا. لن نحوّل صوتك أو نرسله تلقائيًا.'},
+ en:{invitation:'This work began in an encounter. Change it without changing the words that gave rise to it.',title:'Where did this begin?',local:'A retained trace of two roles in a local review, not an agreement or verified identity.',file:'A retained file exchange, not a live meeting or verified identity.',first:'The words that left',second:'The words that returned',emergence:'What emerged in that moment',parent:'Recall the original work',missing:'The original work is not here',child:'Work born in an encounter',voice:'Turn what you said into an idea',voiceNote:'Listen and write your own summary, or review local text if available. We will not automatically transcribe or send your voice.'}
+};const lt=k=>lifeWords[lang][k];
+function valid(v){return v&&v.version===1&&['ar','en'].includes(v.lang)&&Array.isArray(v.works)&&v.works.length<=100&&new Set(v.works.map(w=>w?.id)).size===v.works.length&&v.works.every(w=>w&&str(w.id,80)&&str(w.title,240)&&w.title.trim()&&str(w.body,12000)&&str(w.idea,6000)&&typeof w.ideaOpen==='boolean'&&(w.parent===null||str(w.parent,80))&&(w.origin===undefined||validOrigin(w.origin,w.parent))&&(w.mind===undefined||validMind(w.mind))&&(w.basis===undefined||validBasis(w.basis,w.parent))&&(w.birth===undefined||validBirth(w.birth)))&&(v.active===null||v.works.some(w=>w.id===v.active))}
+try{const raw=localStorage.getItem(KEY);if(raw&&raw.length<=2400000){const v=JSON.parse(raw);if(valid(v)){lang=v.lang;works=v.works.map(w=>({id:w.id,title:w.title,body:w.body,idea:w.idea,ideaOpen:w.ideaOpen,parent:w.parent,...(w.birth?{birth:{kind:w.birth.kind,first:w.birth.first,second:w.birth.second,emergence:w.birth.emergence,id:w.birth.id}}:{}),...(w.origin?{origin:{sourceId:w.origin.sourceId,start:w.origin.start,end:w.origin.end,excerpt:w.origin.excerpt}}:{}),...(w.mind?{mind:{marks:w.mind.marks.map(m=>({id:m.id,kind:m.kind,topic:m.topic,start:m.start,end:m.end,excerpt:m.excerpt})),dismissed:[...w.mind.dismissed]}}:{}),...(w.basis?{basis:w.basis.map(p=>({workId:p.workId,mark:{id:p.mark.id,kind:p.mark.kind,topic:p.mark.topic,start:p.mark.start,end:p.mark.end,excerpt:p.mark.excerpt}}))}:{})}));active=v.active}}}catch{}
 function titleFor(body){const s=body.trim().split(/\r?\n/)[0];return Array.from(s||t('untitled')).slice(0,90).join('')}
 function ensureWork(){let w=current();if(w)return w;if(works.length>=100){status('limit');return null}w={id:crypto.randomUUID(),title:t('untitled'),body:'',idea:'',ideaOpen:false,parent:null};works.push(w);automaticTitles.add(w.id);active=w.id;return w}
 // Presence is not a step to dismiss. Controls derive from what actually exists.
@@ -66,9 +73,27 @@ function presence(){
  $('save').hidden=!hasWork;
  $('recall').hidden=!works.length&&!hasVault();
  $('resume').hidden=!hasOffer||!!forming||!!minding;
- renderFormation();renderMind();
+ renderFormation();renderMind();renderWorkLife(w);
  resizeThought();
 }
+function renderWorkLife(w){
+ const birth=w?.birth,visible=phase==='private'&&!!birth;
+ $('work-birth').hidden=!visible;$('work-life-invitation').hidden=!visible;
+ if(visible)document.body.dataset.workLife='born';else delete document.body.dataset.workLife;
+ $('work-life-invitation').textContent=visible?lt('invitation'):'';
+ $('work-birth-title').textContent=lt('title');
+ $('work-birth-note').textContent=visible?lt(birth.kind==='file-reply'?'file':'local'):'';
+ $('birth-first-label').textContent=lt('first');$('birth-second-label').textContent=lt('second');
+ $('birth-first').textContent=visible?birth.first:'';$('birth-second').textContent=visible?birth.second:'';
+ $('birth-emergence').hidden=!visible||!birth.emergence;
+ $('birth-emergence-label').textContent=lt('emergence');
+ $('birth-emergence-text').textContent=visible?birth.emergence:'';
+ if(!visible)$('birth-emergence').open=false;
+ const parent=visible&&works.find(x=>x.id===w.parent);
+ $('birth-parent').hidden=!visible;$('birth-parent').disabled=!parent;
+ $('birth-parent').textContent=parent?lt('parent'):lt('missing');
+}
+$('birth-parent').onclick=()=>{const w=current();if(phase==='private'&&w?.birth&&works.some(x=>x.id===w.parent))switchWork(w.parent)};
 function loadPrivate(){const w=current();$('name').hidden=!w;$('name').value=w?.title||'';$('thought').value=w?.body||'';$('prior').hidden=!w?.idea;$('prior-text').value=w?.idea||'';$('resume').hidden=!offer;$('resume').disabled=offer?.work!==active;presence()}
 function persist(){try{const raw=JSON.stringify({version:1,lang,works,active});if(raw.length>2400000)throw Error();localStorage.setItem(KEY,raw);status('saved');return true}catch{status('failed');return false}}
 $('thought').addEventListener('input',()=>{
@@ -127,6 +152,8 @@ function micUI(){
  $('clear-clip').hidden=!voiceURL||voiceBusy();
  $('clip').hidden=!voiceURL||voiceBusy();
  voiceSurface.sync({visible:!!voiceURL&&!voiceBusy()});
+ $('voice-next').hidden=!voiceURL||voiceBusy();
+ $('voice-to-thought-label').textContent=lt('voice');$('voice-next-note').textContent=lt('voiceNote');
  updateExpression();dictationUI();
 }
 function dictationUI(){
@@ -151,6 +178,7 @@ function dictationUI(){
  if($('dictation-draft').value!==(draft?.text||''))$('dictation-draft').value=draft?.text||'';
  $('dictation-add').disabled=!available||!draft.text.trim();
 }
+$('voice-to-thought').onclick=()=>{if(phase!=='private'||voiceBusy()||!voice.snapshot().clip)return;const review=$('dictation-review');if(!review.hidden){$('dictation-draft').focus();review.scrollIntoView({block:'nearest',behavior:'instant'})}else{$('thought').focus();$('thought').scrollIntoView({block:'center',behavior:'instant'})}};
 $('dictation-opt').onchange=dictationUI;
 $('dictation-draft').oninput=()=>dictation.edit($('dictation-draft').value);
 $('dictation-add').onclick=()=>{
@@ -189,7 +217,7 @@ function renderFormation(){
  const draft=visible?forming.text:'';
  if($('formation-draft').value!==draft)$('formation-draft').value=draft;
  $('formation-keep').disabled=!visible||!draft.trim();
- const children=phase==='private'&&w?works.filter(child=>child.parent===w.id&&!!child.origin):[];
+ const children=phase==='private'&&w?works.filter(child=>child.parent===w.id&&(!!child.origin||!!child.birth)):[];
  const parent=phase==='private'&&w?.origin?works.find(x=>x.id===w.parent):null;
  const showOrigin=phase==='private'&&!!w?.origin;
  $('formation-lineage').hidden=!showOrigin&&!children.length;
@@ -201,7 +229,7 @@ function renderFormation(){
  for(const child of children){
   const node=document.createElement('button');node.type='button';node.className='formed-work';node.dir='auto';
   const name=document.createElement('span');name.textContent=child.title;
-  const hint=document.createElement('small');hint.textContent=ft('child');
+  const hint=document.createElement('small');hint.textContent=child.birth?lt('child'):ft('child');
   node.append(name,hint);node.onclick=()=>switchWork(child.id);$('formed-works').append(node);
  }
 }
@@ -433,7 +461,8 @@ $('portable-keep').onclick=()=>{
  if(body.length>12000){es('keepLimit');return}
  if((voice.snapshot().clip||voiceBusy())&&!confirm(t('confirmClip')))return;
  const parent=works.some(w=>w.id===offer.sourceWork)?offer.sourceWork:null;
- const w={id:crypto.randomUUID(),title:titleFor(offer.exposed),body,idea:'',ideaOpen:false,parent};
+ const birth=birthOf('file-reply',offer);if(!validBirth(birth)){es('invalid');return}
+ const w={id:crypto.randomUUID(),title:titleFor(offer.exposed),body,idea:'',ideaOpen:false,parent,birth};
  works.push(w);discardVoice();active=w.id;offer=null;phase='private';render();es('kept');$('thought').focus()
 };
 function displaySender(){return offer?.masked?t('anonymous'):offer?.sender||t('anonymous')}
@@ -476,7 +505,7 @@ function render(){
  $('private').hidden=phase!=='private';$('exchange').hidden=phase==='private';
  portableLabels();
  if(phase==='private'){delete document.body.dataset.encounterOutcome;loadPrivate();return}
- renderFormation();renderMind();
+ renderFormation();renderMind();renderWorkLife(null);
  if(!offer){phase='private';render();return}
  const prep=phase==='prepare',receiver=phase==='recipient',returned=phase==='returned',meet=phase==='meeting';
  $('exchange-label').textContent=t(prep?'prepareLabel':receiver?'receive':returned?'returned':'meet');
@@ -516,7 +545,7 @@ $('accept').onclick=()=>{if(phase!=='returned'||!offer?.invited||offer.portable)
 function goPrivate(){if(offer)offer.resume=phase;setPhase('private');status(null)}
 $('back-private').onclick=goPrivate;$('leave').onclick=goPrivate;$('resume').onclick=()=>{if(!forming&&!minding&&offer&&offer.work===active){if(possibilityDraft?.text.trim()&&!confirm(pt('discard')))return;possibilityDraft=null;mindOpen=false;setPhase(offer.resume||'prepare')}};
 $('cancel').onclick=()=>{if(offer?.portable){goPrivate();return}if(phase==='prepare'){offer=null;phase='private';render();$('thought').focus();return}if(confirm(t('confirmEnd'))){const prev=offer.work;offer=null;active=prev;phase='private';render();status(null);$('thought').focus()}};
-$('keep').onclick=()=>{if(phase!=='meeting'||!offer?.accepted)return;const common=$('common').value;if(!common.trim()){status('commonNeed');return}if(works.length>=100){status('limit');return}const body=t('jointA')+'\n'+offer.exposed+'\n\n'+t('jointB')+'\n'+offer.reply+'\n\n'+t('jointC')+'\n'+common;if(body.length>12000){status('limit');return}const w={id:crypto.randomUUID(),title:titleFor(common),body,idea:'',ideaOpen:false,parent:offer.work};works.push(w);discardVoice();active=w.id;offer=null;phase='private';render();status('newMade');$('thought').focus()};
+$('keep').onclick=()=>{if(phase!=='meeting'||!offer?.accepted)return;const common=$('common').value;if(!common.trim()){status('commonNeed');return}if(works.length>=100){status('limit');return}const birth=birthOf('local-review',offer,common);if(!validBirth(birth)){status('limit');return}const w={id:crypto.randomUUID(),title:titleFor(common),body:common,idea:'',ideaOpen:false,parent:offer.work,birth};works.push(w);discardVoice();active=w.id;offer=null;phase='private';render();status('newMade');$('thought').focus()};
 function translate(){
  document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';$('locale').lang=lang==='ar'?'en':'ar';
  for(const [id,k] of Object.entries({mode:'mode',locale:'locale','private-label':'private','name-label':'name','thought-label':'thought','clear-clip':'clear','prepare-label':'prepare',resume:'resume',save:'save',recall:'recall','private-note':'privateNote','prior-label':'prior','prior-input-label':'prior','foot-note':'foot','excerpt-label':'thought','grip-label':'grip','recipient-label':'recipientLabel','masked-label':'mask','person-label':'person',cast:'cast','preview-note':'previewNote','reply-label':'reply','reply-only':'replyOnly','reply-meet':'replyMeet',decline:'decline','answer-origin':'answer',accept:'accept','back-private':'back','common-label':'common',keep:'keep',leave:'leave','meeting-note':'meetingNote','exchange-note':'exchangeNote','memory-title':'memory','close-memory':'close','find-label':'find','new-work':'new',forget:'forget','memory-note':'memoryNote'}))put(id,k);
