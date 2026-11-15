@@ -13,7 +13,7 @@ permissions:
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
@@ -54,7 +54,7 @@ jobs:
           "$browser" --headless --no-sandbox --disable-dev-shm-usage --user-data-dir="$(mktemp -d)" --window-size=1440,1100 --virtual-time-budget=3000 --screenshot="$PWD/visual/02-work-synthetic.png" http://127.0.0.1:8765/tests/visual.html
           "$browser" --headless --no-sandbox --disable-dev-shm-usage --user-data-dir="$(mktemp -d)" --window-size=390,844 --virtual-time-budget=2000 --screenshot="$PWD/visual/03-presence-mobile.png" http://127.0.0.1:8765/
           # Capture the real controls after explicit synthetic actions, not a mock screenshot.
-          for scene in recording trace choices formation connection cast; do
+          for scene in recording trace choices formation connection cast receive returned meeting declined; do
             "$browser" --headless --no-sandbox --disable-dev-shm-usage --user-data-dir="$(mktemp -d)" --window-size=1440,1050 --virtual-time-budget=3000 --screenshot="$PWD/visual/04-$scene.png" "http://127.0.0.1:8765/tests/journey-visual.html?state=$scene"
           done
           # Fresh and synthetic screenshots for review; no user data.
@@ -67,7 +67,7 @@ jobs:
           echo 'BEGIN_WORK_PNG'
           base64 -w 512 visual/02-work-synthetic.png
           echo 'END_WORK_PNG'
-          for scene in recording trace choices formation connection cast; do
+          for scene in recording trace choices formation connection cast receive returned meeting declined; do
             echo "BEGIN_${scene^^}_PNG"
             base64 -w 512 "visual/04-$scene.png"
             echo "END_${scene^^}_PNG"
