@@ -139,6 +139,7 @@
    <p id="work-life-invitation" class="work-life-invitation" hidden></p>
    <label for="thought" id="thought-label" class="sr"></label>
    <textarea id="thought" maxlength="12000" rows="1" dir="auto"></textarea>
+   <aside id="world-periphery" hidden aria-label="What might connect"><button id="mind-reveal" type="button" aria-expanded="false" aria-controls="mind"><svg viewBox="0 0 48 32" width="48" height="32" aria-hidden="true"><path d="M1 5H24L32 27H1Z" fill="#bc775c"/><path d="M47 5H25L17 27H47Z" fill="#93aa8c"/><path d="M24 5 32 27H17Z" fill="#263a67"/></svg><span><span id="mind-signal"></span><small id="mind-signal-detail"></small></span></button></aside>
    <div id="voice" class="voice-line">
     <div class="voice-threshold">
      <button id="mic" class="mic" type="button" aria-pressed="false">
@@ -201,7 +202,7 @@
     <div id="origin-trace" hidden><button id="origin-back" type="button"></button><details><summary id="origin-excerpt-label"></summary><blockquote id="origin-excerpt" dir="auto"></blockquote></details></div>
     <div id="formed-works"></div>
    </section>
-   <aside id="world-periphery" hidden aria-label="What might connect"><button id="mind-reveal" type="button" aria-expanded="false" aria-controls="mind"><svg viewBox="0 0 48 32" width="48" height="32" aria-hidden="true"><path d="M1 5H24L32 27H1Z" fill="#bc775c"/><path d="M47 5H25L17 27H47Z" fill="#93aa8c"/><path d="M24 5 32 27H17Z" fill="#263a67"/></svg><span><span id="mind-signal"></span><small id="mind-signal-detail"></small></span></button></aside>
+   
    <section id="mind" hidden class="mind" aria-labelledby="mind-title">
     <div class="mind-heading"><h2 id="mind-title"></h2><button id="mind-close" type="button"></button></div>
     <p id="mind-note" class="quiet"></p>
@@ -217,8 +218,9 @@
      <div class="actions"><button id="mind-keep" type="button" class="accent"></button><button id="mind-cancel" type="button"></button></div>
      <p id="mind-next" class="quiet" role="status"></p>
     </div>
-    <div id="mind-marks" class="mind-marks"></div>
-    <div id="mind-links" class="mind-links"></div><p id="mind-empty" class="quiet" hidden></p>
+    <div id="mind-echoes" class="mind-echoes" hidden></div>
+    <div id="mind-links" class="mind-links"></div>
+    <div id="mind-marks" class="mind-marks"></div><p id="mind-empty" class="quiet" hidden></p>
     <p id="mind-limit" class="quiet" hidden></p>
    </section>
    <section id="possibility-basis" hidden aria-labelledby="basis-title" class="possibility-basis"><h2 id="basis-title"></h2><p id="basis-note" class="quiet"></p><div id="basis-pieces"></div>
