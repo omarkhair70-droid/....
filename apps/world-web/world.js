@@ -148,7 +148,7 @@ function renderReality(w){
  $('reality-example').hidden=!editing||!(w.fieldBasis?.sources.every(s=>s.kind==='scenario'));
  $('reality-keep').disabled=!realityReady(w,d);
  $('reality-status').textContent=d?.kind==='scenario'?rw('scenario'):'';
- if(editing)document.body.dataset.reality='open';else delete document.body.dataset.reality;
+ if(editing){document.body.dataset.reality='open';document.body.dataset.realityReading=d.reading||'unread';document.body.dataset.realityDecision=d.decision||'undecided'}else{delete document.body.dataset.reality;delete document.body.dataset.realityReading;delete document.body.dataset.realityDecision}
  const history=$('reality-history');history.replaceChildren();
  if(!visible||!w.reality?.length)return;
  history.append(mindText('h3',rw('history')));
