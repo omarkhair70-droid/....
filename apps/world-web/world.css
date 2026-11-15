@@ -117,3 +117,13 @@ body[data-phase=private] #voice{align-items:center}
 #voice[data-capture=recording] #voice-state{color:#773735;font-weight:500}
 #voice[data-capture=requesting] #voice-state,#voice[data-capture=stopping] #voice-state{color:var(--soft)}
 #voice audio{max-width:100%}
+
+/* 01.4c: no full-width resting form rule. The short rule is an input cue;
+   the full native focus outline remains visible under keyboard navigation. */
+body[data-phase=private] #thought{border-block-end:0;background-image:linear-gradient(#746572,#746572);background-repeat:no-repeat;background-size:52px 1px;background-position:left bottom}
+html[dir=rtl] body[data-phase=private] #thought{background-position:right bottom}
+body[data-phase=private] #thought:not(:placeholder-shown){background-image:none}
+body[data-phase=private] #thought:focus-visible{outline:2px solid #34476a;outline-offset:5px}
+#voice-duration{font-size:13px;color:#773735;font-variant-numeric:tabular-nums;direction:ltr}
+#mic[aria-disabled=true]{cursor:default;text-decoration:none;opacity:.76}
+@media(forced-colors:active){body[data-phase=private] #thought{background-image:none;border-block-end:1px solid CanvasText}}

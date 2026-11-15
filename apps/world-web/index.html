@@ -14,11 +14,14 @@
   <radialGradient id="material-depth" cx=".15" cy=".75" r=".85" gradientTransform="matrix(1 0 0 .85 0 .10)"><stop stop-color="#839db5" stop-opacity=".69"/><stop offset=".6" stop-color="#a6b7c8" stop-opacity=".37"/><stop offset="1" stop-color="#a6b7c8" stop-opacity="0"/></radialGradient>
   <radialGradient id="material-rose" cx=".83" cy=".12" r=".73"><stop stop-color="#c498b6" stop-opacity=".67"/><stop offset="1" stop-color="#c498b6" stop-opacity="0"/></radialGradient>
   <radialGradient id="shared-light" cx=".52" cy=".43" r=".60" gradientTransform="matrix(1 0 0 .72 0 .12)"><stop stop-color="#fbf5e5" stop-opacity=".91"/><stop offset=".46" stop-color="#f8edda" stop-opacity=".67"/><stop offset="1" stop-color="#f8edda" stop-opacity="0"/></radialGradient>
+  <linearGradient id="material-veil" x1=".1" y1=".9" x2=".9" y2=".1"><stop stop-color="#9d9abb" stop-opacity="0"/><stop offset=".44" stop-color="#9d9abb" stop-opacity=".19"/><stop offset=".72" stop-color="#d4a9c3" stop-opacity=".13"/><stop offset="1" stop-color="#d4a9c3" stop-opacity="0"/></linearGradient>
+  <filter id="veil-softness" x="-.2" y="-.2" width="1.4" height="1.4"><feGaussianBlur stdDeviation="58"/></filter>
   <radialGradient id="attention-light"><stop stop-color="#fff9e8" stop-opacity=".47"/><stop offset=".48" stop-color="#fff9e8" stop-opacity=".19"/><stop offset="1" stop-color="#fff9e8" stop-opacity="0"/></radialGradient>
  </defs>
  <rect width="1440" height="900" fill="url(#material-base)"/>
  <rect width="1440" height="900" fill="url(#material-depth)"/>
  <rect width="1440" height="900" fill="url(#material-rose)"/>
+ <path d="M-180 80 C140 305 355 355 685 190 S1230 -5 1620 290 L1620 480 C1190 225 1000 365 690 425 S160 520 -180 285Z" fill="url(#material-veil)" filter="url(#veil-softness)"/>
  <rect width="1440" height="900" fill="url(#shared-light)"/>
  <ellipse id="focus-light" cx="720" cy="450" rx="415" ry="290" fill="url(#attention-light)"/>
 </svg>
@@ -36,7 +39,7 @@
    <textarea id="thought" maxlength="12000" rows="3" dir="auto"></textarea>
    <div id="voice" class="voice-line">
     <button id="mic" class="mic" type="button" aria-pressed="false"><svg viewBox="0 0 36 36" width="34" height="34" aria-hidden="true"><rect x="14" y="6" width="8" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M10 17v1a8 8 0 0 0 16 0v-1M18 26v5m-5 0h10" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><span id="mic-label"></span></button>
-    <span id="voice-state" role="status"></span><audio id="clip" controls hidden preload="metadata"></audio><button id="clear-clip" hidden></button>
+    <span id="voice-state" role="status"></span><output id="voice-duration" aria-hidden="true" hidden>0:00</output><audio id="clip" controls hidden preload="metadata"></audio><button id="clear-clip" hidden></button>
    </div>
    <div class="actions" id="private-actions"><button id="prepare" class="accent"></button><button id="resume" hidden></button><button id="save"></button><button id="recall"></button></div>
    <p id="private-note" class="quiet"></p>

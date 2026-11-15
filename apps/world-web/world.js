@@ -32,7 +32,7 @@ function list(){const root=$('works'),q=$('find').value.trim().toLowerCase();roo
 function switchWork(id){if((voice.snapshot().clip||voiceBusy())&&!confirm(t('confirmClip')))return;discardVoice();active=id;offer=null;$('memory').close();loadPrivate();$('thought').focus();status(null)}
 $('recall').onclick=()=>{$('find').value='';list();$('memory').showModal();$('find').focus()};$('find').oninput=list;$('close-memory').onclick=()=>$('memory').close();$('new-work').onclick=()=>switchWork(null);
 $('forget').onclick=()=>{if(!confirm(t('confirmForget')))return;try{localStorage.removeItem(KEY);status('forgot');$('memory').close()}catch{status('failed')}};
-let voiceURL='',displayedClip=null;
+let voiceURL='',displayedClip=null,voiceClock=null,voiceStarted=0;
 const voice=createVoiceCapture({
  getStream:()=>navigator.mediaDevices.getUserMedia({audio:true}),
  makeRecorder:input=>new MediaRecorder(input),
@@ -41,6 +41,8 @@ const voice=createVoiceCapture({
 const voiceBusy=()=>['requesting','recording','stopping'].includes(voice.snapshot().state);
 function micUI(){
  const {state,error,clip}=voice.snapshot(),live=state==='recording';
+ if(voiceBusy())$('clip').pause();
+ updateVoiceClock(live);
  if(displayedClip!==clip){
   $('clip').pause();$('clip').removeAttribute('src');$('clip').load();
   if(voiceURL)URL.revokeObjectURL(voiceURL);
@@ -49,11 +51,19 @@ function micUI(){
  }
  $('voice').dataset.capture=state;
  $('mic').setAttribute('aria-pressed',String(live));
- $('mic').disabled=state==='stopping';
+ $('mic').setAttribute('aria-disabled',String(state==='stopping'));
  put('mic-label',state==='requesting'?'cancelMic':live?'stop':state==='stopping'?'stopping':'mic');
  $('voice-state').textContent=error?t(error):['requesting','recording','stopping','ready'].includes(state)?t(state):'';
  $('clear-clip').hidden=!voiceURL||voiceBusy();
  $('clip').hidden=!voiceURL||voiceBusy();
+}
+function updateVoiceClock(live){
+ const output=$('voice-duration');
+ if(!live){if(voiceClock!==null)clearInterval(voiceClock);voiceClock=null;output.hidden=true;return}
+ if(voiceClock!==null)return;
+ voiceStarted=performance.now();output.hidden=false;
+ const tick=()=>{const s=Math.floor((performance.now()-voiceStarted)/1000);output.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+ tick();voiceClock=setInterval(tick,250);
 }
 function discardVoice(){voice.discard()}
 $('clear-clip').onclick=()=>voice.clear();
