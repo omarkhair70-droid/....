@@ -1,0 +1,12 @@
+[package]
+name = "world-kernel"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+world-language = { path = "../world-language" }
+
+[dev-dependencies]
+serde_json.workspace = true

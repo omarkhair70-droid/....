@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "World Language v0.1 — scoped reply",
+  "description": "Recipient request only. Authority and current aggregate revision are server responsibilities.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "command_id",
+    "work_id",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "command_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "work_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "share_id",
+        "snapshot_revision",
+        "response"
+      ],
+      "properties": {
+        "share_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "snapshot_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "response": {
+          "enum": [
+            "interested_in_discussion",
+            "decline",
+            "request_change"
+          ]
+        },
+        "comment": {
+          "type": "string",
+          "maxLength": 3000
+        }
+      }
+    }
+  }
+}

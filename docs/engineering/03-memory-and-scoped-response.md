@@ -1,0 +1,14 @@
+# Slice 02a — Persistent meaning and bounded participation
+14 November 2026. Previous exact head 6ca9070738566ed0b6751ce5daa698fd81bdf0f1 passed both push 43645189547 and PR 43645193013 with committed Cargo.lock.
+
+This change adds a v0.1 internal serialization envelope for admitted commands, actor, recorded time and accepted revision; the same kernel replays parsed records to rebuild the views and retry index. Unknown versions/fields, duplicate keys and inconsistent revision arithmetic fail closed. Records are internal private data, not user tokens, signed events or a tamper-proof log. Replay checks admissibility under a fixed verified-principal registry; no persistence implementation, durable sequence integrity, encryption, erasure or mutable membership yet. Independent aggregate ordering, truncation or maliciously altered but internally valid history cannot be detected by shape validation/replay alone.
+
+The recipient-facing command shape omits expected aggregate revision; the immutable share snapshot and actor-scoped command ID identify the actual decision. Kernel::respond binds the current internal aggregate revision while holding exclusive access, and uses the original binding on exact retry. Receipt contains command ID, share ID and disclosed snapshot revision only. The recipient never needs to guess an owner-private version. Existing raw submit, full receipt and history remain trusted internal interfaces; HTTP/storage must not expose them. Wrong snapshot/denied handling, timing side channels, rate limits and scope-specific transport error policy still need review.
+
+Tests cover serialization/replay/retry, invalid history and wire fields, revocation, collision, and equal recipient view/acknowledgement across two histories with different private revisions. Synthetic only. No new Cargo dependencies. Previous tests remain. This new head requires fresh CI and review.
+
+## Before PostgreSQL
+Define a versioned storage contract and transactional append with unique work+revision and actor+command ID, serialized command admission, explicit conflict/retry policy and a durable principal registry. Authorize reads and writes at the API boundary, use isolated DB and a minimally privileged role; do not persist real data until deletion, retention, backup/restore and access policies are reviewed. Need migrations, DB integration tests and failure recovery. No external effects, model calls, UI, or production deployment. The scope tests are a useful property check, not a proof of noninterference.
+
+## Contract checkpoint
+Added independent scoped-reply and stored-record JSON Schemas and 10 shape fixtures. The record revision arithmetic is checked by Rust, not expressible by this simple schema. Original command schema remains unchanged; the recipient must use the distinct scoped contract. Formatting fixes taken from actual CI diff; new head must pass checks. No database yet.

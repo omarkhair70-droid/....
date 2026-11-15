@@ -15,3 +15,9 @@ This branch begins the actual new product, not a design experiment. Its checked-
 - [World Language v0.1 contracts](contracts/v0.1/README.md)
 
 Current status: product foundation / first wire contract; engineering bootstrap pending. No application implementation, runtime, or deployment has been approved by this commit. Architecture and visual language remain open. This branch is not production.
+
+## Production foundation
+
+- [Slice 01 — World Language and Kernel](docs/engineering/01-kernel-foundation.md)
+- Rust workspace: `crates/world-language`, `crates/world-kernel`.
+- Run `cargo test --workspace` after resolving dependencies (G0/G1 still pending; no application deployment).

@@ -1,0 +1,11 @@
+[package]
+name = "world-composition"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+world-language = { path = "../world-language" }
+serde.workspace = true
+serde_json.workspace = true

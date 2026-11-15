@@ -1,0 +1,35 @@
+{
+  "framework": null,
+  "installCommand": "true",
+  "buildCommand": "mkdir -p public && cp index.html world.css world.js living-material.mjs presence-law.mjs voice-capture.mjs local-dictation.mjs voice-surface.mjs formation.mjs encounter.mjs living-intelligence.mjs public/",
+  "outputDirectory": "public",
+  "git": {
+    "deploymentEnabled": {
+      "main": false,
+      "production/kernel-foundation": true
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self'; media-src 'self' blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+        }
+      ]
+    }
+  ]
+}

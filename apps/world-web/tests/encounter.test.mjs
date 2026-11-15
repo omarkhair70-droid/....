@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';import {makeIdea,makeReply,validatePacket,parsePacket,serializePacket,parseVault,matchReply} from '../encounter.mjs';
+const id='11111111-1111-4111-8111-111111111111',token='22222222-2222-4222-8222-222222222222';
+const idea=makeIdea({id,token,text:'  Exact idea.  ',recipient:'Reader',sender:null,sourceId:'private',body:'Never disclosed'});
+assert.deepEqual(Object.keys(idea),['version','kind','id','token','text','recipient','sender']);
+assert.equal(parsePacket(serializePacket(idea)).text,'  Exact idea.  ');
+assert.equal(validatePacket({...idea,secret:'hidden'}),false);
+assert.throws(()=>makeIdea({...idea,text:'x'.repeat(6001)}));
+assert.throws(()=>parsePacket('x'.repeat(65537)));
+assert.throws(()=>parsePacket('{"kind":"idea"}'));
+const reply=makeReply(idea,'invite','An independent contribution');
+const vault=[{idea,sourceId:'local-source'}];assert.equal(matchReply(reply,vault).sourceId,'local-source');
+assert.equal(matchReply({...reply,token:id},vault),null);
+assert.equal(matchReply(reply,[]),null);
+assert.deepEqual(parseVault(JSON.stringify(vault)),vault);
+assert.throws(()=>parseVault(JSON.stringify([...vault,...vault])));
+assert.equal(makeReply(idea,'decline','ignored').text,'');
+assert.throws(()=>makeReply(idea,'invite',''));
+console.log('PASS: scoped plaintext exchange packets, explicit outcomes, correlation and bounded parsing');
