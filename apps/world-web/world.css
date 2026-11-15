@@ -849,3 +849,107 @@ body[data-reality-reading=unclear][data-phase=private] #peripheral-material{tran
 body[data-reality-decision=revise] #reality-revision-wrap{padding-inline-start:17px;border-inline-start:2px solid #769382}
 body[data-reality-decision=stop] #reality-compose::before{background:#e4d8cb}
 @media(max-width:760px){body[data-reality-reading=challenges][data-phase=private] #fold-mass{translate:0 -35px}body[data-reality-reading=supports][data-phase=private] #fold-mass{translate:0 -11px}}
+
+
+/* CONTINUUM / one composition, many acts. This last layer replaces the static split and card rhythm. */
+:root{--ink:#263c3c;--soft:#53635c;--action:#244d4d;--line:#92a195}
+body[data-phase]{background:#f5efe2;color:#263c3c}
+body[data-phase] .presence-material{background:#f5efe2}
+body[data-phase] .world-edge{min-height:78px;padding:20px clamp(22px,4.3vw,64px);gap:18px}
+body[data-phase] .signature,body[data-phase=private] .signature{color:#244449;text-shadow:none;letter-spacing:-.08em;font-size:clamp(28px,3vw,43px)}
+body[data-phase] .edge-actions,body[data-phase=private] .edge-actions{background:transparent;gap:14px;padding:0}
+body[data-phase] .edge-actions button{color:#244d4d;font-size:13px;white-space:normal}
+#sound-world[aria-pressed=true]{color:#835a3e;border-block-end:1px solid #835a3e}
+body[data-phase] #world,body[data-phase=private][data-presence=working] #world{justify-content:flex-end;padding:clamp(28px,7vh,92px) clamp(35px,7vw,124px) 48px 0}
+body[data-phase] .center,body[data-phase=private] .center,html[dir=rtl] body[data-phase=private] .center,body[data-phase]:not([data-phase=private]) .center{width:min(100%,800px);max-width:61%;margin:0;padding:0}
+body[data-phase=private][data-presence=still]:not([data-human-field=open]) #world{padding-block-start:clamp(65px,13vh,146px)}
+body[data-phase=private] .place-label{color:#263f42;font-size:clamp(37px,5vw,75px);line-height:1.12;letter-spacing:-.055em;margin-block-end:12px}
+body[data-phase=private][data-presence=working] .place-label{font-size:clamp(26px,3vw,45px)}
+body[data-phase=private] #thought{font-size:clamp(29px,3.2vw,48px);color:#263c3c;line-height:1.58;letter-spacing:-.018em}
+body[data-phase=private][data-presence=working] #thought{font-size:clamp(25px,2.85vw,41px)}
+body[data-phase=private] #thought::placeholder{color:#66746b}
+body[data-phase=private] #mic{gap:18px}
+body[data-phase=private] .voice-orb{background:#244c4d;color:#f6e8ca}
+body[data-phase=private][data-capture=recording] .voice-orb{background:#875741;color:#fff1da}
+#continuum-lines,#continuum-nodes{transition:opacity 760ms ease}
+body[data-phase=private][data-presence=still] #continuum-lines{opacity:.13}
+body[data-scene=authoring] #continuum-lines,body[data-scene=mixed] #continuum-lines{opacity:.3}
+body[data-capture=recording] #surface-filaments{opacity:.75}
+body[data-forming=yes] #continuum-lines{opacity:.4}
+body[data-correspondence=present] #continuum-nodes,body[data-correspondence=echo] #continuum-nodes{opacity:.9}
+body[data-human-field=open] #continuum-lines{opacity:.43}
+body[data-human-field=open][data-phase=private] #fold-mass{translate:-250px 0}
+body[data-human-field=open][data-phase=private] #world{padding-block-start:clamp(20px,4vh,48px)}
+body[data-human-field=open][data-phase=private] #world .center{width:min(100%,1120px);max-width:81%}
+body[data-human-field=open] .field-materials{column-gap:clamp(25px,5vw,76px);row-gap:28px}
+.field-material{padding:20px 0 18px;border-block-start:1px solid #849b8988}
+.field-material::before{background:none;clip-path:none;transform:none}
+.field-material:nth-child(n)::before{inset-block-start:-4px;inset-inline-start:0;width:7px;height:7px;background:#758c78;border-radius:50%;clip-path:none}
+.field-material:nth-child(3n+2)::before{background:#ae8664}
+.field-material blockquote{font-size:clamp(23px,2.45vw,36px);line-height:1.5;margin:15px 0 17px}
+.field-material .field-person{border:0;padding:0}
+.field-material .field-pick[aria-pressed=true]{background:#244d4d;color:#fff9ec}
+.field-material:has(.field-pick[aria-pressed=true]){border-block-start:2px solid #244d4d}
+.field-material .actions{margin-block:10px 0}
+.field-intersection{padding:clamp(16px,2.5vw,34px) 0;border-block:1px solid #94a18d}
+.field-intersection::before{background:linear-gradient(120deg,#d7e3d13d,#e4dcc23d);clip-path:polygon(0 5%,100% 0,100% 97%,0 100%);inset:-8px -16px}
+.intersection-piece{background:none;border-inline-start:1px solid #688677;padding:10px 16px}
+.intersection-sources{gap:22px}
+#intersection-compose{border-block-start:1px solid #849b89}
+#intersection-compose label{color:#244d4d}
+#voice-player{background:transparent;border-inline-start:1px solid #79988b;box-shadow:none;padding-inline:15px}
+.gesture-choices button,.gesture-choices #mind-mark{border-block-end:1px solid #849b89;min-height:114px;padding-inline:5px}
+body[data-phase]:not([data-phase=private]) .center{width:min(100%,900px);max-width:66%}
+#exchange .place-label{color:#263f42;font-size:clamp(32px,4vw,58px)}
+#exchange .idea-object,#exchange .answer,#exchange #reception,#exchange .meeting{padding:clamp(18px,2.4vw,30px) 0;border-block-start:1px solid #72938499}
+#exchange .idea-object::before,#exchange .idea-object::after,#exchange .answer::before,#exchange #reception::before,#exchange .meeting::before{background:none;clip-path:none;transform:none}
+#exchange .idea-object::after,#exchange .answer::before,#exchange #reception::before,#exchange .meeting::before{inset-block-start:-4px;inset-inline-start:0;width:7px;height:7px;border-radius:50%;background:#71917a}
+#exchange .answer,#exchange #reception{border-color:#ad866c}
+#exchange .answer::before,#exchange #reception::before{background:#b38160}
+#exchange .meeting{border-block-start:1px solid #759890}
+#exchange .meeting::before{background:#456f68}
+#exchange .destination{background:transparent;border-radius:0}
+#exchange .destination.ready{background:#dce4d05e}
+#exchange #return-actions{margin-block:14px}
+body:is([data-phase=returned],[data-phase=meeting]) #exchange{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(25px,4vw,48px)}
+body:is([data-phase=returned],[data-phase=meeting]) #exchange > :not(#idea-object):not(#answer){grid-column:1/-1}
+body:is([data-phase=returned],[data-phase=meeting]) #exchange #answer{margin:0}
+body:is([data-phase=returned],[data-phase=meeting]) #exchange .carried-text,body:is([data-phase=returned],[data-phase=meeting]) #exchange #answer-text{font-size:clamp(20px,2.15vw,32px);min-height:0;line-height:1.6}
+body[data-phase=meeting] #exchange .meeting{margin-block-start:34px;padding-block-start:23px}
+body[data-phase=meeting] #exchange #common{font-size:clamp(26px,3vw,42px)}
+#reality-compose::before{background:#d5e0d139;clip-path:none}
+.reality-trace{background:transparent;border-block-start:1px solid #98a58e;border-inline-start:2px solid #73907d}
+.reality-trace[data-reading=challenges],.reality-trace[data-reading=unclear]{background:transparent}
+.field-history .field-question{background:transparent}
+#formation .formation-sheet::before{background:#a7b8a4;opacity:.35}
+#formation .formation-sheet::after{background:linear-gradient(145deg,#f4ecda,#dbe6cf)}
+body[data-reality-reading=challenges] #continuum-lines{opacity:.5}
+body[data-reality-reading=unclear] #continuum-lines{opacity:.13}
+@media(max-width:760px){
+ body[data-phase] .world-edge{padding:12px 18px;align-items:flex-start;min-height:75px;gap:12px}
+ body[data-phase] .signature{color:#25434a;font-size:28px}
+ body[data-phase] .edge-actions{gap:4px 9px;max-width:68%;justify-content:flex-end}
+ body[data-phase] .edge-actions button,body[data-phase] .edge-actions span{font-size:11px;padding:2px}
+ body[data-phase] #world,body[data-phase=private][data-presence=working] #world,body[data-phase=private][data-presence=still]:not([data-human-field=open]) #world,body[data-human-field=open][data-phase=private] #world{padding:clamp(60px,11svh,110px) 20px 34px}
+ body[data-phase] .center,body[data-phase=private] .center,html[dir=rtl] body[data-phase=private] .center,body[data-phase]:not([data-phase=private]) .center,body[data-human-field=open][data-phase=private] #world .center{width:100%;max-width:none}
+ #fold-frame{clip-path:url(#mobile-window);transform:translate(-18px,-50px) scale(.57);transform-origin:0 0}
+ #continuum-lines{opacity:.09}
+ #encounter-field{transform:translate(-18px,-50px) scale(.46);clip-path:url(#mobile-window)}
+ body[data-phase=private] .place-label{font-size:40px}
+ body[data-phase=private] #thought,body[data-phase=private][data-presence=working] #thought{font-size:27px}
+ body[data-human-field=open] .field-materials{gap:22px}
+ body[data-human-field=open][data-phase=private] .field-material:nth-child(n){margin:0}
+ .field-material{padding:14px 0}
+ .field-material blockquote{font-size:25px}
+ .intersection-piece{padding:10px}
+ body:is([data-phase=returned],[data-phase=meeting]) #exchange{grid-template-columns:1fr}
+ #exchange .idea-object,#exchange .answer,#exchange #reception,#exchange .meeting{padding:18px 0}
+ .gesture-choices button,.gesture-choices #mind-mark{min-height:70px}
+}
+@media(prefers-reduced-motion:reduce){
+ #continuum-lines,#continuum-nodes,#fold-mass,#peripheral-material,#aperture-energy,#surface-filaments,#encounter-field,#encounter-field .encounter-other,#encounter-field .encounter-common{transition:none!important}
+}
+@media(forced-colors:active){
+ .field-material,.intersection-piece,#exchange .idea-object,#exchange .answer,#exchange #reception,#exchange .meeting{border-block-start:1px solid CanvasText;color:CanvasText}
+ .field-material::before,#exchange .idea-object::after,#exchange .answer::before,#exchange #reception::before,#exchange .meeting::before{display:none}
+}
