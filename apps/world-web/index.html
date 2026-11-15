@@ -108,6 +108,21 @@
   <path d="M1440 900H1209C1325 844 1374 825 1440 831Z" fill="#c59a76" opacity=".55"/>
   <path d="M1440 0H1334C1397 58 1424 131 1440 219Z" fill="#a58c9e" opacity=".45"/>
  </g>
+ <g id="encounter-field" aria-hidden="true">
+  <g class="encounter-route" fill="none" stroke="#a67b5a" stroke-width="1.1" opacity=".42">
+   <path d="M304 480C485 427 575 215 760 252S1053 474 1440 242" stroke-dasharray="4 9"/>
+   <path d="M297 504C468 449 587 240 758 270" />
+  </g>
+  <g class="encounter-other">
+   <path d="M-45 840C76 691 309 671 418 438C392 691 231 862 16 928Z" fill="#c07c61" opacity=".68"/>
+   <path d="M-45 840C76 691 309 671 418 438C372 655 194 794 28 845Z" fill="#efc195" opacity=".64"/>
+   <path d="M-20 856C108 743 292 671 408 467" stroke="#f3d1b0" stroke-width="1.4" fill="none"/>
+  </g>
+  <g class="encounter-common">
+   <path d="M40 899C152 799 309 739 405 600C401 727 338 839 220 922H40Z" fill="#8eafa6" opacity=".88"/>
+   <path d="M60 908C144 816 301 752 395 632" stroke="#e7e4c5" stroke-width="1.8" fill="none"/>
+  </g>
+ </g>
 </svg>
 </div>
 <header class="world-edge">
@@ -200,7 +215,9 @@
    <details id="prior" hidden><summary id="prior-label"></summary><label class="sr" for="prior-text" id="prior-input-label"></label><textarea id="prior-text" rows="3" maxlength="6000" dir="auto"></textarea></details>
   </section>
   <section id="exchange" hidden aria-labelledby="exchange-label">
+   <p id="exchange-stage" class="exchange-stage"></p>
    <div class="place-label"><span class="dot"></span><span id="exchange-label"></span></div>
+   <p id="exchange-intro"></p>
    <div id="idea-object" class="idea-object">
     <div class="object-origin"><span id="idea-origin"></span><span id="object-mark"></span></div>
     <label for="excerpt" id="excerpt-label" class="sr"></label><textarea id="excerpt" maxlength="6000" rows="3" dir="auto"></textarea>
@@ -215,6 +232,7 @@
     <p id="preview-note" class="quiet"></p>
    </div>
    <div id="reception" hidden>
+    <p id="reply-prompt"></p>
     <label for="reply" id="reply-label" class="sr"></label><textarea id="reply" maxlength="6000" rows="2" dir="auto"></textarea>
     <div class="actions"><button id="reply-only"></button><button id="reply-meet" class="accent"></button><button id="decline"></button></div>
    </div>
