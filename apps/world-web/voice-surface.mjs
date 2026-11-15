@@ -20,6 +20,13 @@ const clock=s=>Number.isFinite(s)&&s>=0?Math.floor(s/60)+':'+String(Math.floor(s
 export function createVoiceSurface({audio,player,play,playLabel,playIcon,position,positionLabel,time,recordedPath,liveInk,livePath,status,translate}){
  let clip=null,length=0,generation=0,context=null,frame=0,source=null,analyser=null,playbackError=false;
  const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const forced=matchMedia('(forced-colors: active)');
+ function playbackMode(){
+  audio.controls=forced.matches;
+  audio.tabIndex=forced.matches?0:-1;
+  if(forced.matches)audio.removeAttribute('aria-hidden');else audio.setAttribute('aria-hidden','true');
+ }
+ forced.addEventListener('change',playbackMode);playbackMode();
  const duration=()=>Number.isFinite(audio.duration)&&audio.duration>0?audio.duration:length;
  function render(){
   const d=duration(),playing=!audio.paused&&!audio.ended;

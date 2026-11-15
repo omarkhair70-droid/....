@@ -223,6 +223,17 @@ body[data-phase=private] #foot-note{background:#f4efe5;padding:4px 8px;color:#45
  #dictation-opt-wrap #dictation-opt{position:static;inline-size:auto;block-size:auto;clip-path:none;overflow:visible}
  #dictation-opt-wrap:before{display:none}
  #voice #clip:not([hidden]){position:static;inline-size:100%;block-size:40px;clip-path:none}
- #voice-player{display:none}
- #voice #clear-clip{display:block}
+ #voice-player .voice-play,#voice-player .voice-material{display:none}
+ #voice-player{padding-block:0}
 }
+
+/* Keep every role in the legible area of the same material. */
+@media(min-width:761px){
+ body[data-phase]:not([data-phase=private]) #world{direction:ltr;justify-content:center}
+ body[data-phase]:not([data-phase=private]) .center{margin-left:clamp(0px,16vw,235px);width:min(100%,720px)}
+ html[dir=rtl] body[data-phase]:not([data-phase=private]) .center{direction:rtl}
+}
+@media(min-width:761px) and (max-width:1050px){
+ body[data-phase=private] .center,html[dir=rtl] body[data-phase=private] .center,body[data-phase]:not([data-phase=private]) .center{margin-left:clamp(0px,11vw,110px);width:min(100%,620px)}
+}
+@media(forced-colors:active){body[data-phase] .center,html[dir=rtl] body[data-phase=private] .center{margin:0 auto}}
