@@ -777,3 +777,66 @@ new MutationObserver(expressLight).observe(document.body,{attributes:true,attrib
 document.addEventListener('focusin',expressLight);
 document.addEventListener('focusout',()=>queueMicrotask(expressLight));
 expressLight();
+
+
+/* CONTINUUM: an optional original sonic gesture, not a soundtrack or simulated human. */
+const soundToggle=$('sound-world');
+let worldSound=null,soundEnabled=false,soundRevision=0,voices=new Set(),lastScore='';
+function soundLabel(){
+ soundToggle.textContent=lang==='ar'?(soundEnabled?'صوت العالم · يعمل':'صوت العالم · صامت'):(soundEnabled?'World sound · on':'World sound · silent');
+ soundToggle.setAttribute('aria-pressed',String(soundEnabled));
+}
+function silenceScore(){
+ for(const node of voices){try{node.stop()}catch{}}
+ voices.clear()
+}
+function scoreScene(){
+ const d=document.body.dataset;
+ if(d.phase==='prepare')return 'crossing';
+ if(d.phase==='recipient')return 'receipt';
+ if(d.phase==='returned')return d.encounterOutcome==='declined'?'refusal':'return';
+ if(d.phase==='meeting')return 'meeting';
+ if(d.humanField==='open')return 'field';
+ if(d.reality==='open')return 'reality';
+ if(d.forming==='yes')return 'formation';
+ if(!$('mind').hidden&&d.correspondence==='present')return 'discovery';
+ if(d.workLife==='born')return 'born';
+ return 'presence';
+}
+const scoreNotes={presence:[196,293.66],crossing:[196,261.63,293.66],receipt:[220,329.63],return:[293.66,246.94],refusal:[196],meeting:[196,246.94,293.66],field:[174.61,261.63,349.23],reality:[196,207.65],formation:[196,261.63],discovery:[261.63,392],born:[196,293.66,392]};
+function playScore(scene){
+ if(!soundEnabled||!worldSound||worldSound.state!=='running'||voiceBusy()||!$('clip').paused||!$('exchange-audio').paused||document.hidden)return;
+ silenceScore();
+ for(const [i,hz] of (scoreNotes[scene]||[]).entries()){
+  try{
+   const oscillator=worldSound.createOscillator(),gain=worldSound.createGain(),at=worldSound.currentTime+.02+i*.08;
+   oscillator.type='sine';oscillator.frequency.value=hz;
+   gain.gain.setValueAtTime(.0001,at);gain.gain.exponentialRampToValueAtTime(.018,at+.09);gain.gain.exponentialRampToValueAtTime(.0001,at+.62);
+   oscillator.connect(gain);gain.connect(worldSound.destination);voices.add(oscillator);
+   oscillator.onended=()=>{voices.delete(oscillator);oscillator.disconnect();gain.disconnect()};
+   oscillator.start(at);oscillator.stop(at+.65)
+  }catch{silenceScore();break}
+ }
+}
+function updateScore(){
+ const next=scoreScene();
+ if(voiceBusy()||!$('clip').paused||!$('exchange-audio').paused){silenceScore();lastScore=next;return}
+ if(next!==lastScore){lastScore=next;playScore(next)}
+}
+soundToggle.onclick=async()=>{
+ const token=++soundRevision;
+ if(soundEnabled){soundEnabled=false;silenceScore();soundLabel();return}
+ try{
+  const C=window.AudioContext||window.webkitAudioContext;if(!C)throw Error();
+  worldSound??=new C();
+  await worldSound.resume();if(token!==soundRevision)return;
+  soundEnabled=worldSound.state==='running';lastScore=scoreScene();soundLabel();if(soundEnabled)playScore(lastScore)
+ }catch{soundEnabled=false;soundLabel()}
+};
+$('locale').addEventListener('click',soundLabel);
+for(const id of ['clip','exchange-audio'])$(id).addEventListener('play',silenceScore);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)silenceScore()});
+window.addEventListener('pagehide',()=>{soundEnabled=false;silenceScore();soundLabel();if(worldSound)worldSound.suspend().catch(()=>{})});
+new MutationObserver(updateScore).observe(document.body,{attributes:true,attributeFilter:['data-phase','data-human-field','data-reality','data-forming','data-correspondence','data-work-life','data-capture','data-encounter-outcome']});
+new MutationObserver(updateScore).observe($('mind'),{attributes:true,attributeFilter:['hidden']});
+soundLabel();lastScore=scoreScene();
