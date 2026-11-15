@@ -274,12 +274,13 @@ function renderMind(){
  for(const [element,k] of Object.entries({'mind-mark-label':'mark','mind-title':'title','mind-note':'note','mind-need-label':'need','mind-ability-label':'ability','mind-topic-label':'topic','mind-keep':'keep','mind-cancel':'cancel','mind-limit':'limit'}))$(element).textContent=mt(k);
  const signal=!!w&&(marks.length>0||result.links.length>0||echoes.length>0);
  $('world-periphery').hidden=!signal||visible;
- $('world-periphery').setAttribute('aria-label',pt('memory'));
+ $('world-periphery').setAttribute('aria-label',result.links.length?pt('signal'):echoes.length?ew('signal'):pt('memory'));
  $('mind-signal').textContent=result.links.length?pt('signal'):echoes.length?ew('signal'):pt('memory');
  $('mind-signal-detail').textContent=mindOpen?pt('close'):pt('hint');
  $('mind-reveal').setAttribute('aria-expanded',String(mindOpen));
  $('mind-close').textContent=pt('close');
  $('mind-close').hidden=visible;
+ if(!visible&&echoes.length&&!result.links.length)$('mind-note').textContent=ew('note');
  $('mind').hidden=!w||(!visible&&(!signal||!mindOpen));
  $('mind-mark-label').textContent=st('mind');$('mind-title').textContent=ct('title');
  for(const [element,k] of Object.entries({'mind-source-caption':'source','mind-choice-label':'choice','mind-need-label':'need','mind-ability-label':'ability','mind-need-example':'needExample','mind-ability-example':'abilityExample','mind-topic-label':'subject','mind-counterpart-note':'otherNote','mind-empty':'none'}))$(element).textContent=ct(k);
