@@ -4,6 +4,20 @@ const assert=(ok,name)=>{if(!ok)throw new Error(name)};
 const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resolve,{once:true});frame.src='../index.html'+query});
 (async()=>{
  const key='one-world.local.v1';
+ localStorage.removeItem(key);
+ await load();
+ let fresh=frame.contentDocument;
+ assert(fresh.body.dataset.presence==='still','first presence without authored work');
+ assert(fresh.getElementById('prepare').hidden&&fresh.getElementById('save').hidden&&fresh.getElementById('recall').hidden,'no premature business actions');
+ assert(!fresh.getElementById('thought').hidden&&!fresh.getElementById('mic').hidden,'first expression remains available');
+ assert(localStorage.getItem(key)===null,'no passive persistence');
+ assert(fresh.getElementById('presence-material').querySelectorAll('svg').length===1,'one authored spatial composition');
+ assert(fresh.documentElement.scrollWidth<=frame.clientWidth+1,'empty mobile bounds');
+ fresh.getElementById('thought').value='A new thought';
+ fresh.getElementById('thought').dispatchEvent(new Event('input',{bubbles:true}));
+ assert(fresh.body.dataset.presence==='working'&&!fresh.getElementById('prepare').hidden,'first act reveals relevant actions');
+ assert(localStorage.getItem(key)===null,'authoring is not implicit storage');
+
  localStorage.setItem(key,JSON.stringify({version:1,lang:'ar',active:'prior-work',works:[{id:'prior-work',title:'Previous work',body:'Private fact. Shared thought.',idea:'Preserved earlier possibility',ideaOpen:false,parent:null}]}));
  await load();let d=frame.contentDocument;
  const $=id=>d.getElementById(id), click=id=>$(id).click(), set=(id,value)=>{$(id).value=value;$(id).dispatchEvent(new Event('input',{bubbles:true}))};

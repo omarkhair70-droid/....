@@ -5,8 +5,36 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; media-src 'self' blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>ONE WORLD</title><link rel="stylesheet" href="world.css"><script src="world.js" defer></script>
 </head>
-<body data-phase="private">
+<body data-phase="private" data-presence="still">
 <div class="daylight" aria-hidden="true"><div class="light-plane"></div><div class="horizon"></div></div>
+<div id="presence-material" aria-hidden="true" class="presence-material">
+<svg viewBox="0 0 820 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <linearGradient id="rose-surface" x1=".04" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#b88aab"/><stop offset=".48" stop-color="#d5a9be"/><stop offset="1" stop-color="#dfc3c9"/></linearGradient>
+  <linearGradient id="slip-surface" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#92a8b8"/><stop offset=".48" stop-color="#c0cbd1"/><stop offset="1" stop-color="#d9dace"/></linearGradient>
+  <linearGradient id="fold-surface" x1="0" y1=".06" x2=".9" y2="1"><stop stop-color="#e6e4d9"/><stop offset=".37" stop-color="#ede7e0"/><stop offset="1" stop-color="#b5b4c6"/></linearGradient>
+  <linearGradient id="ground-light" x1="0" x2=".9" y1="0" y2="1"><stop stop-color="#b5bcae"/><stop offset=".63" stop-color="#d4d3bc"/><stop offset="1" stop-color="#e7e0ca"/></linearGradient>
+  <linearGradient id="occlusion" x1="0" x2="1" y1="0" y2=".4"><stop stop-color="#5a485f" stop-opacity=".23"/><stop offset="1" stop-color="#5a485f" stop-opacity="0"/></linearGradient>
+  <linearGradient id="wash" x1="0" y1="0" x2=".7" y2="1"><stop stop-color="#fff8e8" stop-opacity=".83"/><stop offset="1" stop-color="#fff8e8" stop-opacity="0"/></linearGradient>
+  <filter id="material-grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".52" numOctaves="3" seed="23" stitchTiles="stitch"/></filter>
+ </defs>
+ <rect width="820" height="1000" fill="url(#rose-surface)"/>
+ <!-- All surfaces are a single original projected composition: depth is
+      communicated through light, overlap, and scale, not a literal room. -->
+ <path d="M0 712L820 489V1000H0Z" fill="url(#ground-light)"/>
+ <path d="M0 129L208 88 208 710 0 788Z" fill="#a37e9d" opacity=".26"/>
+ <path d="M207 89L820 174V489L207 710Z" fill="url(#slip-surface)"/>
+ <path d="M207 89L820 174 820 223 207 127Z" fill="#f6f3e9" opacity=".62"/>
+ <path d="M207 89L278 104 278 680 207 710Z" fill="url(#occlusion)"/>
+ <path d="M462 0H820V519L463 653 463 0Z" fill="url(#fold-surface)"/>
+ <path d="M463 0L486 0V644L463 653Z" fill="#656679" opacity=".19"/>
+ <path d="M606 0H820V272L463 489V238Z" fill="url(#wash)"/>
+ <path d="M0 712L207 650 207 710 0 788Z" fill="#8b837d" opacity=".13"/>
+ <path d="M463 653L820 519V529L484 671Z" fill="#72786d" opacity=".16"/>
+ <path d="M207 710L463 653 820 519" fill="none" stroke="#eee9db" stroke-opacity=".64" stroke-width="1.15"/>
+ <rect width="820" height="1000" filter="url(#material-grain)" opacity=".055" class="material-grain"/>
+</svg>
+</div>
 <header class="world-edge">
  <span class="signature" aria-label="One World">one<span>world.</span></span>
  <div class="edge-actions"><span id="mode"></span><button id="locale" lang="en">English</button></div>
@@ -14,7 +42,7 @@
 <main id="world" aria-label="One World">
  <div class="center">
   <section id="private" aria-labelledby="private-label">
-   <div class="place-label"><span class="dot"></span><span id="private-label"></span></div>
+   <div class="place-label"><span id="private-label"></span></div>
    <label for="name" id="name-label" class="sr"></label><input id="name" maxlength="240" dir="auto" hidden>
    <label for="thought" id="thought-label" class="sr"></label>
    <textarea id="thought" maxlength="12000" rows="3" dir="auto"></textarea>
@@ -55,7 +83,7 @@
   <p id="status" class="status" role="status" aria-live="polite"></p>
  </div>
 </main>
-<footer class="world-foot"><span id="foot-note"></span><span class="coordinate" aria-hidden="true">01 — ∞</span></footer>
+<footer class="world-foot"><span id="foot-note"></span><span class="coordinate" aria-hidden="true">ONE WORLD</span></footer>
 <dialog id="memory" aria-labelledby="memory-title"><div class="dialog-head"><h2 id="memory-title"></h2><button id="close-memory"></button></div><label class="sr" for="find" id="find-label"></label><input id="find" type="search" autocomplete="off"><div id="works"></div><div class="actions"><button id="new-work"></button><button id="forget"></button></div><p id="memory-note" class="quiet"></p></dialog>
 <noscript>JavaScript is required for this local review. يلزم تشغيل JavaScript للمعاينة المحلية.</noscript>
 </body></html>

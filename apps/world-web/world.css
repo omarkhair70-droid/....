@@ -39,3 +39,54 @@ dialog{background:#f0e7e6;color:var(--ink);border:1px solid #716475;padding:25px
 @supports(field-sizing:content){textarea{field-sizing:content;resize:none}}
 @media(max-width:600px){:root{font-size:16px}.world-edge{min-height:64px;padding-block:14px}.edge-actions{gap:5px}.edge-actions span{font-size:11px}#world{min-height:calc(100svh - 136px);padding-block:28px}.center{max-width:100%}.place-label{margin-bottom:18px}.light-plane{clip-path:polygon(50% 0,100% 0,100% 90%,73% 70%)}.preparation{grid-template-columns:1fr;gap:10px}.destination{gap:8px}.destination button{padding-inline:12px}.actions{gap:6px 8px}.actions button{padding-inline:10px}.world-foot{font-size:11px;align-items:start}.world-foot .coordinate{display:none}.idea-object{padding-block:16px}.answer{padding-inline-start:15px}.voice-line{gap:7px}dialog{padding:17px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* Chapter 01: presence before action. Not a second route, hero or modal. */
+.presence-material{display:none}
+body[data-phase=private]{background:#efebe6;--ink:#29272d;--soft:#5b535a;--action:#33476a;--line:#8a78869c;color:var(--ink)}
+body[data-phase=private] .daylight{display:none}
+body[data-phase=private] .presence-material{display:block;position:fixed;inset:0 auto 0 0;width:51.6%;z-index:-1;pointer-events:none;overflow:hidden;background:#d2b1c3}
+.presence-material svg{width:100%;height:100%;display:block;clip-path:none}
+.material-grain{mix-blend-mode:multiply}
+body[data-phase=private] .world-edge{direction:ltr;padding-block:22px;min-height:86px;position:relative}
+body[data-phase=private] .signature{font-size:24px;letter-spacing:-.07em;color:#2b2830}
+body[data-phase=private] .edge-actions{gap:16px;direction:inherit}
+body[data-phase=private] .edge-actions span{font-size:12px}
+body[data-phase=private] #world{justify-content:flex-end;padding-inline:0;direction:ltr;min-height:calc(100svh - 146px);align-items:center;padding-block:32px 42px}
+body[data-phase=private] .center{width:48.4%;max-width:none;padding:0 clamp(30px,5.1vw,86px);direction:ltr}
+html[dir=rtl] body[data-phase=private] .center{direction:rtl}
+body[data-phase=private] .place-label{font-size:13px;letter-spacing:.05em;color:#62535d;margin-block-end:28px}
+body[data-phase=private] #thought{font-size:clamp(25px,2.8vw,40px);font-weight:400;line-height:1.5;letter-spacing:-.025em;padding:4px 0 18px;min-height:100px;border-block-end:1px solid #887482;max-height:45vh}
+body[data-phase=private] #thought::placeholder{color:#5d5260}
+body[data-phase=private] #thought:focus-visible{outline:2px solid #33476a;outline-offset:4px}
+body[data-phase=private] #name{font-size:14px;min-height:40px;color:#5b535a;margin-block-end:10px}
+body[data-phase=private] .voice-line{min-height:56px;gap:14px;margin-block-start:11px}
+body[data-phase=private] .mic{font-size:14px;gap:9px;min-height:48px;font-weight:500}
+body[data-phase=private] .mic svg{border-color:#8b7784;width:26px;height:26px;padding:7px}
+body[data-phase=private] #private-actions{margin-block-start:18px}
+body[data-phase=private] #private-note{font-size:13px;color:#625660;margin-block-start:12px}
+body[data-phase=private] .world-foot{direction:ltr;padding-block:16px;align-items:center;font-size:12px;color:#514a53}
+body[data-phase=private] #foot-note{margin-left:auto;max-width:37ch;text-align:end}
+body[data-phase=private] .coordinate{display:none}
+html[dir=rtl] body[data-phase=private] #foot-note{direction:rtl}
+body[data-phase=private] .status:empty{min-height:0;margin:0}
+body[data-phase=private] #private-actions:empty{display:none}
+body[data-phase=private][data-presence=still] #private-actions{margin-block:0;min-height:0}
+body[data-phase=private][data-presence=still] #private-note{margin-block-start:10px}
+body[data-phase=private] #recall{color:#625660;text-decoration-color:#8a7886;padding-inline:0}
+body[data-phase=private] #recall:hover{color:#33476a}
+body[data-phase=private] #private-actions{gap:8px 14px}
+@media(min-width:761px) and (max-height:640px){body[data-phase=private] #world{padding-block:16px}body[data-phase=private] .world-edge{min-height:64px;padding-block:12px}}
+@media(max-width:760px){
+ body[data-phase=private] .presence-material{position:absolute;inset:0 0 auto 0;width:100%;height:clamp(220px,37svh,340px)}
+ body[data-phase=private] .presence-material svg{height:100%;width:100%}
+ body[data-phase=private] .world-edge{min-height:60px;padding-block:12px;padding-inline:20px}
+ body[data-phase=private] .edge-actions span{color:#312d35}
+ body[data-phase=private] .edge-actions button{color:#312d35}
+ body[data-phase=private] #world{display:block;min-height:0;padding-block:calc(clamp(220px,37svh,340px) - 60px + 32px) 28px}
+ body[data-phase=private] .center{width:100%;padding-inline:clamp(20px,6.2vw,48px)}
+ body[data-phase=private] .place-label{margin-block-end:16px}
+ body[data-phase=private] #thought{font-size:clamp(25px,5.4vw,34px);min-height:82px}
+ body[data-phase=private] .world-foot{padding-inline:20px;padding-block:12px;font-size:11px}
+ body[data-phase=private] #foot-note{max-width:none}
+}
+@media(forced-colors:active){body[data-phase=private] .presence-material{display:none}body[data-phase=private] #world{padding-block:24px}body[data-phase=private] .center{width:min(100%,820px);margin:auto}}
