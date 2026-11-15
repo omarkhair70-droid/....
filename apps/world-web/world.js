@@ -377,6 +377,7 @@ function setPhase(next,move){
  if(phase==='meeting'&&offer)offer.common=$('common').value;
  phase=next;render();if(move)animate(move);
  const focus=next==='private'?'thought':next==='prepare'?'excerpt':next==='recipient'?'reply':next==='meeting'?'common':'back-private';$(focus).focus({preventScroll:true});
+ if(next!=='private')window.scrollTo({top:0,behavior:'instant'});
 }
 function exportPacket(packet){
  const blob=new Blob([serializePacket(packet)],{type:'application/json'});
@@ -436,12 +437,45 @@ $('portable-keep').onclick=()=>{
  works.push(w);discardVoice();active=w.id;offer=null;phase='private';render();es('kept');$('thought').focus()
 };
 function displaySender(){return offer?.masked?t('anonymous'):offer?.sender||t('anonymous')}
+// Cinematic language follows explicit human actions, never invents a remote person.
+const encounterSceneWords={
+ ar:{
+  prepare:['١ / العبور','ما الذي تريد أن يغادر منك؟','اختر الجزء الذي تريد إظهاره والوجهة والاسم الظاهر. الأصل يبقى في مساحتك.'],
+  recipient:['٢ / الاستقبال','شيء بين عالمين','انظر إلى الفكرة كما يراها الطرف الآخر في هذه المعاينة. يمكنك إضافة شيء أو اختيار عدم المتابعة.'],
+  incoming:['٢ / الاستقبال','شيء وصل إليك','اقرأ ما اختار صاحبه مشاركته في الملف. أنت من يقرر إن كان يستحق إضافة أو لقاءً.'],
+  returned:['٣ / الرجوع','عاد إليك أثر','هذه مساهمة جديدة، لا تعديل على كلماتك. يمكنك اختيار الاستمرار وحدك.'],
+  returnedFile:['٣ / الرجوع','عاد إليك أثر','وصل الرد بملف فتحته بنفسك. يمكنك الاحتفاظ بالمساهمتين، ولا يوجد لقاء حي هنا.'],
+  declined:['٣ / الرجوع','اختار الطرف الآخر ألا يكمل','عدم المتابعة قرار قائم بذاته. تظل فكرتك لك، ولا يتكوّن لقاء.'],
+  meeting:['٤ / ما بينكما','شيء لم يكن موجودًا','الفكرة والإضافة تظلان مستقلتين. هنا تبدأ مساحة ثالثة لما يمكن أن تصنعاه معًا في المعاينة.'],
+  reply:'ما الذي تستطيع أن تضيفه؟',local:'معاينة محلية · أنت تؤدي الدورين',file:'تبادل بالملف · لا اتصال حي'
+ },
+ en:{
+  prepare:['01 / Crossing','What do you want to let leave?','Choose the passage, its destination and your display name. The original stays in your space.'],
+  recipient:['02 / Receiving','Something between two worlds','See the idea from the other role in this review. Add something or choose not to continue.'],
+  incoming:['02 / Receiving','Something has reached you','Read what its author chose to share in the file. You decide whether to contribute or propose a meeting.'],
+  returned:['03 / Return','A trace has returned','This is a new contribution, not a change to your words. You can choose to continue alone.'],
+  returnedFile:['03 / Return','A trace has returned','You opened a reply file. You may retain both contributions; no live meeting is available here.'],
+  declined:['03 / Return','The other role chose not to continue','Not continuing is a decision in its own right. Your idea remains yours; no meeting forms.'],
+  meeting:['04 / In between','Something that did not exist','The idea and the reply remain distinct. A third space is here for what the two roles could make in this review.'],
+  reply:'What could you contribute?',local:'Local review · you play both roles',file:'File exchange · no live connection'
+ }
+};
+function narrateEncounter(){
+ const words=encounterSceneWords[lang];
+ const key=phase==='recipient'&&offer.portable==='incoming'?'incoming':phase==='returned'&&offer.declined?'declined':phase==='returned'&&offer.portable==='returned'?'returnedFile':phase;
+ const [stage,title,intro]=words[key];
+ $('exchange-stage').textContent=stage+' · '+(offer.portable?words.file:words.local);
+ $('exchange-label').textContent=title;
+ $('exchange-intro').textContent=intro;
+ $('reply-prompt').textContent=words.reply;
+ document.body.dataset.encounterOutcome=offer.declined?'declined':offer.reply?'contribution':'open';
+}
 function render(){
  document.body.dataset.phase=phase;document.body.dataset.transport=phase==='private'?'none':offer?.portable?'file':'review';
  $('open-encounter').hidden=phase!=='private';
  $('private').hidden=phase!=='private';$('exchange').hidden=phase==='private';
  portableLabels();
- if(phase==='private'){loadPrivate();return}
+ if(phase==='private'){delete document.body.dataset.encounterOutcome;loadPrivate();return}
  renderFormation();renderMind();
  if(!offer){phase='private';render();return}
  const prep=phase==='prepare',receiver=phase==='recipient',returned=phase==='returned',meet=phase==='meeting';
@@ -460,7 +494,8 @@ function render(){
  $('back-private').textContent=offer.portable?et('leave'):t('back');
  $('exchange-note').textContent=offer.portable?et('review'):t('exchangeNote');
  $('cancel').textContent=offer.portable?et('leave'):t(prep?'cancel':'exit');
- if(offer.portable){$('exchange-label').textContent=receiver?et('incoming'):et('returned');$('object-mark').textContent=et('mark')}
+ if(offer.portable){$('object-mark').textContent=et('mark')}
+ narrateEncounter();
  if(prep){$('excerpt').value=offer.draft;$('recipient').value=offer.recipient;$('masked').checked=offer.masked;$('person-name').value=offer.sender;preparationUI()}
  else{$('carried-text').textContent=offer.exposed||'';$('excerpt').value='';$('recipient').value='';$('person-name').value='';$('reply').value=receiver?offer.replyDraft||'':'';$('answer-text').textContent=offer.declined?(offer.portable?et('declined'):t('declined')):offer.reply||'';$('common').value=meet?offer.common||'':''}
  // Remove hidden private input values from the receiving view; memory itself
