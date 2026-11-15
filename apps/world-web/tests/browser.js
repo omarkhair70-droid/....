@@ -20,9 +20,9 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(fresh.getElementById('presence-material').querySelectorAll('svg').length===1,'one authored spatial composition');
  assert(fresh.documentElement.scrollWidth<=frame.clientWidth+1,'empty mobile bounds');
  assert(fresh.body.dataset.attention==='rest','quiet before deliberate focus');
- assert(fresh.body.dataset.material==='presence-01.4a','same material law in app');
+ assert(fresh.body.dataset.material==='existence-field-a','same material law in app');
  const scene=fresh.getElementById('presence-material').querySelector('svg');
- assert(scene.getAttribute('viewBox')==='435 0 570 900','mobile frames same field');
+ assert(scene.getAttribute('viewBox')==='610 0 570 900','mobile frames same field');
  fresh.getElementById('thought').focus();
  assert(fresh.body.dataset.attention==='express','explicit focus changes local light');
  assert(frame.contentWindow.getComputedStyle(fresh.getElementById('thought')).outlineStyle==='none','focused writing does not become a rectangular form');
@@ -57,8 +57,10 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  record.finish();assert(get('voice').dataset.capture==='ready'&&!get('clip').hidden&&get('clip').src.startsWith('blob:'),'real local blob exposed to playback control');
  assert(get('thought').value===''&&localStorage.getItem(key)===null,'voice does not transcribe or persist implicitly');
  assert(fresh.body.dataset.expression==='voice','voice alone is a material fact');
+ assert(!get('voice-player').hidden&&get('voice-play-label').textContent.length>0,'authored playback surface available, not a decorative wave');
  get('clear-clip').click();assert(get('clip').hidden&&!get('clip').hasAttribute('src'),'explicit removal of clip');
  assert(fresh.body.dataset.expression==='none','removal leaves no invented material');
+ assert(get('voice-player').hidden&&get('recorded-voice-path').getAttribute('d')==='','removed audio has no residual ink');
  // The optional local recognition adapter is exercised with a fake browser service.
  let recognizer, secondCount=0;
  class RecognitionFixture {
@@ -111,7 +113,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  set('recipient','Fictional company');assert(!$('cast').disabled,'prepared with anonymous display');
  const id=$('idea-object').dataset.idea;
  click('cast');assert(d.body.dataset.phase==='recipient','recipient review');
- assert(d.body.dataset.material==='presence-01.4a'&&frame.contentWindow.getComputedStyle(d.getElementById('presence-material')).display!=='none','recipient inhabits the same material');
+ assert(d.body.dataset.material==='existence-field-a'&&frame.contentWindow.getComputedStyle(d.getElementById('presence-material')).display!=='none','recipient inhabits the same material');
  assert($('carried-text').textContent==='Shared thought.','exact disclosed excerpt');
  assert($('idea-object').dataset.idea===id,'same idea identity');
  assert($('thought').value===''&&$('prior-text').value==='','private text not rendered in recipient view');
@@ -121,7 +123,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  set('reply','A second human contribution.');click('reply-meet');
  assert(d.body.dataset.phase==='returned'&&!$('accept').hidden,'independent invitation to meet');
  click('accept');assert(d.body.dataset.phase==='meeting','explicit mutual local entry');
- assert(d.body.dataset.material==='presence-01.4a'&&frame.contentWindow.getComputedStyle(d.getElementById('presence-material')).display!=='none','meeting preserves the material');
+ assert(d.body.dataset.material==='existence-field-a'&&frame.contentWindow.getComputedStyle(d.getElementById('presence-material')).display!=='none','meeting preserves the material');
  assert($('carried-text').textContent==='Shared thought.'&&$('answer-text').textContent==='A second human contribution.','original contributions remain');
  set('common','A jointly authored possibility.');click('leave');assert($('thought').value==='Private fact. Shared thought.','original restored');
  click('resume');assert($('common').value==='A jointly authored possibility.','same encounter resumes');

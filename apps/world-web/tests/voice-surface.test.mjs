@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {peakEnvelope,voiceInk} from '../voice-surface.mjs';
+assert.deepEqual(peakEnvelope([new Float32Array([0,0,0,0])],2),[0,0]);
+assert.deepEqual(peakEnvelope([new Float32Array([0,.5,-.25,1])],2),[.5,1]);
+assert.deepEqual(peakEnvelope([new Float32Array([0,.25]),new Float32Array([-.5,0])],2),[.5,.25]);
+assert.deepEqual(peakEnvelope([new Float32Array([.5])],3),[.5,.5,.5]);
+assert.equal(voiceInk([0,0]),'M0.00 24.00L360.00 24.00L360.00 24.00L0.00 24.00Z');
+assert.ok(voiceInk([.5,1]).includes('360.00 1.00'));
+assert.equal(voiceInk([NaN,0]),'');
+console.log('PASS: acoustic ink derived solely from measured samples, silence and bounds');

@@ -153,3 +153,76 @@ body[data-phase=private][data-capture=stopping] #focus-light{opacity:1}
 #dictation-status:empty{display:none}
 #dictation-preview,#dictation-draft{white-space:pre-wrap;overflow-wrap:anywhere;font-size:clamp(18px,2.2vw,28px);line-height:1.6}
 #dictation-draft{max-height:45vh}
+
+/* Existence A — an authored field, not wallpaper behind a chat form.
+   One plane continues through the local journey. The ink remains native and selectable. */
+:root{--ink:#252c35;--soft:#57595d;--action:#263a67;--line:#73787c;--edge:clamp(20px,4.5vw,74px)}
+body[data-phase]{background:#f4efe5;color:var(--ink)}
+body[data-phase] .presence-material{background:#f4efe5}
+body[data-phase=private]{--ink:#252c35;--soft:#57595d;--action:#263a67;--line:#73787c}
+body[data-phase=private] .world-edge{min-height:100px;padding-block:27px;align-items:flex-start}
+body[data-phase=private] .signature{font-size:clamp(23px,2.2vw,34px);font-weight:650;color:#f4efe5;text-shadow:0 1px 2px #263a67}
+body[data-phase=private] .edge-actions{background:#f4efe5;gap:15px;padding:2px 8px}
+body[data-phase=private] .edge-actions span,body[data-phase=private] .edge-actions button{color:#343b49;font-size:12px}
+body[data-phase=private] #world{justify-content:center;padding:clamp(34px,7vh,78px) var(--edge);align-items:center}
+body[data-phase=private] .center{width:min(100%,680px);margin-inline-start:clamp(0px,16vw,235px)}
+html[dir=rtl] body[data-phase=private] #world{direction:ltr}
+html[dir=rtl] body[data-phase=private] .center{margin-left:clamp(0px,16vw,235px);margin-right:0}
+body[data-phase=private] .place-label{font-size:clamp(16px,1.6vw,24px);letter-spacing:0;font-weight:500;color:#263a67;margin-block-end:18px}
+body[data-phase=private] #thought{font-size:clamp(28px,3.2vw,48px);font-weight:400;letter-spacing:-.018em;line-height:1.6;min-height:100px;padding-block:8px 14px;color:#252c35;background-image:none;resize:none}
+body[data-phase=private] #thought:placeholder-shown{background-image:none}
+body[data-phase=private] #thought::placeholder{color:#535961}
+body[data-phase=private] #thought:focus-visible{background-image:linear-gradient(#263a67,#263a67);background-size:100% 3px;background-position:left bottom;background-repeat:no-repeat}
+html[dir=rtl] body[data-phase=private] #thought:focus-visible{background-position:right bottom}
+body[data-phase=private] #name{color:#57595d;line-height:1.4;font-size:14px}
+body[data-phase=private] #voice{gap:8px 14px;margin-block-start:20px;border-block-start:1px solid #73787c66;padding-block-start:10px}
+body[data-phase=private] .mic{min-height:54px;gap:11px;color:#263a67;font-weight:600}
+body[data-phase=private] .mic svg{background:#263a67;color:#f8f3e9;border:0;border-radius:50%;width:26px;height:26px;padding:12px}
+body[data-phase=private] #voice[data-capture=recording] #mic svg{background:#ae4e35;color:#fff6eb}
+body[data-phase=private] #private-note{font-size:13px;color:#57595d}
+body[data-phase=private] .world-foot{min-height:58px;padding-block:14px}
+body[data-phase=private] #foot-note{background:#f4efe5;padding:4px 8px;color:#454a54}
+#voice #clip:not([hidden]){position:absolute;inline-size:1px;block-size:1px;clip-path:inset(50%);overflow:hidden}
+#voice-player{display:flex;align-items:center;gap:12px;width:100%;padding-block:12px 4px;color:#263a67;min-width:0}
+.voice-play{display:grid;place-items:center;min-inline-size:44px;min-block-size:44px;border:1px solid #263a67;border-radius:50%;padding:8px}
+.voice-play svg{width:24px;height:24px;display:block}
+.voice-material{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;direction:ltr}
+#recorded-voice-ink,#live-voice-ink{display:block;width:100%;height:46px;color:#263a67}
+#live-voice-ink{max-width:280px;color:#ae4e35}
+#voice-position{appearance:none;width:100%;min-height:28px;cursor:ew-resize;display:block;background:transparent;padding:0;border:0;accent-color:#263a67}
+#voice-position::-webkit-slider-runnable-track{height:1px;background:#73787c}
+#voice-position::-webkit-slider-thumb{appearance:none;margin-top:-6px;width:13px;height:13px;border-radius:50%;background:#263a67;border:0}
+#voice-position::-moz-range-track{height:1px;background:#73787c}
+#voice-position::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:#263a67;border:0}
+#voice-position:disabled{opacity:.4;cursor:default}
+#voice-position-time{font-size:11px;font-variant-numeric:tabular-nums;color:#57595d}
+#voice-player-status{margin:0;width:100%;font-size:12px}
+#voice-player-status:empty{display:none}
+#voice-player #clear-clip{font-size:12px;max-width:100px}
+#dictation-opt-wrap:not([hidden]){display:inline-flex;align-items:center;gap:8px;position:relative;color:#263a67;min-height:44px;cursor:pointer}
+#dictation-opt-wrap #dictation-opt{position:absolute;inline-size:1px;block-size:1px;clip-path:inset(50%);overflow:hidden}
+#dictation-opt-wrap:before{content:"";display:inline-block;width:30px;height:14px;border-radius:12px;border:1px solid #263a67;background:radial-gradient(circle at 7px 50%,#263a67 3.5px,transparent 4px)}
+#dictation-opt-wrap:has(input:checked):before{background:radial-gradient(circle at 22px 50%,#f4efe5 3.5px,transparent 4px),#263a67}
+#dictation-opt-wrap:focus-within{outline:2px solid #263a67;outline-offset:2px}
+#dictation-opt-wrap:has(input:disabled){opacity:.6;cursor:default}
+#dictation-review{border-inline-start:2px solid #b68b54;padding-inline-start:15px;margin-block:12px 18px}
+#dictation-review textarea{border:0}
+#dictation-preview{border-inline-start:2px solid #b68b54;padding-inline-start:14px}
+@media(max-width:760px){
+ body[data-phase=private] .world-edge{min-height:73px;padding:17px 20px}
+ body[data-phase=private] .signature{color:#263a67;text-shadow:none;font-size:24px}
+ body[data-phase=private] #world{padding:35px var(--edge)}
+ body[data-phase=private] .center,html[dir=rtl] body[data-phase=private] .center{width:100%;margin:0}
+ body[data-phase=private] #thought{font-size:clamp(25px,7vw,36px);min-height:105px}
+ #voice-player{gap:8px}
+ #voice-player #clear-clip{padding-inline:4px;max-width:70px}
+}
+@media(forced-colors:active){
+ body[data-phase=private] .signature{color:CanvasText;text-shadow:none}
+ body[data-phase=private] #thought:focus-visible{outline:2px solid Highlight;outline-offset:4px;background-image:none}
+ #dictation-opt-wrap #dictation-opt{position:static;inline-size:auto;block-size:auto;clip-path:none;overflow:visible}
+ #dictation-opt-wrap:before{display:none}
+ #voice #clip:not([hidden]){position:static;inline-size:100%;block-size:40px;clip-path:none}
+ #voice-player{display:none}
+ #voice #clear-clip{display:block}
+}

@@ -32,5 +32,5 @@ export function composePresence({phase,focus,narrow,reducedMotion,capture='idle'
   if(!["private","prepare","recipient","returned","meeting"].includes(phase))return null;
   const active=phase==='private'&&['recording','stopping'].includes(capture);
   const attention=active||["thought","mic","excerpt","reply","common"].includes(focus)?"express":"rest";
-  return {material:"presence-01.4a",frame:narrow?"435 0 570 900":"0 0 1440 900",attention,lightOpacity:attention==="express"?1:0.32,transitionMs:reducedMotion?0:620};
+  return {material:"existence-field-a",frame:narrow?"610 0 570 900":"0 0 1440 900",attention,lightOpacity:attention==="express"?1:0.32,transitionMs:reducedMotion?0:620};
 }

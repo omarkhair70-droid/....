@@ -3,34 +3,76 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; media-src 'self' blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
-<title>ONE WORLD</title><link rel="stylesheet" href="world.css"><script type="module" src="world.js"></script>
+<title>TELEFSHEN</title><link rel="stylesheet" href="world.css"><script type="module" src="world.js"></script>
 </head>
 <body data-phase="private" data-presence="still">
 <div class="daylight" aria-hidden="true"><div class="light-plane"></div><div class="horizon"></div></div>
 <div id="presence-material" aria-hidden="true" class="presence-material">
 <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
  <defs>
-  <linearGradient id="material-base" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c7b4cd"/><stop offset=".5" stop-color="#e5d9d7"/><stop offset="1" stop-color="#d7ddca"/></linearGradient>
-  <radialGradient id="material-depth" cx=".15" cy=".75" r=".85" gradientTransform="matrix(1 0 0 .85 0 .10)"><stop stop-color="#839db5" stop-opacity=".69"/><stop offset=".6" stop-color="#a6b7c8" stop-opacity=".37"/><stop offset="1" stop-color="#a6b7c8" stop-opacity="0"/></radialGradient>
-  <radialGradient id="material-rose" cx=".83" cy=".12" r=".73"><stop stop-color="#c498b6" stop-opacity=".67"/><stop offset="1" stop-color="#c498b6" stop-opacity="0"/></radialGradient>
-  <radialGradient id="shared-light" cx=".52" cy=".43" r=".60" gradientTransform="matrix(1 0 0 .72 0 .12)"><stop stop-color="#fbf5e5" stop-opacity=".91"/><stop offset=".46" stop-color="#f8edda" stop-opacity=".67"/><stop offset="1" stop-color="#f8edda" stop-opacity="0"/></radialGradient>
-  <linearGradient id="material-veil" x1=".1" y1=".9" x2=".9" y2=".1"><stop stop-color="#9d9abb" stop-opacity="0"/><stop offset=".44" stop-color="#9d9abb" stop-opacity=".19"/><stop offset=".72" stop-color="#d4a9c3" stop-opacity=".13"/><stop offset="1" stop-color="#d4a9c3" stop-opacity="0"/></linearGradient>
-  <filter id="veil-softness" x="-.2" y="-.2" width="1.4" height="1.4"><feGaussianBlur stdDeviation="58"/></filter>
-  <radialGradient id="attention-light"><stop stop-color="#fff9e8" stop-opacity=".47"/><stop offset=".48" stop-color="#fff9e8" stop-opacity=".19"/><stop offset="1" stop-color="#fff9e8" stop-opacity="0"/></radialGradient>
+  <clipPath id="fold-clip"><path d="M0 0H610C484 95 331 138 277 294C208 496 415 643 296 900H0Z"/></clipPath>
+  <clipPath id="lower-clip"><path d="M0 632C218 635 314 831 562 900H0Z"/></clipPath>
+  <pattern id="fiber" width="7" height="7" patternUnits="userSpaceOnUse"><path d="M0 7 7 0" stroke="#5c594d" stroke-opacity=".11" stroke-width=".5"/></pattern>
+  <radialGradient id="local-daylight" cx=".5" cy=".5" r=".5"><stop stop-color="#fffaf1" stop-opacity=".8"/><stop offset="1" stop-color="#fffaf1" stop-opacity="0"/></radialGradient>
  </defs>
- <rect width="1440" height="900" fill="url(#material-base)"/>
- <rect width="1440" height="900" fill="url(#material-depth)"/>
- <rect width="1440" height="900" fill="url(#material-rose)"/>
- <path d="M-180 80 C140 305 355 355 685 190 S1230 -5 1620 290 L1620 480 C1190 225 1000 365 690 425 S160 520 -180 285Z" fill="url(#material-veil)" filter="url(#veil-softness)"/>
- <rect width="1440" height="900" fill="url(#shared-light)"/>
- <ellipse id="focus-light" cx="720" cy="450" rx="415" ry="290" fill="url(#attention-light)"/>
+ <rect width="1440" height="900" fill="#f4efe5"/>
+ <path d="M0 0H610C484 95 331 138 277 294C208 496 415 643 296 900H0Z" fill="#263a67"/>
+ <g clip-path="url(#fold-clip)">
+  <path d="M-90 98C168 13 255 211 195 426S112 722 393 920H-90Z" fill="#49699a"/>
+  <path d="M-60 260C115 263 213 139 291 42L430-40H-60Z" fill="#d47b55"/>
+  <path d="M-70 435C163 293 251 568 163 726S213 891 458 972H-70Z" fill="#9eb5ba"/>
+  <g stroke="#f4efe5" stroke-width=".75" stroke-opacity=".34" fill="none"><path d="M-210.0 -35 C80.0 166 -300.0 330 -175.0 310.0 S100.0 855 260.0 980"/>
+<path d="M-196.6 -35 C93.4 166 -286.6 330 -161.6 322.6 S113.4 855 273.4 980"/>
+<path d="M-183.1 -35 C106.9 166 -273.1 330 -148.1 335.1 S126.9 855 286.9 980"/>
+<path d="M-169.7 -35 C120.3 166 -259.7 330 -134.7 347.7 S140.3 855 300.3 980"/>
+<path d="M-156.3 -35 C133.7 166 -246.3 330 -121.3 360.3 S153.7 855 313.7 980"/>
+<path d="M-142.9 -35 C147.1 166 -232.9 330 -107.9 372.9 S167.1 855 327.1 980"/>
+<path d="M-129.4 -35 C160.6 166 -219.4 330 -94.4 385.4 S180.6 855 340.6 980"/>
+<path d="M-116.0 -35 C174.0 166 -206.0 330 -81.0 398.0 S194.0 855 354.0 980"/>
+<path d="M-102.6 -35 C187.4 166 -192.6 330 -67.6 410.6 S207.4 855 367.4 980"/>
+<path d="M-89.1 -35 C200.9 166 -179.1 330 -54.1 423.1 S220.9 855 380.9 980"/>
+<path d="M-75.7 -35 C214.3 166 -165.7 330 -40.7 435.7 S234.3 855 394.3 980"/>
+<path d="M-62.3 -35 C227.7 166 -152.3 330 -27.3 448.3 S247.7 855 407.7 980"/>
+<path d="M-48.9 -35 C241.1 166 -138.9 330 -13.9 460.9 S261.1 855 421.1 980"/>
+<path d="M-35.4 -35 C254.6 166 -125.4 330 -0.4 473.4 S274.6 855 434.6 980"/>
+<path d="M-22.0 -35 C268.0 166 -112.0 330 13.0 486.0 S288.0 855 448.0 980"/>
+<path d="M-8.6 -35 C281.4 166 -98.6 330 26.4 498.6 S301.4 855 461.4 980"/>
+<path d="M4.9 -35 C294.9 166 -85.1 330 39.9 511.1 S314.9 855 474.9 980"/>
+<path d="M18.3 -35 C308.3 166 -71.7 330 53.3 523.7 S328.3 855 488.3 980"/>
+<path d="M31.7 -35 C321.7 166 -58.3 330 66.7 536.3 S341.7 855 501.7 980"/>
+<path d="M45.1 -35 C335.1 166 -44.9 330 80.1 548.9 S355.1 855 515.1 980"/>
+<path d="M58.6 -35 C348.6 166 -31.4 330 93.6 561.4 S368.6 855 528.6 980"/>
+<path d="M72.0 -35 C362.0 166 -18.0 330 107.0 574.0 S382.0 855 542.0 980"/>
+<path d="M85.4 -35 C375.4 166 -4.6 330 120.4 586.6 S395.4 855 555.4 980"/>
+<path d="M98.9 -35 C388.9 166 8.9 330 133.9 599.1 S408.9 855 568.9 980"/>
+<path d="M112.3 -35 C402.3 166 22.3 330 147.3 611.7 S422.3 855 582.3 980"/>
+<path d="M125.7 -35 C415.7 166 35.7 330 160.7 624.3 S435.7 855 595.7 980"/>
+<path d="M139.1 -35 C429.1 166 49.1 330 174.1 636.9 S449.1 855 609.1 980"/>
+<path d="M152.6 -35 C442.6 166 62.6 330 187.6 649.4 S462.6 855 622.6 980"/>
+<path d="M166.0 -35 C456.0 166 76.0 330 201.0 662.0 S476.0 855 636.0 980"/>
+<path d="M179.4 -35 C469.4 166 89.4 330 214.4 674.6 S489.4 855 649.4 980"/>
+<path d="M192.9 -35 C482.9 166 102.9 330 227.9 687.1 S502.9 855 662.9 980"/>
+<path d="M206.3 -35 C496.3 166 116.3 330 241.3 699.7 S516.3 855 676.3 980"/>
+<path d="M219.7 -35 C509.7 166 129.7 330 254.7 712.3 S529.7 855 689.7 980"/>
+<path d="M233.1 -35 C523.1 166 143.1 330 268.1 724.9 S543.1 855 703.1 980"/>
+<path d="M246.6 -35 C536.6 166 156.6 330 281.6 737.4 S556.6 855 716.6 980"/>
+<path d="M260.0 -35 C550.0 166 170.0 330 295.0 750.0 S570.0 855 730.0 980"/></g>
+ </g>
+ <path d="M0 632C218 635 314 831 562 900H0Z" fill="#cbb16d"/>
+ <g clip-path="url(#lower-clip)" fill="none" stroke="#514b55" stroke-width=".75" opacity=".34"><path d="M-60 690 Q260 835 590 950"/><path d="M-60 698 Q262 840 596 950"/><path d="M-60 706 Q264 845 602 950"/><path d="M-60 714 Q266 850 608 950"/><path d="M-60 722 Q268 855 614 950"/><path d="M-60 730 Q270 860 620 950"/><path d="M-60 738 Q272 865 626 950"/><path d="M-60 746 Q274 870 632 950"/><path d="M-60 754 Q276 875 638 950"/><path d="M-60 762 Q278 880 644 950"/><path d="M-60 770 Q280 885 650 950"/><path d="M-60 778 Q282 890 656 950"/><path d="M-60 786 Q284 895 662 950"/><path d="M-60 794 Q286 900 668 950"/><path d="M-60 802 Q288 905 674 950"/><path d="M-60 810 Q290 910 680 950"/><path d="M-60 818 Q292 915 686 950"/><path d="M-60 826 Q294 920 692 950"/></g>
+ <path d="M0 0H610C484 95 331 138 277 294" fill="none" stroke="#f4efe5" stroke-width="1.2" opacity=".7"/>
+ <path d="M1440 0H1270C1373 86 1324 195 1440 285Z" fill="#c4afc2"/>
+ <path d="M1440 900H1030C1198 848 1288 758 1440 773Z" fill="#d5d8c2"/>
+ <path d="M1440 900H1133C1255 858 1307 812 1440 814Z" fill="url(#fiber)"/>
+ <path d="M0 0H1440V900H0Z" fill="url(#fiber)" opacity=".32"/>
+ <ellipse id="focus-light" cx="900" cy="470" rx="520" ry="340" fill="url(#local-daylight)"/>
 </svg>
 </div>
 <header class="world-edge">
- <span class="signature" aria-label="One World">one<span>world.</span></span>
+ <span class="signature" aria-label="Telefshen">telef<span>shen.</span></span>
  <div class="edge-actions"><span id="mode"></span><button id="locale" lang="en">English</button></div>
 </header>
-<main id="world" aria-label="One World">
+<main id="world" aria-label="Telefshen">
  <div class="center">
   <section id="private" aria-labelledby="private-label">
    <div class="place-label"><span id="private-label"></span></div>
@@ -39,7 +81,17 @@
    <textarea id="thought" maxlength="12000" rows="3" dir="auto"></textarea>
    <div id="voice" class="voice-line">
     <button id="mic" class="mic" type="button" aria-pressed="false"><svg viewBox="0 0 36 36" width="34" height="34" aria-hidden="true"><rect x="14" y="6" width="8" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M10 17v1a8 8 0 0 0 16 0v-1M18 26v5m-5 0h10" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><span id="mic-label"></span></button>
-    <span id="voice-state" role="status"></span><output id="voice-duration" aria-hidden="true" hidden>0:00</output><audio id="clip" controls hidden preload="metadata"></audio><button id="clear-clip" hidden></button>
+    <span id="voice-state" role="status"></span><output id="voice-duration" aria-hidden="true" hidden>0:00</output>
+    <svg id="live-voice-ink" class="live-ink" viewBox="0 0 360 48" aria-hidden="true" hidden><path id="live-voice-path" fill="currentColor"/></svg>
+    <audio id="clip" controls hidden preload="metadata"></audio>
+    <div id="voice-player" class="voice-player" hidden>
+     <button id="voice-play" type="button" class="voice-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="voice-play-icon" d="M8 4 20 12 8 20Z" fill="currentColor"/></svg><span id="voice-play-label" class="sr"></span></button>
+     <div class="voice-material"><svg id="recorded-voice-ink" viewBox="0 0 360 48" aria-hidden="true"><path d="M0 24H360" fill="none" stroke="currentColor" stroke-opacity=".28"/><path id="recorded-voice-path" fill="currentColor"/></svg>
+      <label id="voice-position-label" class="sr" for="voice-position"></label><input id="voice-position" type="range" min="0" max="1000" value="0" disabled>
+      <output id="voice-position-time" aria-hidden="true">0:00</output>
+     </div>
+     <button id="clear-clip" hidden></button>
+    </div><p id="voice-player-status" role="status"></p>
    </div>
    <div id="dictation" class="dictation">
     <label id="dictation-opt-wrap" hidden><input id="dictation-opt" type="checkbox"><span id="dictation-opt-label"></span></label>
@@ -81,7 +133,7 @@
   <p id="status" class="status" role="status" aria-live="polite"></p>
  </div>
 </main>
-<footer class="world-foot"><span id="foot-note"></span><span class="coordinate" aria-hidden="true">ONE WORLD</span></footer>
+<footer class="world-foot"><span id="foot-note"></span><span class="coordinate" aria-hidden="true">TELEFSHEN</span></footer>
 <dialog id="memory" aria-labelledby="memory-title"><div class="dialog-head"><h2 id="memory-title"></h2><button id="close-memory"></button></div><label class="sr" for="find" id="find-label"></label><input id="find" type="search" autocomplete="off"><div id="works"></div><div class="actions"><button id="new-work"></button><button id="forget"></button></div><p id="memory-note" class="quiet"></p></dialog>
 <noscript>JavaScript is required for this local review. يلزم تشغيل JavaScript للمعاينة المحلية.</noscript>
 </body></html>

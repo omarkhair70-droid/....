@@ -24,10 +24,11 @@ jobs:
           node apps/world-web/tests/presence-law.test.mjs
           node apps/world-web/tests/voice-capture.test.mjs
           node apps/world-web/tests/local-dictation.test.mjs
+          node apps/world-web/tests/voice-surface.test.mjs
           node --check apps/world-web/tests/browser.js
           cd apps/world-web
           mkdir -p /tmp/world-web-package
-          cp index.html world.css world.js presence-law.mjs voice-capture.mjs local-dictation.mjs /tmp/world-web-package/
+          cp index.html world.css world.js presence-law.mjs voice-capture.mjs local-dictation.mjs voice-surface.mjs /tmp/world-web-package/
           test -s /tmp/world-web-package/local-dictation.mjs
           cd ../..
           python3 -m http.server 8765 --bind 127.0.0.1 --directory apps/world-web >/tmp/world-web-http.log 2>&1 &
