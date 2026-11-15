@@ -5,7 +5,7 @@ import {createLocalDictation} from './local-dictation.mjs';
 import {createVoiceSurface} from './voice-surface.mjs';
 import {captureFragment,validOrigin,formWork} from './formation.mjs';
 import {VAULT_KEY,MAX_PACKET_BYTES,makeIdea,makeReply,parsePacket,serializePacket,parseVault,matchReply} from './encounter.mjs';
-import {MAX_MARKS,emptyMind,validMind,makeMark,activeMark,correspondences,dismiss,validBasis,captureBasis} from './living-intelligence.mjs';
+import {MAX_MARKS,emptyMind,validMind,makeMark,activeMark,correspondences,dismiss,validBasis,captureBasis,rememberedMentions} from './living-intelligence.mjs';
 const $=id=>document.getElementById(id), KEY='one-world.local.v1';
 const text={
  ar:{mode:'معاينة محلية',locale:'English',private:'هنا، لك',name:'اسم العمل',thought:'اكتب…',mic:'اتكلم',stop:'أنهِ التسجيل',requesting:'بانتظار إذن الميكروفون',cancelMic:'إلغاء الطلب',stopping:'لحظة، بنحتفظ بالتسجيل هنا',voiceLimit:'التسجيل تجاوز الحد المسموح. التسجيل السابق كما هو.',recording:'تسجيل محلي',ready:'التسجيل هنا على جهازك',noMic:'التسجيل غير متاح أو لم يُسمح به. تقدر تكتب.',clear:'امسح التسجيل',prepare:'ارمِ فكرة',resume:'استحضر اللقاء',save:'احتفظ هنا',recall:'استحضر',privateNote:'تقدر تكتب، أو تتكلم، أو تفضل ساكت.',prior:'تصوّر سابق',foot:'عالم قيد التشكّل · الكتابة والتسجيل على جهازك فقط',prepareLabel:'الفكرة قبل أن تغادر',recipientLabel:'إلى من؟',recipientHint:'شخص أو شركة',mask:'بدون إظهار اسمي',person:'الاسم الذي سيظهر',anonymous:'إنسان بلا اسم معلن',origin:'منك',object:'فكرة · من كتابتك',grip:'اسحب الفكرة نحو وجهتها',cast:'ارمها في المعاينة',target:'الوجهة',previewNote:'المستلم اسم تختاره للمعاينة فقط. النص الظاهر هو ما سيصل في التجربة؛ لا إرسال حقيقي ولا نقل للصوت.',receive:'منظور الطرف الآخر · أنت تؤدي الدور',returned:'رجعت لك الفكرة',meet:'المساحة بينكما · دورين محليين',cancel:'ارجع لمساحتك',exit:'أنه المعاينة',exchangeNote:'اختبار محلي بين دورين على نفس الجهاز، بلا أشخاص متصلين.',reply:'إيه اللي تحب تضيفه؟',replyOnly:'أعد الفكرة',replyMeet:'أعدها واقترح لقاءً',decline:'لا أريد المتابعة',declined:'اختار الطرف الآخر عدم المتابعة في المعاينة.',answer:'إضافة من الطرف الآخر في المعاينة',accept:'اقبل اللقاء',back:'استمر بمفردك',common:'ما الذي يمكن أن نصنعه معًا؟',commonHint:'اكتب ما أصبح ممكنًا بعد اللقاء…',keep:'احتفظ بالعمل الجديد هنا',leave:'ارجع لمساحتك',meetingNote:'النصان الأصليان باقيان. ما تكتبه هنا تأليف مشترك في المعاينة، وليس اتفاقًا.',memory:'استحضر شيئًا',close:'إغلاق',find:'ابحث في أعمالك المحلية',new:'مساحة لفكرة أخرى',forget:'امسح النسخ المحفوظة',memoryNote:'التخزين محلي، ليس حسابًا. اللقاءات والتسجيلات مؤقتة حتى تحفظ نص عملك.',empty:'لا توجد أعمال.',untitled:'فكرة بلا اسم',saved:'حُفظ النص على هذا الجهاز فقط.',failed:'تعذر الحفظ؛ النص لا يزال هنا.',need:'اكتب فكرة وحدد وجهة واسمًا ظاهرًا إن اخترته.',emptyThought:'اكتب شيئًا أولًا. التسجيل لا يتحول إلى نص تلقائيًا.',replyNeed:'اكتب إضافتك أولًا، أو اختر عدم المتابعة.',commonNeed:'اكتب ما تريد أن يصبح عملًا.',limit:'وصلت لحد الأعمال المحلية.',confirmForget:'امسح النسخ المحفوظة في هذا المتصفح؟',forgot:'أزيلت النسخ المحفوظة. ما في الذاكرة الحالية لا يزال هنا.',confirmEnd:'إنهاء هذه المعاينة؟ سيبقى عملك الأصلي.',confirmClip:'التسجيل محلي ومؤقت. امسحه قبل الانتقال إلى عمل آخر؟',localOnly:'لم يحدث إرسال حقيقي.',newMade:'نشأ عمل محلي جديد؛ الأصل محفوظ في الذاكرة.',mark:'معاينة لا إرسال',from:'من',to:'إلى',jointA:'الفكرة الأصلية',jointB:'إضافة الطرف الثاني',jointC:'العمل المتكوّن'},
@@ -14,6 +14,7 @@ const text={
 let lang='ar',works=[],active=null,phase='private',offer=null;
 const automaticTitles=new Set();
 let forming=null,minding=null,mindOpen=false,possibilityDraft=null;
+const quietMentions=new Map();
 const possibilityWords={
  ar:{signal:'في شيء قد يتصل بما تفكر فيه',memory:'معانٍ تركتها هنا',hint:'اقترب لو تحب',close:'ابتعد',explore:'شكّل ما يمكن حدوثه',prompt:'ماذا يمكن أن تصنع من هذه الصلة؟',keep:'اجعلها عملًا مستقلاً',cancel:'اتركها الآن',basis:'من أين بدأت الإمكانية؟',basisNote:'المقطعان كما كانا حين اخترت تكوين هذه الفكرة، لا دليل على صلاحية العلاقة اليوم.',source:'استحضر المصدر',missing:'المصدر غير موجود هنا',created:'تكوّن عمل خاص جديد من اقتراحك. لا حفظ تلقائي.',discard:'اترك الإمكانية التي لم تحتفظ بها؟'},
  en:{signal:'Something may connect to your thinking',memory:'Meaning you left here',hint:'Come closer if you wish',close:'Move away',explore:'Shape what might happen',prompt:'What could you make from this connection?',keep:'Make it a separate work',cancel:'Leave it for now',basis:'Where this possibility began',basisNote:'The passages as they were when you formed this idea, not evidence that the connection holds today.',source:'Recall source',missing:'Source not available here',created:'A new private work came from your proposal. Nothing saved automatically.',discard:'Leave the possibility you have not kept?'}
@@ -217,7 +218,7 @@ function renderFormation(){
  const draft=visible?forming.text:'';
  if($('formation-draft').value!==draft)$('formation-draft').value=draft;
  $('formation-keep').disabled=!visible||!draft.trim();
- const children=phase==='private'&&w?works.filter(child=>child.parent===w.id&&(!!child.origin||!!child.birth)):[];
+ const children=phase==='private'&&w?works.filter(child=>child.parent===w.id&&(!!child.origin||!!child.birth||!!child.basis)):[];
  const parent=phase==='private'&&w?.origin?works.find(x=>x.id===w.parent):null;
  const showOrigin=phase==='private'&&!!w?.origin;
  $('formation-lineage').hidden=!showOrigin&&!children.length;
@@ -261,14 +262,20 @@ function mindText(tag,value,cls=''){
  const n=document.createElement(tag);n.textContent=value;n.dir='auto';if(cls)n.className=cls;return n;
 }
 function mindStatus(k){$('status').textContent=mt(k)}
+const echoWords={
+ ar:{signal:'شيء مما تعرفه يقترب من هذا التفكير',title:'أثر من معرفتك',note:'تذكّر، لا استنتاج. الموضوع نفسه ظهر في كلامك الحالي وفي مقطع سبق أن علّمته. لم يثبت وجود علاقة أو فرصة.',open:'استحضر مصدر الأثر',connect:'هل يمكن أن يتصلا؟',ignore:'اترك هذا الأثر الآن',why:'سبب ظهور الصلة',whyNote:'احتياج وقدرة علّمتهما بنفسك تحت الموضوع نفسه. الصلة احتمال يحتاج إلى تحقق، وليست إثباتًا.',label:'فرضية قابلة للرفض',mark:'المعنى الذي سمحت به'},
+ en:{signal:'Something you know is near this thought',title:'A trace of your knowledge',note:'Recall, not inference. The same subject appears in your current words and in a passage you marked earlier. No relationship or opportunity is established.',open:'Recall the source',connect:'Could they connect?',ignore:'Leave this trace for now',why:'Why this connection appears',whyNote:'A need and capability you marked under the same subject. This is a hypothesis to investigate, not proof.',label:'A challengeable hypothesis',mark:'Meaning you allowed'}
+};const ew=k=>echoWords[lang][k];
+function echoesFor(w){return w?rememberedMentions(works,w.id).filter(x=>!quietMentions.get(w.id)?.has(x.key)):[]}
+
 function renderMind(){
  const w=phase==='private'?current():null,visible=!!w&&!!minding&&minding.fragment.sourceId===w.id;
- const marks=w?.mind?.marks??[],result=w?correspondences(works,w.id):{links:[],limited:false};
+ const marks=w?.mind?.marks??[],result=w?correspondences(works,w.id):{links:[],limited:false},echoes=echoesFor(w);
  for(const [element,k] of Object.entries({'mind-mark-label':'mark','mind-title':'title','mind-note':'note','mind-need-label':'need','mind-ability-label':'ability','mind-topic-label':'topic','mind-keep':'keep','mind-cancel':'cancel','mind-limit':'limit'}))$(element).textContent=mt(k);
- const signal=!!w&&(marks.length>0||result.links.length>0);
+ const signal=!!w&&(marks.length>0||result.links.length>0||echoes.length>0);
  $('world-periphery').hidden=!signal||visible;
  $('world-periphery').setAttribute('aria-label',pt('memory'));
- $('mind-signal').textContent=result.links.length?pt('signal'):pt('memory');
+ $('mind-signal').textContent=result.links.length?pt('signal'):echoes.length?ew('signal'):pt('memory');
  $('mind-signal-detail').textContent=mindOpen?pt('close'):pt('hint');
  $('mind-reveal').setAttribute('aria-expanded',String(mindOpen));
  $('mind-close').textContent=pt('close');
@@ -278,7 +285,7 @@ function renderMind(){
  for(const [element,k] of Object.entries({'mind-source-caption':'source','mind-choice-label':'choice','mind-need-label':'need','mind-ability-label':'ability','mind-need-example':'needExample','mind-ability-example':'abilityExample','mind-topic-label':'subject','mind-counterpart-note':'otherNote','mind-empty':'none'}))$(element).textContent=ct(k);
  $('mind-topic').placeholder=ct('subjectHint');
  $('mind-counterpart').placeholder=ct('otherHint');
- $('mind-empty').hidden=!w||visible||!marks.length||!!result.links.length;
+ $('mind-empty').hidden=!w||visible||!marks.length||!!result.links.length||!!echoes.length;
  if(possibilityDraft&&(!w||possibilityDraft.work!==w.id||!result.links.some(l=>l.key===possibilityDraft.key)))possibilityDraft=null;
  renderBasis(w);
  $('mind-compose').hidden=!visible;$('mind-passage').textContent=visible?minding.fragment.excerpt:'';
@@ -289,6 +296,22 @@ function renderMind(){
  updateMindComposer();$('mind-limit').hidden=!result.limited;
  const markRoot=$('mind-marks'),linkRoot=$('mind-links');
  markRoot.replaceChildren();linkRoot.replaceChildren();
+ const echoRoot=$('mind-echoes');echoRoot.replaceChildren();echoRoot.hidden=!mindOpen||visible||!echoes.length;
+ if(mindOpen&&!visible)for(const e of echoes){
+  const item=document.createElement('article');item.className='mind-echo';
+  item.append(mindText('h3',ew('title')),mindText('p',ew('note'),'quiet'),mindText('p',mt(e.mark.kind)+' · '+e.mark.topic,'mind-subject'),mindText('blockquote',e.mark.excerpt));
+  const actions=document.createElement('div');actions.className='actions';
+  actions.append(mindButton(ew('open'),()=>switchWork(e.workId)),mindButton(ew('ignore'),()=>{
+   if(phase!=='private'||current()!==w)return;
+   const ignored=quietMentions.get(w.id)??new Set();ignored.add(e.key);quietMentions.set(w.id,ignored);renderMind();
+   if($('world-periphery').hidden)$('thought').focus();else $('mind-reveal').focus();
+  }),mindButton(ew('connect'),()=>{
+   if(phase!=='private'||current()!==w||!echoesFor(w).some(x=>x.key===e.key))return;
+   $('mind-mark').click();
+   if(minding){minding.topic=e.mark.topic;renderMind();$('mind-need').focus()}
+  },'accent'));
+  item.append(actions);echoRoot.append(item);
+ }
  for(const m of marks){
   const item=document.createElement('div');item.className='mind-mark';
   item.append(mindText('p',mt(m.kind)+' · '+m.topic,'mind-subject'),mindText('blockquote',m.excerpt));
@@ -304,7 +327,8 @@ function renderMind(){
    piece.append(mindText('p',mt(m.kind)+' · '+m.topic,'mind-subject'),mindText('blockquote',m.excerpt));
    material.append(piece)
   }
-  item.append(mindText('h3',mt('related')),material);
+  const why=document.createElement('details');why.className='mind-why';why.append(mindText('summary',ew('why')),mindText('p',ew('whyNote'),'quiet'));
+  item.append(mindText('p',ew('label'),'mind-hypothesis'),mindText('h3',mt('related')),material,why);
   const actions=document.createElement('div');actions.className='actions';
   actions.append(mindButton(mt('open'),()=>switchWork(link.workId)),mindButton(mt('reject'),()=>{if(phase!=='private'||current()!==w)return;try{w.mind=dismiss(w,link.key);renderMind();mindStatus('dismissed');$('mind-mark').focus()}catch{mindStatus('full')}}));
   actions.append(mindButton(pt('explore'),()=>{
@@ -323,7 +347,7 @@ function renderMind(){
     if(works.length>=100){status('limit');return}
     const live=correspondences(works,w.id).links.find(l=>l.key===link.key);if(!live){renderMind();return}
     const body=input.value,child={id:crypto.randomUUID(),title:titleFor(body),body,idea:'',ideaOpen:false,parent:w.id,basis:captureBasis(w.id,live)};
-    works.push(child);possibilityDraft=null;renderMind();
+    works.push(child);possibilityDraft=null;renderMind();renderFormation();
     const open=mindButton(pt('source'),()=>switchWork(child.id));
     $('status').textContent=pt('created');open.textContent=child.title;open.className='possibility-open';$('status').append(' ',open);
    },'accent');
@@ -333,7 +357,7 @@ function renderMind(){
   }
   linkRoot.append(item)
  }
- document.body.dataset.correspondence=result.links.length?'present':'none';
+ document.body.dataset.correspondence=result.links.length?'present':echoes.length?'echo':'none';
 }
 function renderBasis(w){
  const root=$('basis-pieces');root.replaceChildren();
@@ -348,7 +372,7 @@ function renderBasis(w){
   root.append(piece);
  }
 }
-$('mind-reveal').onclick=()=>{mindOpen=!mindOpen;renderMind()};
+$('mind-reveal').onclick=()=>{mindOpen=!mindOpen;renderMind();if(mindOpen&&!$('mind').hidden){$('mind').scrollIntoView({block:'start',behavior:'instant'});$('mind-close').focus({preventScroll:true})}};
 $('mind-close').onclick=()=>{mindOpen=false;renderMind();$('mind-reveal').focus()};
 $('mind-mark').onclick=()=>{
  const w=current(),editor=$('thought');if(phase!=='private'||!w||forming||minding)return;
