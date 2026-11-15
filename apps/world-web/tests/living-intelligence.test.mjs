@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {captureFragment} from '../formation.mjs';
-import {emptyMind,makeMark,activeMark,correspondences,dismiss,validMind,topicKey,validBasis,captureBasis} from '../living-intelligence.mjs';
+import {emptyMind,makeMark,activeMark,correspondences,dismiss,validMind,topicKey,validBasis,captureBasis,rememberedMentions} from '../living-intelligence.mjs';
 const a={id:'a',title:'A',body:'Private. Need calibration.',mind:emptyMind()},b={id:'b',title:'B',body:'Offer calibration.',mind:emptyMind()};
 const one='11111111-1111-4111-8111-111111111111',two='22222222-2222-4222-8222-222222222222';
 a.mind.marks.push(makeMark({id:one,kind:'need',topic:'Calibration',fragment:captureFragment(a,9,a.body.length)}));
@@ -22,3 +22,16 @@ assert.equal(correspondences([a,b],b.id).links.length,0);assert.equal(validMind(
 assert.throws(()=>makeMark({id:two,kind:'fact',topic:'x',fragment:captureFragment(b,0,0)}));
 assert.equal(validMind({marks:[b.mind.marks[0],b.mind.marks[0]],dismissed:[]}),false);
 console.log('PASS: explicit meaning, exact source, local correspondences, invalidation and human challenge');
+
+const draft={id:'draft',body:'What about calibration for our factory?'};
+assert.equal(rememberedMentions([a,b,draft],draft.id).length,2);
+assert.equal(rememberedMentions([b,draft],draft.id)[0].mark.excerpt,'Offer calibration.');
+assert.equal(rememberedMentions([b,{...draft,body:'miscalibration'}],draft.id).length,0);
+assert.equal(rememberedMentions([b,{...draft,body:'calibrations'}],draft.id).length,0);
+assert.equal(rememberedMentions([{...b,body:'Edited.'},draft],draft.id).length,0);
+assert.equal(rememberedMentions([a,b],a.id).length,0,'a marked topic does not masquerade as a fresh recall after challenge');
+assert.equal(rememberedMentions([b,{...b,id:'duplicate'},draft],draft.id).length,0,'duplicate mark identities are excluded');
+const ar={id:'ar',body:'نظام للمخزون',mind:emptyMind()};
+ar.mind.marks.push(makeMark({id:'33333333-3333-4333-8333-333333333333',kind:'ability',topic:'إدارة المخزون',fragment:captureFragment(ar,0,0)}));
+assert.equal(rememberedMentions([ar,{id:'now',body:'أفكر في اِدارة المخزون.'}],'now').length,1);
+console.log('PASS: remembered subjects, exact boundaries and source invalidation without inferred role');
