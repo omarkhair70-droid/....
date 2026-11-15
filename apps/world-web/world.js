@@ -106,3 +106,18 @@ function translate(){
 }
 $('locale').onclick=()=>{if(phase==='prepare')captureDraft();if(phase==='recipient'&&offer)offer.replyDraft=$('reply').value;if(phase==='meeting'&&offer)offer.common=$('common').value;lang=lang==='ar'?'en':'ar';translate();render();status(null)};
 translate();render();
+/* Spatial continuity of Presence. No timer, pointer tracking or passive data
+   collection. On a narrow viewport we frame the same composition toward the
+   illuminated plane. A focused expression changes only the local light. */
+const presenceSVG=$('presence-material').querySelector('svg');
+const presenceNarrow=matchMedia('(max-width:760px)');
+function framePresence(){
+ presenceSVG.setAttribute('viewBox',presenceNarrow.matches?'690 0 480 900':'0 0 1440 900');
+}
+function expressLight(){
+ document.body.dataset.attention=(document.activeElement===$('thought')||document.activeElement===$('mic'))?'express':'rest';
+}
+framePresence();presenceNarrow.addEventListener('change',framePresence);
+document.addEventListener('focusin',expressLight);
+document.addEventListener('focusout',()=>queueMicrotask(expressLight));
+expressLight();

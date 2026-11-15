@@ -13,6 +13,15 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(localStorage.getItem(key)===null,'no passive persistence');
  assert(fresh.getElementById('presence-material').querySelectorAll('svg').length===1,'one authored spatial composition');
  assert(fresh.documentElement.scrollWidth<=frame.clientWidth+1,'empty mobile bounds');
+ assert(fresh.body.dataset.attention==='rest','quiet before deliberate focus');
+ const scene=fresh.getElementById('presence-material').querySelector('svg');
+ assert(scene.getAttribute('viewBox')==='690 0 480 900','mobile frames same field');
+ fresh.getElementById('thought').focus();
+ assert(fresh.body.dataset.attention==='express','explicit focus changes local light');
+ fresh.getElementById('thought').blur();
+ await Promise.resolve();
+ assert(fresh.body.dataset.attention==='rest','light returns at rest');
+
  fresh.getElementById('thought').value='A new thought';
  fresh.getElementById('thought').dispatchEvent(new Event('input',{bubbles:true}));
  assert(fresh.body.dataset.presence==='working'&&!fresh.getElementById('prepare').hidden,'first act reveals relevant actions');
