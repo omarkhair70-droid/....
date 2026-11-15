@@ -660,3 +660,33 @@ body:not([data-phase=private]) #world{padding-block-start:clamp(28px,6vh,65px)}
  #exchange .idea-object::before,#exchange .idea-object::after,#exchange .answer::before,#exchange #reception::before,#exchange .meeting::before{display:none}
  #exchange #cast,#exchange #reply-meet,#exchange #accept,#exchange #keep{background:ButtonFace;color:ButtonText;border:1px solid ButtonText}
 }
+
+
+/* AFTER THE ENCOUNTER — the work is a new, mutable substance; its birth is not. */
+#voice-next{padding:10px 0 0;margin-inline-start:0;max-width:65ch}
+#voice-to-thought{display:inline-flex;align-items:center;gap:18px;padding:8px 0;min-height:44px;text-align:start;color:#244561;font-size:clamp(17px,1.6vw,23px);border-block-end:1px solid #6e8a7b}
+#voice-to-thought:hover{text-decoration:none;color:#375449}
+#voice-next-note{font-size:12px;line-height:1.6;color:#53615e;margin:7px 0 0}
+body[data-phase=private][data-work-life=born] #fold-mass{translate:-108px 0}
+body[data-phase=private][data-work-life=born] #encounter-field{opacity:.66}
+body[data-phase=private][data-work-life=born] #encounter-field .encounter-common{opacity:.85;transform:translate(32px,0)}
+body[data-phase=private][data-work-life=born] #encounter-field .encounter-other{opacity:.65}
+.work-life-invitation{color:#53615e;max-width:56ch;line-height:1.65;font-size:clamp(14px,1.3vw,18px);margin:0 0 18px}
+body[data-work-life=born] #name{color:#375449}
+body[data-work-life=born] #thought{color:#244561}
+.work-birth{position:relative;isolation:isolate;padding-block:28px 20px;margin-block:36px 24px;border-block-start:1px solid #89968c80;min-width:0}
+.birth-heading h2{font-size:clamp(23px,2.7vw,38px);font-weight:400;line-height:1.3;letter-spacing:-.025em;color:#244561;margin:0 0 8px}
+.birth-heading p{font-size:13px;line-height:1.6;color:#53615e;max-width:62ch;margin:0 0 22px}
+.birth-materials{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.birth-piece{position:relative;isolation:isolate;padding:clamp(14px,2vw,25px);min-width:0}
+.birth-piece::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none}
+.birth-piece.first{color:#375449}.birth-piece.first::before{background:#dce5cb;clip-path:polygon(0 0,98% 4%,100% 94%,1% 100%)}
+.birth-piece.second{color:#743f32}.birth-piece.second::before{background:#eddbc5;clip-path:polygon(2% 4%,100% 0,99% 100%,0 94%)}
+.birth-piece>span{font-size:12px;font-weight:500}
+.birth-piece blockquote,#birth-emergence-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:clamp(17px,1.7vw,24px);line-height:1.6;margin:10px 0 0}
+#birth-emergence{margin-block:18px 7px;padding:7px 16px 11px;border-inline-start:2px solid #779b97;background:#d4e2e56b;color:#244561}
+#birth-emergence summary{cursor:pointer;min-height:44px;padding-block:10px;font-size:14px}
+#birth-emergence-text{margin-block:0 10px}
+#birth-parent{padding-inline:0;margin-block-start:6px;color:#375449;font-size:14px}
+@media(max-width:760px){body[data-phase=private][data-work-life=born] #fold-mass{translate:0 -18px}.birth-materials{grid-template-columns:1fr;gap:12px}.work-birth{margin-block:25px}.birth-piece{padding:16px}}
+@media(forced-colors:active){.birth-piece,#birth-emergence{background:Canvas;color:CanvasText;border:1px solid CanvasText}.birth-piece::before{display:none}#voice-to-thought{color:ButtonText}}
