@@ -24,7 +24,21 @@ frame.addEventListener('load',async()=>{
   set('thought','ماذا لو استطعنا صناعة نظام يجعل المصانع ترى احتياجاتها قبل أن تتعطل؟');
   if(state==='formation'){click('form-fragment');set('formation-draft','نظام يتنبأ بنقص المخزون ويربط المصنع بالشريك المناسب.');$('formation').scrollIntoView({block:'start',behavior:'instant'})}
   if(state==='connection'){click('mind-mark');click('mind-need');set('mind-topic','إدارة المخزون');set('mind-counterpart','فريق يستطيع تطوير نظام ذكي لإدارة المخزون.');click('mind-keep');$('mind').scrollIntoView({block:'start',behavior:'instant'})}
-  if(state==='cast'){click('prepare');set('recipient','فريق هندسي مستقل')}
+  if(['cast','receive','returned','meeting','declined'].includes(state)){
+   click('prepare');set('recipient','فريق هندسي مستقل');
+   if(state!=='cast'){
+    click('cast');
+    if(state==='declined')click('decline');
+    else if(state!=='receive'){
+     set('reply','لدينا فريق يعمل على التنبؤ بالاحتياجات. يمكننا اختبار الفكرة مع مصنع واحد.');
+     click('reply-meet');
+     if(state==='meeting'){click('accept');set('common','نعمل معًا على تجربة أولى تحوّل إشارات المخزون إلى قرار مبكر.')}
+    }
+   }
+   const expected={cast:'prepare',receive:'recipient',returned:'returned',meeting:'meeting',declined:'returned'}[state];
+   if(d.body.dataset.phase!==expected)throw Error('encounter scene was not entered');
+   if(state==='meeting')$('meeting').scrollIntoView({block:'center',behavior:'instant'});
+  }
  }
  document.body.dataset.fixture='ready';
  }catch(e){const err=document.getElementById('fixture-error');err.hidden=false;err.textContent='Synthetic scene could not be rendered: '+e.message;document.body.dataset.fixture='error'}
