@@ -100,11 +100,11 @@ export function composeFieldWork({sources,question,body,id,title,parent=null}){
 // Evidence is an authored observation, not verified external truth. The work changes only by an explicit human decision.
 const realityText=(x,n)=>typeof x==='string'&&x.length<=n&&!!x.trim();
 export function validReality(r){
- return Array.isArray(r)&&r.length<=12&&new Set(r.map(e=>e?.id)).size===r.length&&r.every(e=>!!e&&Object.keys(e).length===8&&realityText(e.id,80)&&realityText(e.observation,2000)&&realityText(e.source,500)&&['supports','challenges','unclear'].includes(e.reading)&&['revise','hold','stop'].includes(e.decision)&&realityText(e.before,12000)&&realityText(e.after,12000)&&(e.decision==='revise'?e.before!==e.after:e.before===e.after)&&realityText(e.next,1000));
+ return Array.isArray(r)&&r.length<=12&&new Set(r.map(e=>e?.id)).size===r.length&&r.every(e=>!!e&&Object.keys(e).length===9&&['reported','scenario'].includes(e.kind)&&realityText(e.id,80)&&realityText(e.observation,2000)&&realityText(e.source,500)&&['supports','challenges','unclear'].includes(e.reading)&&['revise','hold','stop'].includes(e.decision)&&realityText(e.before,12000)&&realityText(e.after,12000)&&(e.decision==='revise'?e.before!==e.after:e.before===e.after)&&realityText(e.next,1000));
 }
-export function meetReality(work,{id,observation,source,reading,decision,revision,next}){
+export function meetReality(work,{id,kind,observation,source,reading,decision,revision,next}){
  if(!work||!realityText(work.body,12000)||!validReality(work.reality??[])||(work.reality??[]).length>=12)throw new TypeError('Invalid reality history');
- const entry={id,observation,source,reading,decision,before:work.body,after:decision==='revise'?revision:work.body,next};
+ const entry={id,kind,observation,source,reading,decision,before:work.body,after:decision==='revise'?revision:work.body,next};
  const reality=[...(work.reality??[]),entry];
  if(!validReality(reality))throw new TypeError('Invalid authored observation or decision');
  return {...work,body:entry.after,reality};
