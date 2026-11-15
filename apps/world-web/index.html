@@ -125,16 +125,19 @@
     <div class="mind-heading"><h2 id="mind-title"></h2><button id="mind-close" type="button"></button></div>
     <p id="mind-note" class="quiet"></p>
     <div id="mind-compose" hidden>
-     <blockquote id="mind-passage" dir="auto"></blockquote>
-     <div class="mind-choices">
-      <label><input type="radio" name="mind-kind" value="need" id="mind-need" checked><span id="mind-need-label"></span></label>
-      <label><input type="radio" name="mind-kind" value="ability" id="mind-ability"><span id="mind-ability-label"></span></label>
+     <div class="connection-source"><span id="mind-source-caption" class="mind-subject"></span><blockquote id="mind-passage" dir="auto"></blockquote></div>
+     <p id="mind-choice-label" class="connection-label"></p>
+     <div class="mind-choices" role="group" aria-labelledby="mind-choice-label">
+      <button type="button" id="mind-need" aria-pressed="false"><span id="mind-need-label"></span><small id="mind-need-example"></small></button>
+      <button type="button" id="mind-ability" aria-pressed="false"><span id="mind-ability-label"></span><small id="mind-ability-example"></small></button>
      </div>
-     <label for="mind-topic" id="mind-topic-label"></label><input id="mind-topic" maxlength="80" dir="auto" autocomplete="off">
+     <label for="mind-topic" id="mind-topic-label" class="connection-label"></label><input id="mind-topic" maxlength="80" dir="auto" autocomplete="off">
+     <div class="connection-other"><label for="mind-counterpart" id="mind-counterpart-label" class="connection-label"></label><textarea id="mind-counterpart" rows="3" maxlength="1200" dir="auto"></textarea><p id="mind-counterpart-note" class="quiet"></p></div>
      <div class="actions"><button id="mind-keep" type="button" class="accent"></button><button id="mind-cancel" type="button"></button></div>
+     <p id="mind-next" class="quiet" role="status"></p>
     </div>
     <div id="mind-marks" class="mind-marks"></div>
-    <div id="mind-links" class="mind-links"></div>
+    <div id="mind-links" class="mind-links"></div><p id="mind-empty" class="quiet" hidden></p>
     <p id="mind-limit" class="quiet" hidden></p>
    </section>
    <section id="possibility-basis" hidden aria-labelledby="basis-title" class="possibility-basis"><h2 id="basis-title"></h2><p id="basis-note" class="quiet"></p><div id="basis-pieces"></div>

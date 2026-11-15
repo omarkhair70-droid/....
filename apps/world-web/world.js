@@ -24,6 +24,11 @@ const mindWords={
  en:{mark:'Leave meaning for the world',title:'What might connect',note:'The world connects a need and a capability you marked in different works, on this device only. A connection is a hypothesis, not proof or an internet suggestion.',need:'Need',ability:'Proposed capability',topic:'Shared subject (a short phrase)',keep:'Allow this connection',cancel:'Return',remove:'Withdraw meaning',stale:'The text changed; this meaning is inactive until marked again.',related:'A possibility worth considering',open:'Recall the other work',reject:'This connection is not relevant',limit:'More connections exist beyond the display limit.',invalid:'Choose a clear passage of up to 1,200 characters and a short subject.',full:'This work reached the meaning or challenge limit.',changed:'The text changed; select the passage again.',saved:'Meaning added to this work. It is retained only when you explicitly save your work.',dismissed:'This connection no longer appears between the two works.',challenge:'Leave the unfinished meaning?'}
 };
 const mt=k=>mindWords[lang][k];
+const connectionWords={
+ ar:{mark:'اكتشف صلة',title:'من فكرة إلى إمكانية',source:'من كلامك',choice:'ما الذي تتحدث عنه؟',need:'شيء أحتاجه',ability:'شيء أستطيع تقديمه',needExample:'مثال: مصنع يحتاج نظامًا',abilityExample:'مثال: فريق يستطيع تطوير نظام',subject:'ما الموضوع المشترك؟',subjectHint:'مثال: إدارة المخزون',otherNeed:'هل تعرف قدرة قد تلبي هذا الاحتياج؟',otherAbility:'هل تعرف احتياجًا يناسب هذه القدرة؟',otherHint:'اكتب ما تعرفه فعلًا، أو اتركه فارغًا.',otherNote:'اختياري. إذا كتبت الطرف الثاني، يصبح عملًا مستقلًا خاصًا بك. لا نختلق أشخاصًا أو نرسل شيئًا.',choose:'اختر احتياجًا أو قدرة أولًا.',enter:'اكتب الموضوع لتجربة الربط.',waiting:'سنحتفظ بالمعنى ونبحث عن مقابل في أعمالك المعلّمة.',ready:'سنكوّن علاقة من المادتين اللتين كتبتهما.',keep:'احتفظ بالمعنى',connect:'أظهر الصلة',none:'لم نجد طرفًا مقابلًا في أعمالك المعلّمة. يمكنك إضافة معنى مقابل باستخدام الموضوع نفسه، أو كتابة الطرف الثاني مباشرة.',created:'اتصلت المادتان. دي فرضية من كلامك، مش فرصة مثبتة.',existing:'يحتفظ العالم بالمعنى الذي سمحت به. لا بحث خارجي هنا.'},
+ en:{mark:'Discover a connection',title:'From a thought to a possibility',source:'From your words',choice:'What are you describing?',need:'Something needed',ability:'Something I can offer',needExample:'Example: a factory needs a system',abilityExample:'Example: a team can build a system',subject:'What is the shared subject?',subjectHint:'Example: inventory management',otherNeed:'Do you know a capability that might meet this need?',otherAbility:'Do you know a need that might fit this capability?',otherHint:'Write what you actually know, or leave this blank.',otherNote:'Optional. If written, the counterpart becomes a separate private work. No invented people or sending.',choose:'Choose a need or capability first.',enter:'Enter a subject to try the connection.',waiting:'We will retain the meaning and look for a counterpart in your marked works.',ready:'We will form a relationship from the two passages you authored.',keep:'Keep the meaning',connect:'Reveal the connection',none:'No counterpart in your marked works. Add an opposite meaning with the same subject, or write the counterpart directly.',created:'The two passages connect. This is a hypothesis from your words, not a verified opportunity.',existing:'The world retains meaning you allowed. No external search here.'}
+};
+const ct=k=>connectionWords[lang][k];
 const formationWords={
  ar:{form:'شكّل فكرة',title:'شيء بدأ يتكوّن',source:'من كلامك الأصلي',draft:'ما تريد أن تصبح عليه هذه الفكرة',keep:'احتفظ بها كفكرة مستقلة',cancel:'ارجع',note:'الأصل كما هو. الفكرة الجديدة خاصة بك وغير مرسلة. الحفظ على جهازك يتم باختيارك.',lineage:'ما اتصل بهذا العمل',back:'ارجع إلى الأصل',excerpt:'الجزء الذي بدأت منه',child:'واصل في هذه الفكرة',missing:'الأصل غير متاح هنا',empty:'اختر كلامًا أو اكتب شيئًا أولًا.',discard:'اترك صياغة الفكرة التي لم تحتفظ بها؟',created:'تكوّنت فكرة مستقلة. يمكنك مواصلتها أو البقاء هنا.'},
  en:{form:'Shape a thought',title:'Something takes form',source:'From your original words',draft:'What this idea could become',keep:'Keep as a separate idea',cancel:'Return',note:'The original is unchanged. The new idea is private and unsent. Saving on this device is your choice.',lineage:'Connected to this work',back:'Return to the source',excerpt:'The passage it came from',child:'Continue this idea',missing:'Source unavailable here',empty:'Select words or write something first.',discard:'Leave this unfinished formation?',created:'A separate idea exists. Continue it or stay here.'}
@@ -231,13 +236,19 @@ function renderMind(){
  $('mind-close').textContent=pt('close');
  $('mind-close').hidden=visible;
  $('mind').hidden=!w||(!visible&&(!signal||!mindOpen));
+ $('mind-mark').textContent=ct('mark');$('mind-title').textContent=ct('title');
+ for(const [element,k] of Object.entries({'mind-source-caption':'source','mind-choice-label':'choice','mind-need-label':'need','mind-ability-label':'ability','mind-need-example':'needExample','mind-ability-example':'abilityExample','mind-topic-label':'subject','mind-counterpart-note':'otherNote','mind-empty':'none'}))$(element).textContent=ct(k);
+ $('mind-topic').placeholder=ct('subjectHint');
+ $('mind-counterpart').placeholder=ct('otherHint');
+ $('mind-empty').hidden=!w||visible||!marks.length||!!result.links.length;
  if(possibilityDraft&&(!w||possibilityDraft.work!==w.id||!result.links.some(l=>l.key===possibilityDraft.key)))possibilityDraft=null;
  renderBasis(w);
  $('mind-compose').hidden=!visible;$('mind-passage').textContent=visible?minding.fragment.excerpt:'';
  const input=$('mind-topic'),topic=visible?minding.topic:'';
  if(input.value!==topic)input.value=topic;
- $('mind-need').checked=!visible||minding.kind==='need';$('mind-ability').checked=visible&&minding.kind==='ability';
- $('mind-keep').disabled=!visible||!topic.trim();$('mind-limit').hidden=!result.limited;
+ const counterpart=visible?minding.counterpart:'',other=$('mind-counterpart');
+ if(other.value!==counterpart)other.value=counterpart;
+ updateMindComposer();$('mind-limit').hidden=!result.limited;
  const markRoot=$('mind-marks'),linkRoot=$('mind-links');
  markRoot.replaceChildren();linkRoot.replaceChildren();
  for(const m of marks){
@@ -306,18 +317,42 @@ $('mind-mark').onclick=()=>{
  if((w.mind?.marks.length??0)>=MAX_MARKS){mindStatus('full');return}
  let fragment;try{fragment=captureFragment(w,editor.selectionStart,editor.selectionEnd)}catch{mindStatus('invalid');return}
  if(!fragment||fragment.excerpt.length>1200){mindStatus('invalid');return}
- minding={fragment,kind:'need',topic:''};mindOpen=true;presence();$('mind-topic').focus()
+ minding={fragment,kind:null,topic:'',counterpart:''};mindOpen=true;status(null);presence();$('mind-need').focus();$('mind-compose').scrollIntoView({block:'nearest',behavior:'instant'})
 };
-$('mind-topic').oninput=()=>{if(minding){minding.topic=$('mind-topic').value;$('mind-keep').disabled=!minding.topic.trim()}};
-$('mind-need').onchange=()=>{if(minding)minding.kind='need'};
-$('mind-ability').onchange=()=>{if(minding)minding.kind='ability'};
+function updateMindComposer(){
+ const choice=minding?.kind,topic=minding?.topic??'',other=minding?.counterpart??'';
+ $('mind-need').setAttribute('aria-pressed',String(choice==='need'));
+ $('mind-ability').setAttribute('aria-pressed',String(choice==='ability'));
+ $('mind-counterpart-label').textContent=ct(choice==='ability'?'otherAbility':'otherNeed');
+ $('mind-counterpart').disabled=!choice;
+ $('mind-keep').textContent=ct(other.trim()?'connect':'keep');
+ $('mind-keep').disabled=!choice||!topic.trim();
+ $('mind-next').textContent=choice?(topic.trim()?ct(other.trim()?'ready':'waiting'):ct('enter')):ct('choose');
+}
+$('mind-topic').oninput=()=>{if(minding){minding.topic=$('mind-topic').value;updateMindComposer()}};
+$('mind-counterpart').oninput=()=>{if(minding){minding.counterpart=$('mind-counterpart').value;updateMindComposer()}};
+$('mind-need').onclick=()=>{if(minding){minding.kind='need';updateMindComposer()}};
+$('mind-ability').onclick=()=>{if(minding){minding.kind='ability';updateMindComposer()}};
 $('mind-cancel').onclick=()=>{minding=null;presence();$('thought').focus()};
 $('mind-keep').onclick=()=>{
  const w=current();if(phase!=='private'||!w||!minding||minding.fragment.sourceId!==w.id)return;
  const f=minding.fragment;if(w.body.slice(f.start,f.end)!==f.excerpt){mindStatus('changed');return}
  const mind=w.mind??emptyMind();if(mind.marks.length>=MAX_MARKS){mindStatus('full');return}
- let mark;try{mark=makeMark({id:crypto.randomUUID(),kind:minding.kind,topic:minding.topic,fragment:f})}catch{mindStatus('invalid');return}
- w.mind={...mind,marks:[...mind.marks,mark]};minding=null;presence();mindStatus('saved');$('mind-mark').focus()
+ let mark,child;
+ try{
+  mark=makeMark({id:crypto.randomUUID(),kind:minding.kind,topic:minding.topic,fragment:f});
+  const body=minding.counterpart;
+  if(body.trim()){
+   if(works.length>=100){status('limit');return}
+   const id=crypto.randomUUID();
+   const otherMark=makeMark({id:crypto.randomUUID(),kind:mark.kind==='need'?'ability':'need',topic:mark.topic,fragment:{start:0,end:body.length,excerpt:body}});
+   child={id,title:titleFor(body),body,idea:'',ideaOpen:false,parent:null,mind:{marks:[otherMark],dismissed:[]}};
+  }
+ }catch{mindStatus('invalid');return}
+ w.mind={...mind,marks:[...mind.marks,mark]};if(child)works.push(child);
+ minding=null;mindOpen=true;presence();
+ if(child){$('status').textContent=ct('created');$('mind-links').scrollIntoView({block:'nearest',behavior:'instant'});$('mind-links').querySelector('button')?.focus({preventScroll:true})}
+ else{mindStatus('saved');$('mind-empty').scrollIntoView({block:'nearest',behavior:'instant'});$('mind-reveal').focus({preventScroll:true})}
 };
 
 function captureDraft(){if(!offer||phase!=='prepare')return;offer.draft=$('excerpt').value;offer.recipient=$('recipient').value;offer.masked=$('masked').checked;offer.sender=$('person-name').value}

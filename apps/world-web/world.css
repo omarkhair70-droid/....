@@ -10,7 +10,7 @@ body[data-phase=returned] .daylight{background:linear-gradient(119deg,#dbbfce,#e
 body[data-phase=meeting] .daylight{background:linear-gradient(112deg,#c9afcf 0%,#e8d5dd 29%,#f0eada 49%,#d8e4d5 72%,#adcbd2 100%)}
 button,input,textarea{font:inherit;color:inherit}button{background:transparent;border:0;cursor:pointer;min-height:44px;padding:8px 12px;color:var(--action);text-underline-offset:4px}button:hover{text-decoration:underline}button:disabled{color:#67636c;opacity:.75;cursor:default;text-decoration:none}button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid #284169;outline-offset:4px;border-radius:2px}
 button.accent{border:1px solid #384e6b;padding:9px 22px;border-radius:100px;color:#243a57;background:#f7f2eb55;font-weight:600}button.accent:hover{background:#f7f2ebbb;text-decoration:none}
-input:not([type=checkbox]),textarea{border:0;border-block-end:1px solid var(--line);background:transparent;display:block;padding:8px 0;resize:vertical;width:100%;min-height:44px;overflow-wrap:anywhere;line-height:1.55}textarea::placeholder,input::placeholder{color:#625962;opacity:1}
+input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),textarea{border:0;border-block-end:1px solid var(--line);background:transparent;display:block;padding:8px 0;resize:vertical;width:100%;min-height:44px;overflow-wrap:anywhere;line-height:1.55}textarea::placeholder,input::placeholder{color:#625962;opacity:1}
 .world-edge,.world-foot{display:flex;justify-content:space-between;align-items:center;padding-inline:var(--edge);gap:12px;min-width:0}
 .world-edge{padding-block:25px;min-height:84px}.signature{direction:ltr;white-space:nowrap;letter-spacing:-.085em;font-size:clamp(19px,2.25vw,29px);font-weight:600;line-height:1}.signature span{font-weight:400}
 .edge-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:end}.edge-actions button,.edge-actions span{font-size:12px;color:var(--soft)}.edge-actions button{padding:5px}
@@ -365,3 +365,28 @@ body[data-correspondence=present][data-phase=private] #peripheral-material{trans
 .possibility-open{font-weight:600;text-decoration:underline}
 @media(max-width:760px){#basis-pieces{grid-template-columns:1fr}}
 @media(forced-colors:active){#mind-reveal svg{display:none}}
+
+/* A human-readable connection instrument: two real passages, never a hidden form. */
+#mind-compose{border:0;padding:0;margin-block:24px}
+.connection-source{padding:18px 22px;background:#e9ddca;border-inline-start:4px solid #ac7853}
+.connection-source blockquote{font-size:clamp(23px,2.6vw,34px);color:#263a67;margin-block:8px 0}
+.connection-label{display:block;font-size:15px;font-weight:600;color:#263a67;margin:20px 0 8px}
+.mind-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 18px}
+.mind-choices button{min-height:90px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:start;border:1px solid #9d9e95;padding:13px 16px;color:#263a67;line-height:1.45;background:#f4efe5}
+.mind-choices button span{font-size:19px;font-weight:600}
+.mind-choices button small{font-size:12px;color:#454f49;line-height:1.45;margin-top:6px}
+.mind-choices #mind-need[aria-pressed=true]{background:#e7d4c4;border:2px solid #a45b43;padding:12px 15px}
+.mind-choices #mind-ability[aria-pressed=true]{background:#d7e0cd;border:2px solid #4e7358;padding:12px 15px}
+#mind-topic{border:1px solid #797c72;padding:10px 14px;background:#fffaf1;font-size:19px;min-height:52px;margin-block:0 15px;border-radius:2px}
+#mind-topic::placeholder,#mind-counterpart::placeholder{color:#57595d}
+#mind-counterpart{padding:14px;min-height:110px;border:1px solid #797c72;background:#f9f5eb;font-size:clamp(17px,1.8vw,24px)}
+#mind-counterpart:disabled{opacity:.55}
+#mind-keep:not(:disabled){background:#263a67;color:#f4efe5}
+#mind-next{min-height:24px}
+#mind-empty{padding-block:12px;border-block-start:1px solid #73787c66}
+#mind-note{font-size:13px}
+#mind-mark{font-weight:600;text-decoration:none}
+#mind-mark:hover{text-decoration:underline}
+body[data-phase=private] .signature{color:#f4efe5;text-shadow:0 1px 2px #263a67}
+@media(max-width:760px){.mind-choices button{min-height:106px;padding:10px}.mind-choices button span{font-size:16px}.mind-choices button small{font-size:11px}.mind-choices #mind-need[aria-pressed=true],.mind-choices #mind-ability[aria-pressed=true]{padding:9px}.connection-source{padding:14px}.mind-choices{gap:8px}body[data-phase=private] .signature{color:#182543;text-shadow:0 0 2px #f4efe5}}
+@media(forced-colors:active){.mind-choices button[aria-pressed=true]{outline:2px solid Highlight}.connection-source{background:Canvas;border:1px solid CanvasText}}
