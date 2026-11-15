@@ -20,11 +20,14 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(fresh.getElementById('presence-material').querySelectorAll('svg').length===1,'one authored spatial composition');
  assert(fresh.documentElement.scrollWidth<=frame.clientWidth+1,'empty mobile bounds');
  assert(fresh.body.dataset.attention==='rest','quiet before deliberate focus');
+ assert(fresh.body.dataset.scene==='still','entry does not invent an act');
+ assert(fresh.getElementById('fold-mass')&&fresh.getElementById('peripheral-material'),'one material has a responsive composition');
  assert(fresh.body.dataset.material==='existence-field-a','same material law in app');
  const scene=fresh.getElementById('presence-material').querySelector('svg');
- assert(scene.getAttribute('viewBox')==='610 0 570 900','mobile frames same field');
+ assert(scene.getAttribute('viewBox')==='0 0 430 900','mobile frames same field');
  fresh.getElementById('thought').focus();
  assert(fresh.body.dataset.attention==='express','explicit focus changes local light');
+ assert(fresh.body.dataset.scene==='oriented','attention is not authorship');
  assert(frame.contentWindow.getComputedStyle(fresh.getElementById('thought')).outlineStyle==='none','focused writing does not become a rectangular form');
  assert(frame.contentWindow.getComputedStyle(fresh.getElementById('thought')).backgroundSize==='100% 3px','focused writing retains a visible line');
  fresh.getElementById('thought').blur();
@@ -52,6 +55,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(get('voice').dataset.capture==='recording'&&get('mic').getAttribute('aria-pressed')==='true'&&!get('voice-duration').hidden,'recording indication and actual elapsed clock');
  await tick();
  assert(fresh.body.dataset.capture==='recording'&&fresh.body.dataset.attention==='express','actual capture stays present without focus');
+ assert(fresh.body.dataset.scene==='speaking','actual capture changes the field');
  get('mic').click();assert(get('voice').dataset.capture==='stopping'&&get('mic').getAttribute('aria-disabled')==='true','waits for final data');
  get('mic').click();assert(requests===2,'no overlapping recording');
  record.finish();assert(get('voice').dataset.capture==='ready'&&!get('clip').hidden&&get('clip').src.startsWith('blob:'),'real local blob exposed to playback control');
@@ -71,7 +75,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  }
  voiceWindow.SpeechRecognition=RecognitionFixture;
  const audioTrack={kind:'audio',readyState:'live',stop(){}};
- get('dictation-opt').checked=true;get('dictation-opt').dispatchEvent(new Event('change'));
+ get('dictation-options').open=true;get('dictation-opt').checked=true;get('dictation-opt').dispatchEvent(new Event('change'));
  get('mic').click();pending({getTracks:()=>[audioTrack],getAudioTracks:()=>[audioTrack]});await tick();await tick();
  assert(secondCount===1,'explicit local recognition');
  recognizer.onresult({results:[Object.assign([{transcript:'نص أولي'}],{isFinal:false})]});
@@ -93,6 +97,12 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(fresh.body.dataset.presence==='working'&&!fresh.getElementById('prepare').hidden,'first act reveals relevant actions');
  assert(localStorage.getItem(key)===null,'authoring is not implicit storage');
  assert(fresh.body.dataset.expression==='text','written expression exists');
+ await Promise.resolve();
+ assert(fresh.body.dataset.scene==='authoring','written material changes the field');
+ const thought=fresh.getElementById('thought');
+ thought.value=Array(30).fill('A complete line of human writing.').join('\n');
+ thought.dispatchEvent(new Event('input',{bubbles:true}));
+ assert(thought.scrollHeight<=thought.clientHeight+2,'native long writing grows without an inner scrollbar');
  fresh.getElementById('thought').value='A new thought developed';
  fresh.getElementById('thought').dispatchEvent(new Event('input',{bubbles:true}));
  assert(fresh.getElementById('name').value==='A new thought developed','provisional title follows the author until renamed');

@@ -237,3 +237,41 @@ body[data-phase=private] #foot-note{background:#f4efe5;padding:4px 8px;color:#45
  body[data-phase=private] .center,html[dir=rtl] body[data-phase=private] .center,body[data-phase]:not([data-phase=private]) .center{margin-left:clamp(0px,11vw,110px);width:min(100%,620px)}
 }
 @media(forced-colors:active){body[data-phase] .center,html[dir=rtl] body[data-phase=private] .center{margin:0 auto}}
+
+/* EXISTENCE B — a field that yields to actual material, not a wallpaper.
+   A stationary reading axis stays stable as the native editor grows. */
+#fold-mass,#peripheral-material{transform-origin:0 0;transition:translate 680ms cubic-bezier(.2,.75,.3,1)}
+body[data-scene=oriented] #fold-mass{translate:-14px 0}
+body[data-scene=authoring] #fold-mass,body[data-scene=mixed] #fold-mass{translate:-58px 0}
+body[data-scene=speaking] #fold-mass,body[data-scene=voice-present] #fold-mass{translate:-32px 0}
+body[data-scene=encounter] #fold-mass{translate:-46px 0}
+body[data-scene=authoring] #peripheral-material,body[data-scene=mixed] #peripheral-material{translate:22px 0}
+body[data-phase=private] .signature{color:#182543;text-shadow:none}
+body[data-phase=private] #world{align-items:flex-start;padding-block-start:clamp(85px,17svh,190px);padding-block-end:clamp(50px,9svh,100px)}
+body[data-phase=private] #thought{font-size:clamp(25px,2.55vw,38px);line-height:1.65;min-height:76px;max-height:none;overflow-y:hidden;border:0}
+body[data-phase=private] #thought:placeholder-shown{color:#535961}
+body[data-phase=private] .place-label{font-size:clamp(27px,3.1vw,46px);line-height:1.2;min-height:1.3em;font-weight:400;letter-spacing:-.04em;margin-block-end:25px}
+body[data-phase=private] #voice{border-block-start:0;margin-block-start:14px;padding-block-start:2px}
+body[data-phase=private] #name{margin-block-end:14px}
+body[data-phase=private] .edge-actions,body[data-phase=private] #foot-note{background:transparent}
+body[data-phase=private] #foot-note{color:#303943}
+#dictation-options{width:fit-content;max-width:100%;font-size:13px}
+#dictation-options summary{color:#263a67;cursor:pointer;min-height:44px;align-content:center;text-underline-offset:4px}
+#dictation-options summary:hover{text-decoration:underline}
+#dictation-options[open]{padding-inline-start:12px;border-inline-start:1px solid #73787c66}
+#dictation-options[open] summary{margin-inline-start:-12px}
+#dictation-language-wrap:not([hidden]){padding-block-end:8px}
+@media(max-width:760px){
+ #fold-mass{transform:translate(0px,-8px) scale(.65,.18)}
+ #peripheral-material{transform:translate(-1010px,0) scale(1,1);opacity:.34}
+ #focus-light{transform:translate(-685px,0)}
+ body[data-scene=oriented] #fold-mass{translate:0 -5px}
+ body[data-scene=authoring] #fold-mass,body[data-scene=mixed] #fold-mass{translate:0 -25px}
+ body[data-scene=speaking] #fold-mass,body[data-scene=voice-present] #fold-mass{translate:0 -12px}
+ body[data-scene=encounter] #fold-mass{translate:0 -28px}
+ body[data-phase=private] #world{padding-block-start:clamp(100px,19svh,185px);padding-block-end:45px}
+ body[data-phase=private] .place-label{font-size:38px}
+ body[data-phase=private] #thought{font-size:clamp(24px,6.4vw,34px);min-height:70px}
+ body[data-phase=private] .edge-actions{background:#f4efe5;padding:2px 5px}
+}
+@media(forced-colors:active){body[data-phase=private] .signature{color:CanvasText}body[data-phase=private] #thought:focus-visible{outline:2px solid Highlight;background-image:none}}

@@ -16,6 +16,7 @@
   <radialGradient id="local-daylight" cx=".5" cy=".5" r=".5"><stop stop-color="#fffaf1" stop-opacity=".8"/><stop offset="1" stop-color="#fffaf1" stop-opacity="0"/></radialGradient>
  </defs>
  <rect width="1440" height="900" fill="#f4efe5"/>
+ <g id="fold-mass">
  <path d="M0 0H610C484 95 331 138 277 294C208 496 415 643 296 900H0Z" fill="#263a67"/>
  <g clip-path="url(#fold-clip)">
   <path d="M-90 98C168 13 255 211 195 426S112 722 393 920H-90Z" fill="#49699a"/>
@@ -61,9 +62,12 @@
  <path d="M0 632C218 635 314 831 562 900H0Z" fill="#cbb16d"/>
  <g clip-path="url(#lower-clip)" fill="none" stroke="#514b55" stroke-width=".75" opacity=".34"><path d="M-60 690 Q260 835 590 950"/><path d="M-60 698 Q262 840 596 950"/><path d="M-60 706 Q264 845 602 950"/><path d="M-60 714 Q266 850 608 950"/><path d="M-60 722 Q268 855 614 950"/><path d="M-60 730 Q270 860 620 950"/><path d="M-60 738 Q272 865 626 950"/><path d="M-60 746 Q274 870 632 950"/><path d="M-60 754 Q276 875 638 950"/><path d="M-60 762 Q278 880 644 950"/><path d="M-60 770 Q280 885 650 950"/><path d="M-60 778 Q282 890 656 950"/><path d="M-60 786 Q284 895 662 950"/><path d="M-60 794 Q286 900 668 950"/><path d="M-60 802 Q288 905 674 950"/><path d="M-60 810 Q290 910 680 950"/><path d="M-60 818 Q292 915 686 950"/><path d="M-60 826 Q294 920 692 950"/></g>
  <path d="M0 0H610C484 95 331 138 277 294" fill="none" stroke="#f4efe5" stroke-width="1.2" opacity=".7"/>
+ </g>
+ <g id="peripheral-material">
  <path d="M1440 0H1270C1373 86 1324 195 1440 285Z" fill="#c4afc2"/>
  <path d="M1440 900H1030C1198 848 1288 758 1440 773Z" fill="#d5d8c2"/>
  <path d="M1440 900H1133C1255 858 1307 812 1440 814Z" fill="url(#fiber)"/>
+ </g>
  <path d="M0 0H1440V900H0Z" fill="url(#fiber)" opacity=".32"/>
  <ellipse id="focus-light" cx="900" cy="470" rx="520" ry="340" fill="url(#local-daylight)"/>
 </svg>
@@ -78,7 +82,7 @@
    <div class="place-label"><span id="private-label"></span></div>
    <label for="name" id="name-label" class="sr"></label><input id="name" maxlength="240" dir="auto" hidden>
    <label for="thought" id="thought-label" class="sr"></label>
-   <textarea id="thought" maxlength="12000" rows="3" dir="auto"></textarea>
+   <textarea id="thought" maxlength="12000" rows="1" dir="auto"></textarea>
    <div id="voice" class="voice-line">
     <button id="mic" class="mic" type="button" aria-pressed="false"><svg viewBox="0 0 36 36" width="34" height="34" aria-hidden="true"><rect x="14" y="6" width="8" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M10 17v1a8 8 0 0 0 16 0v-1M18 26v5m-5 0h10" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><span id="mic-label"></span></button>
     <span id="voice-state" role="status"></span><output id="voice-duration" aria-hidden="true" hidden>0:00</output>
@@ -94,8 +98,9 @@
     </div><p id="voice-player-status" role="status"></p>
    </div>
    <div id="dictation" class="dictation">
+    <details id="dictation-options"><summary id="dictation-options-label"></summary>
     <label id="dictation-opt-wrap" hidden><input id="dictation-opt" type="checkbox"><span id="dictation-opt-label"></span></label>
-    <label id="dictation-language-wrap" hidden><span id="dictation-language-label"></span><select id="dictation-language"><option value="ar-EG">العربية (مصر)</option><option value="en-US">English (US)</option></select></label>
+    <label id="dictation-language-wrap" hidden><span id="dictation-language-label"></span><select id="dictation-language"><option value="ar-EG">العربية (مصر)</option><option value="en-US">English (US)</option></select></label></details>
     <p id="dictation-status" role="status" class="quiet"></p>
     <p id="dictation-preview" dir="auto" hidden></p>
     <div id="dictation-review" hidden><label id="dictation-label" for="dictation-draft"></label><textarea id="dictation-draft" dir="auto" maxlength="12000" rows="3"></textarea><button id="dictation-add" type="button"></button></div>

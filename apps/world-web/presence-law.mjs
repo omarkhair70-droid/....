@@ -27,10 +27,11 @@ export function expressionState({hasText, capture='idle', hasClip=false}){
   if(typeof hasText!=='boolean'||typeof hasClip!=='boolean'||!['idle','requesting','recording','stopping','ready'].includes(capture))throw new TypeError('Invalid expression facts');
   return {material:hasText?(hasClip?'mixed':'text'):(hasClip?'voice':'none'),capture,active:capture==='recording'||capture==='stopping'};
 }
-export function composePresence({phase,focus,narrow,reducedMotion,capture='idle'}) {
+export function composePresence({phase,focus,narrow,reducedMotion,capture='idle',expression='none'}) {
   if(typeof phase!=="string"||typeof focus!=="string"||typeof narrow!=="boolean"||typeof reducedMotion!=="boolean") throw new TypeError("Invalid presence context");
   if(!["private","prepare","recipient","returned","meeting"].includes(phase))return null;
   const active=phase==='private'&&['recording','stopping'].includes(capture);
   const attention=active||["thought","mic","excerpt","reply","common"].includes(focus)?"express":"rest";
-  return {material:"existence-field-a",frame:narrow?"610 0 570 900":"0 0 1440 900",attention,lightOpacity:attention==="express"?1:0.32,transitionMs:reducedMotion?0:620};
+  const scene=phase!=='private'?'encounter':active?'speaking':expression==='mixed'?'mixed':expression==='voice'?'voice-present':expression==='text'?'authoring':attention==='express'?'oriented':'still';
+  return {material:"existence-field-a",frame:narrow?"0 0 430 900":"0 0 1440 900",attention,scene,lightOpacity:attention==="express"?1:0.32,transitionMs:reducedMotion?0:680};
 }

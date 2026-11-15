@@ -33,3 +33,12 @@ assert.equal(composePresence({...ctx,capture:'recording'}).attention,'express');
 assert.equal(composePresence({...ctx,capture:'requesting'}).attention,'rest');
 assert.equal(composePresence({...ctx,phase:'recipient',capture:'recording'}).attention,'rest');
 console.log('PASS: explicit expression facts, independent voice and text');
+
+assert.equal(rest.scene,'still');
+assert.equal(focus.scene,'oriented');
+assert.equal(composePresence({...ctx,expression:'text'}).scene,'authoring');
+assert.equal(composePresence({...ctx,expression:'voice'}).scene,'voice-present');
+assert.equal(composePresence({...ctx,expression:'mixed'}).scene,'mixed');
+assert.equal(composePresence({...ctx,capture:'recording',expression:'text'}).scene,'speaking');
+assert.equal(composePresence({...ctx,phase:'meeting',expression:'mixed'}).scene,'encounter');
+assert.equal(mobile.frame,'0 0 430 900');
