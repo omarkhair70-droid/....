@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {captureFragment} from '../formation.mjs';
-import {emptyMind,makeMark,activeMark,correspondences,dismiss,validMind,topicKey} from '../living-intelligence.mjs';
+import {emptyMind,makeMark,activeMark,correspondences,dismiss,validMind,topicKey,validBasis,captureBasis} from '../living-intelligence.mjs';
 const a={id:'a',title:'A',body:'Private. Need calibration.',mind:emptyMind()},b={id:'b',title:'B',body:'Offer calibration.',mind:emptyMind()};
 const one='11111111-1111-4111-8111-111111111111',two='22222222-2222-4222-8222-222222222222';
 a.mind.marks.push(makeMark({id:one,kind:'need',topic:'Calibration',fragment:captureFragment(a,9,a.body.length)}));
@@ -9,6 +9,11 @@ b.mind.marks.push(makeMark({id:two,kind:'ability',topic:' calibration ',fragment
 let result=correspondences([a,b],a.id);
 assert.equal(result.links.length,1);assert.equal(result.links[0].local.excerpt,'Need calibration.');
 assert.equal(result.links[0].kind,'hypothesis');
+const basis=captureBasis(a.id,result.links[0]);
+assert.equal(validBasis(basis,a.id),true);
+assert.equal(validBasis(basis,b.id),false);
+assert.equal(basis[1].mark.excerpt,'Offer calibration.');
+assert.equal(validBasis([basis[0],basis[0]],a.id),false);
 assert.equal(topicKey('إِدارة'),topicKey('ادارة'));
 assert.equal(correspondences([a,b],b.id).links.length,1);
 b.body='Edited.';assert.equal(activeMark(b,b.mind.marks[0]),false);assert.equal(correspondences([a,b],a.id).links.length,0);

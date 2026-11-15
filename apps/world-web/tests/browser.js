@@ -185,7 +185,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  // Simulate an independent device by clearing the sender's browser reference.
  localStorage.removeItem(vaultKey);
  await load();d=frame.contentDocument;
- async function importFixture(p){const w=frame.contentWindow,dt=new w.DataTransfer();dt.items.add(new w.File([JSON.stringify(p)],'example.telefshen',{type:'application/json'}));$('encounter-file').files=dt.files;$('encounter-file').dispatchEvent(new w.Event('change'));for(let i=0;i<5&&d.body.dataset.phase==='private';i++)await tick()}
+ async function importFixture(p){const w=frame.contentWindow,dt=new w.DataTransfer();dt.items.add(new w.File([JSON.stringify(p)],'example.telefshen',{type:'application/json'}));$('encounter-file').files=dt.files;await $('encounter-file').onchange()}
  await importFixture(idea);
  assert(d.body.dataset.transport==='file'&&d.body.dataset.phase==='recipient'&&$('carried-text').textContent===idea.text,'independent file reader, exact disclosed material');
  set('reply','I can contribute.');exportFixture();click('reply-meet');
@@ -213,6 +213,20 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(JSON.parse(localStorage.getItem(key)).works.length===1,'no implicit storage');
  click('save');await load();d=frame.contentDocument;
  assert($('mind-links').children.length===1,'relationship restored from explicitly saved work');
+ assert($('mind').hidden&&!$('world-periphery').hidden,'restored relation stays peripheral until chosen');
+ click('mind-reveal');assert(!$('mind').hidden,'human opens the possibility');
+ $('mind-links').querySelectorAll('button')[2].click();
+ set('possibility-draft','A calibration partnership pilot.');
+ $('mind-links').querySelector('.possibility-editor .accent').click();
+ assert($('status').textContent.includes('A calibration partnership pilot.')&&$('thought').value==='I can offer calibration work.','new possibility does not replace current writing');
+ assert(JSON.parse(localStorage.getItem(key)).works.length===2,'new possibility is not silently saved');
+ $('status').querySelector('button').click();
+ assert($('thought').value==='A calibration partnership pilot.'&&!$('possibility-basis').hidden&&$('basis-pieces').textContent.includes('We need a calibration partner.'),'historical basis accompanies the new work');
+ click('save');await load();d=frame.contentDocument;
+ assert(!$('possibility-basis').hidden,'historical basis restored');
+ $('basis-pieces').querySelector('button').click();
+ assert($('thought').value==='I can offer calibration work.','return to the original authoring');
+ click('mind-reveal');
  set('thought','I can offer unrelated work.');
  assert($('mind-links').children.length===0&&$('mind-marks').textContent.includes('النص تغير'),'changed source suspends old meaning');
  set('thought','I can offer calibration work.');
@@ -222,7 +236,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  click('save');await load();d=frame.contentDocument;
  assert($('mind-links').children.length===0,'challenge persists after explicit save');
  click('prepare');set('recipient','Other human');click('cast');
- assert($('mind').hidden&&$('mind-marks').children.length===0&&$('mind-passage').textContent==='','private knowledge absent from recipient view');
+ assert($('mind').hidden&&$('world-periphery').hidden&&$('basis-pieces').children.length===0&&$('mind-marks').children.length===0&&$('mind-passage').textContent==='','private knowledge absent from recipient view');
  localStorage.removeItem(key);
  result.textContent='PASS: local world, exact disclosure, distinct contributions, continuity, RTL/LTR, 320px';
 })().catch(e=>{result.textContent='FAIL: '+e.message});

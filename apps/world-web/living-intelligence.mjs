@@ -42,3 +42,16 @@ export function dismiss(work,key){
  if(mind.dismissed.length>=MAX_DISMISSED)throw new RangeError('Challenge limit');
  return {marks:mind.marks,dismissed:[...mind.dismissed,key]};
 }
+
+// Historical snapshots are distinct from a currently supported relationship.
+export function validBasis(basis,parent){
+ if(!Array.isArray(basis)||basis.length!==2||typeof parent!=='string'||!parent)return false;
+ if(!basis.every(p=>p&&Object.keys(p).length===2&&typeof p.workId==='string'&&p.workId.length>0&&p.workId.length<=80&&validMark(p.mark)))return false;
+ const [a,b]=basis;
+ return a.workId===parent&&a.workId!==b.workId&&a.mark.id!==b.mark.id&&a.mark.kind!==b.mark.kind&&topicKey(a.mark.topic)===topicKey(b.mark.topic);
+}
+export function captureBasis(workId,link){
+ const basis=[{workId,mark:{...link.local}},{workId:link.workId,mark:{...link.other}}];
+ if(!validBasis(basis,workId))throw new TypeError('Invalid historical basis');
+ return basis;
+}
