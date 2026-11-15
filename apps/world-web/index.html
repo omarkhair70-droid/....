@@ -105,8 +105,21 @@
     <p id="dictation-preview" dir="auto" hidden></p>
     <div id="dictation-review" hidden><label id="dictation-label" for="dictation-draft"></label><textarea id="dictation-draft" dir="auto" maxlength="12000" rows="3"></textarea><button id="dictation-add" type="button"></button></div>
    </div>
-   <div class="actions" id="private-actions"><button id="prepare" class="accent"></button><button id="resume" hidden></button><button id="save"></button><button id="recall"></button></div>
+   <div class="actions" id="private-actions"><button id="form-fragment" class="form-action" hidden><svg viewBox="0 0 28 28" width="24" height="24" aria-hidden="true"><path d="M4 4H18V18H4ZM10 10H24V24H10Z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span id="form-fragment-label"></span></button><button id="prepare" class="accent"></button><button id="resume" hidden></button><button id="save"></button><button id="recall"></button></div>
    <p id="private-note" class="quiet"></p>
+   <section id="formation" hidden aria-labelledby="formation-title" class="formation">
+    <div class="formation-heading"><h2 id="formation-title"></h2><button type="button" id="formation-cancel"></button></div>
+    <div class="formation-composition">
+     <div class="formation-source"><p id="formation-source-label" class="quiet"></p><blockquote id="formation-quote" dir="auto"></blockquote></div>
+     <div class="formation-sheet"><label for="formation-draft" id="formation-draft-label"></label><textarea id="formation-draft" rows="3" maxlength="12000" dir="auto"></textarea><button id="formation-keep" type="button" class="accent"></button></div>
+    </div>
+    <p id="formation-note" class="quiet"></p>
+   </section>
+   <section id="formation-lineage" hidden class="formation-lineage" aria-labelledby="lineage-label">
+    <h2 id="lineage-label"></h2>
+    <div id="origin-trace" hidden><button id="origin-back" type="button"></button><details><summary id="origin-excerpt-label"></summary><blockquote id="origin-excerpt" dir="auto"></blockquote></details></div>
+    <div id="formed-works"></div>
+   </section>
    <details id="prior" hidden><summary id="prior-label"></summary><label class="sr" for="prior-text" id="prior-input-label"></label><textarea id="prior-text" rows="3" maxlength="6000" dir="auto"></textarea></details>
   </section>
   <section id="exchange" hidden aria-labelledby="exchange-label">

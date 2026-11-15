@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';import {captureFragment,validOrigin,formWork} from '../formation.mjs';
+const source={id:'original',body:'Private. Public. 🪁'};
+const fragment=captureFragment(source,9,16);
+assert.equal(fragment.excerpt,'Public.');
+assert.equal(captureFragment(source,0,0).excerpt,source.body);
+assert.equal(captureFragment({id:'empty',body:'   '},0,0),null);
+assert.throws(()=>captureFragment(source,0,100));
+assert.throws(()=>captureFragment(source,18,19));
+const child=formWork({source,fragment,text:'Refined',id:'child',title:'Refined'});
+assert.equal(source.body,'Private. Public. 🪁');
+assert.equal(child.body,'Refined');assert.equal(child.parent,'original');assert.equal(child.origin.excerpt,'Public.');
+source.body='Later revised';assert.equal(child.origin.excerpt,'Public.');
+assert.equal(validOrigin(child.origin,child.parent),true);assert.equal(validOrigin(child.origin,'wrong'),false);assert.equal(validOrigin({...child.origin,end:100},'original'),false);
+assert.throws(()=>formWork({source,fragment,text:' ',id:'child',title:'Refined'}));
+console.log('PASS: exact selection, distinct authorship, retained origin and bounded lineage');
