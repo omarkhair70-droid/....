@@ -172,5 +172,33 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  $('formed-works').querySelector('button').click();click('prepare');set('recipient','Another person');click('cast');
  assert($('formation-quote').textContent===''&&$('origin-excerpt').textContent===''&&!$('carried-text').textContent.includes('Private untouched.'),'private provenance not rendered for recipient');
  localStorage.removeItem(key);
+ const vaultKey='telefshen.encounters.v1';localStorage.removeItem(vaultKey);
+ await load();d=frame.contentDocument;
+ set('thought','PRIVATE source. Carry this only.');
+ $('thought').setSelectionRange(16,32);click('prepare');set('recipient','Independent reader');
+ let exported;const exportFixture=()=>{const w=frame.contentWindow,orig=w.URL.createObjectURL.bind(w.URL);w.URL.createObjectURL=b=>{exported=b;return orig(b)};w.HTMLAnchorElement.prototype.click=function(){}};
+ exportFixture();click('export-idea');
+ assert(exported&&localStorage.getItem(key)===null,'explicit export keeps only its own reference, not the source work');
+ const idea=JSON.parse(await new Blob([exported]).text()),vaultRaw=localStorage.getItem(vaultKey);
+ assert(idea.text==='Carry this only.'&&idea.sender===null&&!JSON.stringify(idea).includes('PRIVATE')&&!JSON.stringify(idea).includes('sourceId'),'packet only contains intended disclosure');
+ assert(d.body.dataset.phase==='prepare','export never impersonates recipient or delivery');
+ // Simulate an independent device by clearing the sender's browser reference.
+ localStorage.removeItem(vaultKey);
+ await load();d=frame.contentDocument;
+ async function importFixture(p){const w=frame.contentWindow,dt=new w.DataTransfer();dt.items.add(new w.File([JSON.stringify(p)],'example.telefshen',{type:'application/json'}));$('encounter-file').files=dt.files;$('encounter-file').dispatchEvent(new w.Event('change'));for(let i=0;i<5&&d.body.dataset.phase==='private';i++)await tick()}
+ await importFixture(idea);
+ assert(d.body.dataset.transport==='file'&&d.body.dataset.phase==='recipient'&&$('carried-text').textContent===idea.text,'independent file reader, exact disclosed material');
+ set('reply','I can contribute.');exportFixture();click('reply-meet');
+ const reply=JSON.parse(await new Blob([exported]).text());
+ assert(reply.outcome==='invite'&&reply.text==='I can contribute.'&&d.body.dataset.phase==='recipient','reply file without impersonating author or claiming delivery');
+ await load();d=frame.contentDocument;
+ await importFixture(reply);assert(d.body.dataset.phase==='private','unmatched reply cannot enter returned view');
+ localStorage.setItem(vaultKey,vaultRaw);
+ await importFixture(reply);
+ assert(d.body.dataset.phase==='returned'&&$('answer-text').textContent==='I can contribute.'&&$('accept').hidden&&!$('portable-keep').hidden,'matched returned trace does not claim live meeting');
+ click('portable-keep');
+ assert($('thought').value.includes('Carry this only.')&&$('thought').value.includes('I can contribute.')&&!$('thought').value.includes('PRIVATE'),'private new work contains exact disclosed contributions only');
+ assert(localStorage.getItem(key)===null,'kept contributions not silently persisted');
+ localStorage.removeItem(vaultKey);
  result.textContent='PASS: local world, exact disclosure, distinct contributions, continuity, RTL/LTR, 320px';
 })().catch(e=>{result.textContent='FAIL: '+e.message});

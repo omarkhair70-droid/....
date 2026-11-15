@@ -298,3 +298,23 @@ body[data-phase=private] #foot-note{color:#303943}
 body[data-forming=yes] #fold-mass{translate:-85px 0}
 @media(max-width:760px){.formation-composition{grid-template-columns:1fr;gap:22px}.formation-sheet{transform:none}.formation-source{padding-inline-start:12px}body[data-forming=yes] #fold-mass{translate:0 -28px}}
 @media(forced-colors:active){.formation-sheet{box-shadow:none;border:1px solid CanvasText}.formed-work{border-color:CanvasText}}
+
+/* ENCOUNTER A — the exposed words carry a distinct boundary and arrive intact.
+   The file route is actual user-carried data; role review never impersonates delivery. */
+#exchange .place-label{font-size:clamp(21px,2.5vw,34px);color:#263a67;font-weight:400;letter-spacing:-.02em}
+#exchange .idea-object{isolation:isolate;border:0;background:#e5e7da;border-inline-start:4px solid #9b7850;padding:clamp(18px,3vw,40px);box-shadow:8px 10px 0 #263a6717}
+#exchange .object-origin{font-size:12px;line-height:1.55}
+#exchange #excerpt,#exchange .carried-text{font-size:clamp(22px,2.8vw,38px);line-height:1.55;max-height:none}
+#exchange .preparation{margin-block-start:28px}
+#exchange .portable-departure{grid-column:1/-1;border-block-start:1px solid #73787c66;padding-block-start:16px}
+#exchange .portable-departure button{background:#263a67;color:#fffaf1;border-color:#263a67}
+#exchange .portable-departure button:disabled{opacity:.55}
+#exchange .portable-departure p{font-size:12px;margin-block:10px}
+#exchange .answer{background:#e2d4c6;border-inline-start:4px solid #a45b43;padding:20px 26px;margin-block:24px}
+#exchange .meeting{border-block-start:2px solid #b68b54;padding-block:22px}
+body[data-transport=file] #exchange .idea-object{border-inline-start-color:#263a67}
+body[data-transport=file] #exchange #object-mark{color:#57595d}
+#portable-context{line-height:1.7;max-width:65ch;margin-block:20px}
+#open-encounter{font-weight:600}
+@media(max-width:760px){#exchange .idea-object{padding:16px;box-shadow:4px 5px 0 #263a6717}#exchange .answer{padding:15px}#exchange #excerpt,#exchange .carried-text{font-size:26px}.edge-actions{gap:6px;max-width:75%}}
+@media(forced-colors:active){#exchange .idea-object,#exchange .answer{background:Canvas;border:1px solid CanvasText;box-shadow:none}}

@@ -74,7 +74,7 @@
 </div>
 <header class="world-edge">
  <span class="signature" aria-label="Telefshen">telef<span>shen.</span></span>
- <div class="edge-actions"><span id="mode"></span><button id="locale" lang="en">English</button></div>
+ <div class="edge-actions"><button id="open-encounter" type="button"></button><input id="encounter-file" type="file" accept=".telefshen,application/json" hidden><span id="mode"></span><button id="locale" lang="en">English</button></div>
 </header>
 <main id="world" aria-label="Telefshen">
  <div class="center">
@@ -134,6 +134,7 @@
     <div class="address"><label for="recipient" id="recipient-label"></label><input id="recipient" maxlength="160" dir="auto" autocomplete="off"></div>
     <div class="identity"><label class="check"><input id="masked" type="checkbox" checked><span id="masked-label"></span></label><label for="person-name" id="person-label" hidden></label><input id="person-name" maxlength="120" dir="auto" autocomplete="off" hidden></div>
     <div id="destination" class="destination"><span id="destination-name"></span><button type="button" id="cast" class="accent"></button></div>
+    <div class="portable-departure"><button id="export-idea" type="button" class="accent"></button><p id="portable-note" class="quiet"></p></div>
     <p id="preview-note" class="quiet"></p>
    </div>
    <div id="reception" hidden>
@@ -141,12 +142,12 @@
     <div class="actions"><button id="reply-only"></button><button id="reply-meet" class="accent"></button><button id="decline"></button></div>
    </div>
    <div id="answer" hidden class="answer"><p id="answer-origin" class="quiet"></p><p id="answer-text" dir="auto"></p></div>
-   <div id="return-actions" hidden class="actions"><button id="accept" class="accent" hidden></button><button id="back-private"></button></div>
+   <div id="return-actions" hidden class="actions"><button id="portable-keep" type="button" class="accent" hidden></button><button id="accept" class="accent" hidden></button><button id="back-private"></button></div>
    <div id="meeting" hidden class="meeting">
     <label for="common" id="common-label"></label><textarea id="common" maxlength="6000" rows="3" dir="auto"></textarea>
     <div class="actions"><button id="keep" class="accent"></button><button id="leave"></button></div><p class="quiet" id="meeting-note"></p>
    </div>
-   <div class="exchange-foot"><button id="cancel"></button><span id="exchange-note" class="quiet"></span></div>
+   <p id="portable-context" class="quiet" hidden></p><div class="exchange-foot"><button id="cancel"></button><span id="exchange-note" class="quiet"></span></div>
   </section>
   <p id="status" class="status" role="status" aria-live="polite"></p>
  </div>
