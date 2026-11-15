@@ -127,6 +127,8 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  set('recipient','Fictional company');assert(!$('cast').disabled,'prepared with anonymous display');
  const id=$('idea-object').dataset.idea;
  click('cast');assert(d.body.dataset.phase==='recipient','recipient review');
+ assert($('exchange-stage').textContent.includes('الدورين')&&$('exchange-intro').textContent.includes('المعاينة'),'local crossing explicitly narrates the reviewed role');
+ assert(frame.contentWindow.getComputedStyle($('encounter-field')).display!=='none'&&$('meeting').hidden,'the receiving field is present without a common work');
  assert(d.body.dataset.material==='existence-field-a'&&frame.contentWindow.getComputedStyle(d.getElementById('presence-material')).display!=='none','recipient inhabits the same material');
  assert($('carried-text').textContent==='Shared thought.','exact disclosed excerpt');
  assert($('idea-object').dataset.idea===id,'same idea identity');
@@ -136,7 +138,9 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  click('locale');assert(d.documentElement.dir==='ltr'&&d.body.dataset.phase==='recipient','language preserves role');
  set('reply','A second human contribution.');click('reply-meet');
  assert(d.body.dataset.phase==='returned'&&!$('accept').hidden,'independent invitation to meet');
+ assert(d.body.dataset.encounterOutcome==='contribution'&&$('meeting').hidden,'a reply does not by itself begin common work');
  click('accept');assert(d.body.dataset.phase==='meeting','explicit mutual local entry');
+ assert(!$('meeting').hidden&&$('exchange-stage').textContent.includes('04')&&!$('answer').hidden&&$('carried-text').textContent.trim(),'mutual entry retains both independent materials');
  assert(d.body.dataset.material==='existence-field-a'&&frame.contentWindow.getComputedStyle(d.getElementById('presence-material')).display!=='none','meeting preserves the material');
  assert($('carried-text').textContent==='Shared thought.'&&$('answer-text').textContent==='A second human contribution.','original contributions remain');
  set('common','A jointly authored possibility.');click('leave');assert($('thought').value==='Private fact. Shared thought.','original restored');
@@ -153,6 +157,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert($('cast').disabled,'name required when unmasked');set('person-name','Chosen name');assert(!$('cast').disabled,'display name explicit');
  click('cast');assert($('idea-origin').textContent.includes('Chosen name'),'chosen name shown');
  click('decline');assert($('accept').hidden,'decline never creates a meeting');
+ assert(d.body.dataset.encounterOutcome==='declined'&&$('meeting').hidden,'refusal has its own outcome with no common material');
  click('back-private');assert(d.body.dataset.phase==='private','continue alone');
  assert(d.documentElement.scrollWidth<=frame.clientWidth+1,'mobile bounds');
  localStorage.removeItem(key);
@@ -196,6 +201,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  async function importFixture(p){const w=frame.contentWindow,dt=new w.DataTransfer();dt.items.add(new w.File([JSON.stringify(p)],'example.telefshen',{type:'application/json'}));$('encounter-file').files=dt.files;await $('encounter-file').onchange()}
  await importFixture(idea);
  assert(d.body.dataset.transport==='file'&&d.body.dataset.phase==='recipient'&&$('carried-text').textContent===idea.text,'independent file reader, exact disclosed material');
+ assert(!$('exchange-stage').textContent.includes('both roles')&&!$('exchange-stage').textContent.includes('الدورين'),'file reception is not role switching');
  set('reply','I can contribute.');exportFixture();click('reply-meet');
  const reply=JSON.parse(await new Blob([exported]).text());
  assert(reply.outcome==='invite'&&reply.text==='I can contribute.'&&d.body.dataset.phase==='recipient','reply file without impersonating author or claiming delivery');
