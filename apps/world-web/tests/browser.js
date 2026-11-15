@@ -161,8 +161,8 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  $('thought').setSelectionRange(19,31);click('form-fragment');
  assert(!$('formation').hidden&&$('formation-quote').textContent==='Public idea.','exact private fragment lifted');
  assert(d.body.dataset.forming==='yes','formation changes the shared spatial scene');
- const formationStyle=frame.contentWindow.getComputedStyle($('formation-sheet'),'::after');
- assert(formationStyle.clipPath!=='none'&&frame.contentWindow.getComputedStyle($('formation-source'),'::after').content!=='none','source and new material have an authored contour');
+ const formationStyle=frame.contentWindow.getComputedStyle(d.querySelector('.formation-sheet'),'::after');
+ assert(formationStyle.clipPath!=='none'&&frame.contentWindow.getComputedStyle(d.querySelector('.formation-source'),'::after').content!=='none','source and new material have an authored contour');
  assert($('prepare').hidden,'formation is independent of casting');
  set('formation-draft','A refined possibility.');
  assert($('thought').value==='Private untouched. Public idea.','formation never mutates source');
