@@ -22,7 +22,7 @@ frame.addEventListener('load',async()=>{
   if(state==='trace'||state==='voice-cast'){click('mic');await tick(400);if(d.body.dataset.capture!=='ready')throw Error('trace unavailable');if(state==='voice-cast'){click('cast-voice');set('recipient','طرف في المعاينة');if($('exchange-voice').hidden)throw Error('voice crossing unavailable')}}
  }else{
   set('thought','ماذا لو استطعنا صناعة نظام يجعل المصانع ترى احتياجاتها قبل أن تتعطل؟');
-  if(state==='field'){click('prepare');click('release-field');click('field-scenarios');if($('human-field').hidden)throw Error('field unavailable')}
+  if(['field','intersection','field-work'].includes(state)){click('prepare');click('release-field');click('field-scenarios');if($('human-field').hidden)throw Error('field unavailable');if(state!=='field'){click('intersection-example');if($('intersection-compose').hidden)throw Error('intersection unavailable');if(state==='field-work'){click('intersection-keep');if($('field-history').hidden)throw Error('field work unavailable');$('field-history').scrollIntoView({block:'start',behavior:'instant'})}}}
   if(state==='formation'){click('form-fragment');set('formation-draft','نظام يتنبأ بنقص المخزون ويربط المصنع بالشريك المناسب.');$('formation').scrollIntoView({block:'start',behavior:'instant'})}
   if(state==='connection'){click('mind-mark');click('mind-need');set('mind-topic','إدارة المخزون');set('mind-counterpart','فريق يستطيع تطوير نظام ذكي لإدارة المخزون.');click('mind-keep');$('mind').scrollIntoView({block:'start',behavior:'instant'})}
   if(['cast','receive','returned','meeting','declined','born'].includes(state)){
