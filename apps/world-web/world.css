@@ -111,3 +111,9 @@ body[data-phase=private] #voice{align-items:center}
  body[data-phase=private] #thought{font-size:clamp(26px,6vw,34px)}
 }
 @media(forced-colors:active){body[data-phase=private] .presence-material{display:none}}
+
+/* Actual capture, not an ambient or decorative pulse. */
+#voice[data-capture=recording] #mic svg{color:#823f41;border-color:#823f41;background:#f0d6d1}
+#voice[data-capture=recording] #voice-state{color:#773735;font-weight:500}
+#voice[data-capture=requesting] #voice-state,#voice[data-capture=stopping] #voice-state{color:var(--soft)}
+#voice audio{max-width:100%}

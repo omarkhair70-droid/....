@@ -22,6 +22,7 @@ jobs:
         run: |
           node --input-type=module --check < apps/world-web/world.js
           node apps/world-web/tests/presence-law.test.mjs
+          node apps/world-web/tests/voice-capture.test.mjs
           node --check apps/world-web/tests/browser.js
           python3 -m http.server 8765 --bind 127.0.0.1 --directory apps/world-web >/tmp/world-web-http.log 2>&1 &
           trap 'kill $!' EXIT
