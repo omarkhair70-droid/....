@@ -839,3 +839,13 @@ body[data-reality=open][data-phase=private] #fold-mass{translate:-152px 0}
 body[data-reality=open][data-phase=private] #peripheral-material{opacity:.85;translate:22px -14px}
 @media(max-width:760px){.reality-heading{align-items:flex-start;flex-direction:column;gap:8px}#reality-open{max-width:100%}#reality-compose{padding:18px 15px}.reality-observation{padding-inline-start:10px}body[data-reality=open][data-phase=private] #fold-mass{translate:0 -18px}}
 @media(forced-colors:active){#reality-compose,.reality-trace{background:Canvas;color:CanvasText;border:1px solid CanvasText}#reality-compose::before{display:none}.reality-choices button[aria-pressed=true],#reality-keep{background:ButtonFace;color:ButtonText;border:1px solid ButtonText}}
+
+
+/* Meaningful response: the existing spatial material responds to interpretation, never to fake analytics. */
+body[data-reality-reading=challenges][data-phase=private] #fold-mass{translate:-214px 0}
+body[data-reality-reading=challenges][data-phase=private] #peripheral-material{translate:48px -25px;opacity:1}
+body[data-reality-reading=supports][data-phase=private] #fold-mass{translate:-94px 0}
+body[data-reality-reading=unclear][data-phase=private] #peripheral-material{translate:12px -7px;opacity:.62}
+body[data-reality-decision=revise] #reality-revision-wrap{padding-inline-start:17px;border-inline-start:2px solid #769382}
+body[data-reality-decision=stop] #reality-compose::before{background:#e4d8cb}
+@media(max-width:760px){body[data-reality-reading=challenges][data-phase=private] #fold-mass{translate:0 -35px}body[data-reality-reading=supports][data-phase=private] #fold-mass{translate:0 -11px}}
