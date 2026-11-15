@@ -160,12 +160,16 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  set('thought','Private untouched. Public idea.');
  $('thought').setSelectionRange(19,31);click('form-fragment');
  assert(!$('formation').hidden&&$('formation-quote').textContent==='Public idea.','exact private fragment lifted');
+ assert(d.body.dataset.forming==='yes','formation changes the shared spatial scene');
+ const formationStyle=frame.contentWindow.getComputedStyle($('formation-sheet'),'::after');
+ assert(formationStyle.clipPath!=='none'&&frame.contentWindow.getComputedStyle($('formation-source'),'::after').content!=='none','source and new material have an authored contour');
  assert($('prepare').hidden,'formation is independent of casting');
  set('formation-draft','A refined possibility.');
  assert($('thought').value==='Private untouched. Public idea.','formation never mutates source');
  click('locale');assert($('formation-draft').value==='A refined possibility.','language does not reset formation');
  click('formation-keep');
  assert($('formation').hidden&&$('formed-works').querySelectorAll('button').length===1,'child formed in place');
+ assert(d.body.dataset.forming==='no','the spatial scene returns after formation');
  assert(localStorage.getItem(key)===null,'forming does not persist implicitly');
  $('formed-works').querySelector('button').click();
  assert($('thought').value==='A refined possibility.'&&$('origin-excerpt').textContent==='Public idea.','child contains transformed passage and exact trace only');
