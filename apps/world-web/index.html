@@ -136,6 +136,7 @@
    <div class="place-label"><span id="private-label"></span></div>
    <p id="arrival-note" class="arrival-note"></p>
    <label for="name" id="name-label" class="sr"></label><input id="name" maxlength="240" dir="auto" hidden>
+   <p id="work-life-invitation" class="work-life-invitation" hidden></p>
    <label for="thought" id="thought-label" class="sr"></label>
    <textarea id="thought" maxlength="12000" rows="1" dir="auto"></textarea>
    <div id="voice" class="voice-line">
@@ -158,6 +159,7 @@
      </div>
      <button id="clear-clip" hidden></button>
     </div><p id="voice-player-status" role="status"></p>
+    <div id="voice-next" hidden><button id="voice-to-thought" type="button"><span id="voice-to-thought-label"></span><span aria-hidden="true">↗</span></button><p id="voice-next-note"></p></div>
    </div>
    <div id="dictation" class="dictation">
     <details id="dictation-options"><summary id="dictation-options-label"></summary>
@@ -184,6 +186,15 @@
      <div class="formation-sheet"><label for="formation-draft" id="formation-draft-label"></label><textarea id="formation-draft" rows="3" maxlength="12000" dir="auto"></textarea><button id="formation-keep" type="button" class="accent"></button></div>
     </div>
     <p id="formation-note" class="quiet"></p>
+   </section>
+   <section id="work-birth" hidden aria-labelledby="work-birth-title" class="work-birth">
+    <div class="birth-heading"><h2 id="work-birth-title"></h2><p id="work-birth-note"></p></div>
+    <div class="birth-materials">
+     <div class="birth-piece first"><span id="birth-first-label"></span><blockquote id="birth-first" dir="auto"></blockquote></div>
+     <div class="birth-piece second"><span id="birth-second-label"></span><blockquote id="birth-second" dir="auto"></blockquote></div>
+    </div>
+    <details id="birth-emergence"><summary id="birth-emergence-label"></summary><blockquote id="birth-emergence-text" dir="auto"></blockquote></details>
+    <button id="birth-parent" type="button" hidden></button>
    </section>
    <section id="formation-lineage" hidden class="formation-lineage" aria-labelledby="lineage-label">
     <h2 id="lineage-label"></h2>
