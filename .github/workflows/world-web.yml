@@ -49,6 +49,13 @@ jobs:
           "$browser" --headless --no-sandbox --disable-dev-shm-usage --user-data-dir="$profile" --virtual-time-budget=10000 --dump-dom http://127.0.0.1:8765/tests/browser.html > /tmp/world-web-result.html
           cat /tmp/world-web-result.html
           grep -F 'PASS: local world, exact disclosure, distinct contributions, continuity, RTL/LTR, 320px' /tmp/world-web-result.html
+      - name: Upload verified preview package
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: telefshen-local-preview
+          path: apps/world-web/public/
+          retention-days: 14
+          if-no-files-found: error
       - name: Capture actual browser surfaces
         if: always()
         run: |

@@ -976,3 +976,35 @@ body:is([data-phase=returned],[data-phase=meeting]) #continuum-lines{opacity:.17
 #living-material{pointer-events:none}
 @media (prefers-reduced-motion:reduce){#living-material{animation:none!important;transition:none!important}}
 @media (forced-colors:active){#living-material{display:none}}
+
+/* THE OTHER WORLD / an authored thought is the subject, its author a deliberate disclosure. */
+body[data-human-field=open] .field-materials{grid-template-columns:minmax(0,1fr);gap:0;margin-block:18px 30px}
+body[data-human-field=open][data-phase=private] .field-material:nth-child(n){margin:0}
+.field-material{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:clamp(16px,4vw,60px);align-items:center;padding:clamp(24px,3.5vw,48px) 0;border-block-start:1px solid #7c99847d}
+.field-material .field-copy{min-width:0}
+.field-material .field-copy blockquote{font-size:clamp(23px,2.65vw,38px);line-height:1.58;margin:12px 0 20px;color:#24494b}
+.field-material .field-provenance{font-size:12px;letter-spacing:.025em;color:#755b46}
+.field-material .field-identity{margin:0;font-size:13px;color:#45594e}
+.field-material .field-identity summary{cursor:pointer;min-height:32px;width:fit-content}
+.field-material .field-identity summary:focus-visible,.field-material .actions button:focus-visible{outline:2px solid #80583e;outline-offset:4px}
+.field-material .field-person{margin-block:8px 0;line-height:1.65}
+.field-material .actions{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;min-width:0;margin:0}
+.field-material .actions .field-approach{display:flex;flex-direction:column;align-items:center;gap:4px;color:#24494b;background:none;border:0;max-width:100%;width:100%;min-height:44px;padding:0;text-align:center}
+.field-approach svg{display:block;max-width:260px;width:100%;height:auto;overflow:visible;transition:transform 360ms cubic-bezier(.2,.7,.2,1)}
+.field-approach:hover svg,.field-approach:focus-visible svg{transform:translateY(-5px) scale(1.04)}
+.field-approach span{border-block-end:1px solid #8c9b83;padding:4px 0}
+.field-material .actions button:not(.field-approach){min-height:44px;max-width:100%;white-space:normal;padding:8px 6px;text-align:center;overflow-wrap:anywhere}
+.field-material .field-pick{border:0;border-block-end:1px solid #94a58c}
+.field-material[data-selected=true]{border-block-start:2px solid #244d4d}
+.field-material[data-selected=true] .field-copy blockquote{color:#173c3c}
+.field-material[data-selected=true] .field-approach span{border-color:#a47653}
+#field-scenarios{min-height:44px}
+@media(max-width:760px){
+ .field-material{grid-template-columns:minmax(0,1fr);gap:10px;padding:22px 0}
+ .field-material .field-copy blockquote{font-size:25px;margin-block:10px}
+ .field-material .actions{flex-direction:row;flex-wrap:wrap;justify-content:flex-start;gap:8px}
+ .field-material .actions .field-approach{width:100%;flex-direction:row;justify-content:flex-start;gap:9px}
+ .field-approach svg{width:120px;max-width:42%;flex-shrink:0}
+}
+@media(prefers-reduced-motion:reduce){.field-approach svg{transition:none!important;transform:none!important}}
+@media(forced-colors:active){.field-material .field-copy blockquote,.field-material .field-provenance,.field-material .field-identity,.field-material .actions .field-approach{color:CanvasText}.field-approach svg{display:none}.field-material[data-selected=true]{border-color:Highlight}}

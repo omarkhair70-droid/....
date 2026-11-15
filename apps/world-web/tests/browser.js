@@ -287,6 +287,11 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  await load();d=frame.contentDocument;
  click('open-field');assert(!$('human-field').hidden&&$('field-samples').hidden&&$('field-own').querySelectorAll('article').length===0,'empty shared field never fabricates presence');
  click('field-scenarios');assert($('field-samples').querySelectorAll('article').length===4,'explicit fictional scenario materials');
+ const firstMatter=$('field-samples').querySelector('article');
+ assert(!!firstMatter.querySelector('blockquote').textContent.trim()&&firstMatter.querySelector('.field-approach svg[aria-hidden=true]')&&!firstMatter.querySelector('.field-identity').open,'thought is readable before optional author identity');
+ firstMatter.querySelector('.field-identity').open=true;assert(firstMatter.querySelector('.field-person').textContent.length>0,'identity is available deliberately and the sample stays labelled');
+ firstMatter.querySelector('.field-pick').click();assert($('field-samples').querySelector('article').dataset.selected==='true','the selected matter is visibly identified');
+ $('field-samples').querySelector('.field-pick').click();assert($('field-samples').querySelector('article').dataset.selected==='false','deselect restores independent material');
  click('field-close');
  set('thought','PRIVATE. A thought to reveal.');$('thought').setSelectionRange(9,29);click('prepare');
  assert(!$('release-field').disabled&&$('cast').disabled,'field has no named destination requirement');

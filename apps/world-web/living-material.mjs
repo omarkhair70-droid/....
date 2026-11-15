@@ -122,3 +122,21 @@ export function attachLivingMaterial({document,matchMedia,read}){
  for(const media of [narrow,reduced,forced])media.addEventListener('change',()=>{previous='';if(reduced.matches)group.getAnimations?.().forEach(a=>a.cancel());sync()});
  sync();return {sync};
 }
+
+// A visual object for an explicitly disclosed thought. This is not a biometric or semantic signature.
+// Geometry varies with the number of disclosed words/lines and its position in the current field.
+export function materialContour({text='',voice=false,position=0,selected=false}={}){
+ const s=typeof text==='string'?text.trim().slice(0,6000):'',words=s?s.split(/\s+/u).length:0;
+ const lines=s?s.split(/\r?\n/u).length:0,rank=bounded(position)%5;
+ const span=clamp(24+Math.log1p(words)*11,24,80),bias=(rank-2)*7, lift=clamp(11+lines*3,11,26);
+ const palette=voice?['#ad7959','#edd1a0','#36585a']:rank%3===1?['#ac785b','#e7c399','#4e7270']:['#365b59','#b6c9ae','#b98560'];
+ const marks=[],put=(d,fill,stroke='none',opacity=1,width=1)=>marks.push({d,fill,stroke,opacity,width});
+ const center=100+bias;
+ put(`M${center} 9 C${center-span} 18 ${center-span-9} 91 ${center-14} 117 C${center+span-3} 94 ${center+span+15} 28 ${center} 9Z`,palette[0],'none',.96);
+ put(`M${center-6} 16 C${center-span*.58} 39 ${center-span*.64} 84 ${center-12} 109 C${center+span*.9} 76 ${center+span*.66} 32 ${center-6} 16Z`,palette[1],'none',.72);
+ put(`M${center+lift} 21 C${center-span*.34} 31 ${center-span*.36} 87 ${center-6} 98 C${center+span*.62} 72 ${center+span*.49} 44 ${center+lift} 21Z`,palette[0],'none',.92);
+ for(let i=0;i<9;i++){const off=i*4;put(`M${center-span*.72+off} 26 Q${center-span*.88+off} ${62+i*3} ${center+span*.46-off*.24} 103`,'none',palette[1],.56, .7);}
+ // Selected matter keeps its own shape; a new path leaves it toward a potential intersection.
+ if(selected)put(`M${center+span*.8} 57 Q${center+span+10} 55 198 61`,'none','#a77656',.96,2);
+ return marks;
+}

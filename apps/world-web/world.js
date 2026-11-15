@@ -1,6 +1,6 @@
 'use strict';
 import {composePresence,expressionState} from './presence-law.mjs';
-import {attachLivingMaterial,inkPeaks} from './living-material.mjs';
+import {attachLivingMaterial,inkPeaks,materialContour} from './living-material.mjs';
 import {createVoiceCapture} from './voice-capture.mjs';
 import {createLocalDictation} from './local-dictation.mjs';
 import {createVoiceSurface} from './voice-surface.mjs';
@@ -188,11 +188,26 @@ function renderField(){
  $('field-scenarios').textContent=fw('samples');$('field-scenarios').setAttribute('aria-expanded',String(visible&&fieldExamples));
  const own=$('field-own'),samples=$('field-samples');own.replaceChildren();samples.replaceChildren();samples.hidden=!visible||!fieldExamples;renderIntersection(visible);if(!visible)return;
  if(!fieldItems.length)own.append(mindText('p',fw('empty'),'field-empty'));
+ let position=0;
  const card=(item,sample)=>{
   const el=document.createElement('article');el.className='field-material';
-  el.append(mindText('p',fw(sample?'sampleNote':'ownNote'),'field-provenance'),mindText('blockquote',item.text||fw('voiceOnly')),mindText('p',(item.sender||fw('anonymous'))+(sample?' · '+fw('sampleOrigin'):''),'field-person'));
+  const picked=fieldSelected.some(s=>s.id===item.id);
+  el.dataset.selected=String(picked);
+  const copy=document.createElement('div');copy.className='field-copy';
+  const identity=document.createElement('details');identity.className='field-identity';
+  identity.append(mindText('summary',lang==='ar'?'من وراء هذه الفكرة؟':'Who is behind this thought?'),mindText('p',(item.sender||fw('anonymous'))+(sample?' · '+fw('sampleOrigin'):''),'field-person'));
+  copy.append(mindText('p',fw(sample?'sampleNote':'ownNote'),'field-provenance'),mindText('blockquote',item.text||fw('voiceOnly')),identity);
+  el.append(copy);
   const actions=document.createElement('div');actions.className='actions';
-  actions.append(mindButton(fw('approach'),()=>approachField(item,sample)));
+  const approach=mindButton(fw('approach'),()=>approachField(item,sample),'field-approach');
+  const ns='http://www.w3.org/2000/svg',art=document.createElementNS(ns,'svg');
+  art.setAttribute('viewBox','0 0 200 128');art.setAttribute('aria-hidden','true');art.setAttribute('focusable','false');
+  for(const o of materialContour({text:item.text,voice:!!item.voice,position:position++,selected:picked})){
+   const p=document.createElementNS(ns,'path');
+   for(const [k,v] of Object.entries({d:o.d,fill:o.fill,stroke:o.stroke,opacity:o.opacity,'stroke-width':o.width}))p.setAttribute(k,String(v));
+   art.append(p);
+  }
+  approach.replaceChildren(art,mindText('span',fw('approach')));actions.append(approach);
   if(!sample)actions.append(mindButton(fw('remove'),()=>{fieldItems=fieldItems.filter(x=>x.id!==item.id);fieldSelected=fieldSelected.filter(x=>x.id!==item.id);if(offer?.fieldId===item.id)offer=null;renderField();presence();$('open-field').focus()}));
   if(item.text.trim()){const picked=fieldSelected.some(s=>s.id===item.id),pick=mindButton(iw(picked?'unpick':'pick'),()=>toggleIntersection(item,sample),'field-pick');pick.dataset.material=item.id;pick.setAttribute('aria-pressed',String(picked));actions.append(pick)}
   el.append(actions);return el;

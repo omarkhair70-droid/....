@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {inkPeaks,livingFact,livingForms} from '../living-material.mjs';
+import {inkPeaks,livingFact,livingForms,materialContour} from '../living-material.mjs';
 import {voiceInk} from '../voice-surface.mjs';
 const get=x=>livingForms(livingFact(x));
 assert.equal(get({}).length,0);
@@ -17,3 +17,10 @@ assert.equal(get({phase:'meeting',commonLength:80}).length,get({phase:'meeting'}
 assert.notDeepEqual(get({phase:'returned',outcome:'declined'}),get({phase:'returned',outcome:'contribution'}));
 for(const scene of [{length:12000},{field:true,count:1000,selected:1000},{phase:'meeting',commonLength:1000}])for(const x of get(scene))assert.ok(!/NaN|Infinity/.test(x.d));
 console.log('PASS: living material is shaped by explicit facts, voice samples, visible field and actual common work');
+
+const silhouette=materialContour({text:'one disclosed thought',position:0});
+assert.equal(silhouette.length,12);
+assert.notDeepEqual(silhouette,materialContour({text:'one disclosed thought',position:1}));
+assert.equal(materialContour({text:'one disclosed thought',selected:true}).length,silhouette.length+1);
+assert.deepEqual(materialContour({text:'one disclosed thought',selected:true}).slice(0,-1),silhouette);
+assert.notDeepEqual(silhouette,materialContour({text:'a much longer thought that has several words as well',position:0}));
