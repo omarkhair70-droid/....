@@ -15,7 +15,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(fresh.documentElement.scrollWidth<=frame.clientWidth+1,'empty mobile bounds');
  assert(fresh.body.dataset.attention==='rest','quiet before deliberate focus');
  const scene=fresh.getElementById('presence-material').querySelector('svg');
- assert(scene.getAttribute('viewBox')==='690 0 480 900','mobile frames same field');
+ assert(scene.getAttribute('viewBox')==='155 0 570 900','mobile frames same field');
  fresh.getElementById('thought').focus();
  assert(fresh.body.dataset.attention==='express','explicit focus changes local light');
  fresh.getElementById('thought').blur();

@@ -112,7 +112,7 @@ translate();render();
 const presenceSVG=$('presence-material').querySelector('svg');
 const presenceNarrow=matchMedia('(max-width:760px)');
 function framePresence(){
- presenceSVG.setAttribute('viewBox',presenceNarrow.matches?'690 0 480 900':'0 0 1440 900');
+ presenceSVG.setAttribute('viewBox',presenceNarrow.matches?'155 0 570 900':'0 0 1440 900');
 }
 function expressLight(){
  document.body.dataset.attention=(document.activeElement===$('thought')||document.activeElement===$('mic'))?'express':'rest';

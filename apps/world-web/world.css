@@ -93,3 +93,7 @@ body[data-phase=private] #recall:hover{color:#34476a}
  body[data-phase=private] .center{width:min(100%,820px);margin:auto}
 }
 @media(prefers-reduced-motion:reduce){#focus-light{transition:none}}
+
+/* A narrow view is a different framing of the same material, preserving its color. */
+.mobile-reading-light{display:none}
+@media(max-width:760px){.mobile-reading-light{display:block;opacity:.72}}
