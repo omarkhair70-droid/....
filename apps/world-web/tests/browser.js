@@ -231,7 +231,12 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert($('mind-marks').children.length===1&&$('mind-links').children.length===0,'no invented counterpart');
  click('save');click('recall');click('new-work');
  set('thought','I can offer calibration work.');
- click('mind-mark');click('mind-ability');set('mind-topic','calibration');
+ assert(d.body.dataset.correspondence==='echo'&&!$('world-periphery').hidden&&$('mind-echoes').children.length===0,'remembered knowledge stays peripheral while writing');
+ click('mind-reveal');
+ assert(!$('mind-echoes').hidden&&$('mind-echoes').textContent.includes('We need a calibration partner.')&&!$('mind-echoes').textContent.includes('Private note.')&&$('mind-links').children.length===0,'exact recalled material is not presented as a confirmed link');
+ $('mind-echoes').querySelector('.accent').click();
+ assert($('mind-topic').value==='Calibration'&&$('mind-keep').disabled,'recalled topic is offered but no meaning is assigned automatically');
+ click('mind-ability');set('mind-topic','calibration');
  assert($('mind-ability').getAttribute('aria-pressed')==='true'&&!$('mind-keep').disabled,'explicit capability choice');
  click('mind-keep');
  assert($('mind-links').children.length===1&&$('mind-links').textContent.includes('We need a calibration partner.')&&!$('mind-links').textContent.includes('Private note.'),'actual related excerpt only, excluding unrelated title');
@@ -261,7 +266,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  click('save');await load();d=frame.contentDocument;
  assert($('mind-links').children.length===0,'challenge persists after explicit save');
  click('prepare');set('recipient','Other human');click('cast');
- assert($('mind').hidden&&$('world-periphery').hidden&&$('basis-pieces').children.length===0&&$('mind-marks').children.length===0&&$('mind-passage').textContent==='','private knowledge absent from recipient view');
+ assert($('mind').hidden&&$('world-periphery').hidden&&$('basis-pieces').children.length===0&&$('mind-marks').children.length===0&&$('mind-passage').textContent===''&&$('mind-echoes').children.length===0,'private knowledge absent from recipient view');
  localStorage.removeItem(key);
  await load();d=frame.contentDocument;
  set('thought','A factory needs inventory management.');click('mind-mark');click('mind-need');set('mind-topic','inventory');
