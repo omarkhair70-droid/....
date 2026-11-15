@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {captureFragment} from '../formation.mjs';
-import {emptyMind,makeMark,activeMark,correspondences,dismiss,validMind,topicKey,validBasis,captureBasis,rememberedMentions} from '../living-intelligence.mjs';
+import {emptyMind,makeMark,activeMark,correspondences,dismiss,validMind,topicKey,validBasis,captureBasis,rememberedMentions,validFieldBasis,composeFieldWork} from '../living-intelligence.mjs';
 const a={id:'a',title:'A',body:'Private. Need calibration.',mind:emptyMind()},b={id:'b',title:'B',body:'Offer calibration.',mind:emptyMind()};
 const one='11111111-1111-4111-8111-111111111111',two='22222222-2222-4222-8222-222222222222';
 a.mind.marks.push(makeMark({id:one,kind:'need',topic:'Calibration',fragment:captureFragment(a,9,a.body.length)}));
@@ -35,3 +35,15 @@ const ar={id:'ar',body:'نظام للمخزون',mind:emptyMind()};
 ar.mind.marks.push(makeMark({id:'33333333-3333-4333-8333-333333333333',kind:'ability',topic:'إدارة المخزون',fragment:captureFragment(ar,0,0)}));
 assert.equal(rememberedMentions([ar,{id:'now',body:'أفكر في اِدارة المخزون.'}],'now').length,1);
 console.log('PASS: remembered subjects, exact boundaries and source invalidation without inferred role');
+
+const materials=[{id:'scenario-0',kind:'scenario',text:'A team can build.'},{id:'local-1',kind:'local',text:'A factory needs help.',private:'Do not capture',voice:'Do not capture'}];
+const formedInField=composeFieldWork({sources:materials,question:'Who will test it?',body:'A pilot.',id:'field-work',title:'A pilot.'});
+assert.equal(validFieldBasis(formedInField.fieldBasis),true);
+assert.deepEqual(formedInField.fieldBasis.sources,[{id:'scenario-0',kind:'scenario',text:'A team can build.'},{id:'local-1',kind:'local',text:'A factory needs help.'}]);
+materials[0].text='Changed';formedInField.body='A revised pilot.';
+assert.equal(formedInField.fieldBasis.sources[0].text,'A team can build.');
+assert.equal(formedInField.fieldBasis.initial,'A pilot.');
+assert.throws(()=>composeFieldWork({sources:[materials[0],materials[0]],question:'Question?',body:'A pilot.',id:'field-work',title:'A pilot.'}));
+assert.throws(()=>composeFieldWork({sources:materials,question:' ',body:'A pilot.',id:'field-work',title:'A pilot.'}));
+assert.equal(validFieldBasis({...formedInField.fieldBasis,sources:[{id:'x',kind:'verified',text:'Something'}]}),false);
+console.log('PASS: disclosed field composition, independent evolution, provenance, and explicit uncertainty');
