@@ -537,8 +537,8 @@ html[dir=ltr] #material-actions::before{transform:scaleX(-1)}
 .gesture-choices button:is(:hover,:focus-visible) svg{transform:translateY(-5px)}
 /* A branching contour, emerging from the source, is specific to formation. */
 body[data-phase=private][data-forming=yes] #fold-mass{translate:-38px 0}
-body[data-phase=private][data-forming=yes] #aperture-energy{transform:scale(.9);opacity:.78}
-body[data-phase=private][data-forming=yes] #surface-filaments{opacity:.55}
+body[data-phase=private][data-forming=yes]:is([data-capture=idle],[data-capture=ready]) #aperture-energy{transform:scale(.9);opacity:.78}
+body[data-phase=private][data-forming=yes]:is([data-capture=idle],[data-capture=ready]) #surface-filaments{opacity:.55}
 .formation{margin-block:clamp(24px,4vw,48px);padding:0;border:0;scroll-margin-block-start:20px;min-width:0}
 .formation-heading{align-items:start;padding-block-end:18px;border-block-end:1px solid #89968c80}
 .formation-heading h2{font-size:clamp(27px,3.3vw,46px);color:#244561;letter-spacing:-.035em}
@@ -546,7 +546,7 @@ body[data-phase=private][data-forming=yes] #surface-filaments{opacity:.55}
 .formation-composition{position:relative;isolation:isolate;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(18px,3vw,46px);margin-block:22px 16px;align-items:start}
 .formation-source{position:relative;padding:16px 14px;border-inline-start:1px solid #ad805c;background:linear-gradient(145deg,#e6d5bf9c,transparent 90%);min-width:0}
 .formation-source::after{content:"";position:absolute;inset-block-start:42px;inset-inline-end:calc(-1 * clamp(18px,3vw,46px));width:clamp(18px,3vw,46px);height:28px;border-block-start:1px solid #a7805e;border-inline-end:1px solid #a7805e;border-start-end-radius:24px;pointer-events:none}
-.formation-source blockquote{font-size:clamp(17px,1.7vw,23px);color:#374c4d;max-height:220px;overflow:auto;overscroll-behavior:contain}
+.formation-source blockquote{font-size:clamp(17px,1.7vw,23px);color:#374c4d;max-height:none;overflow-wrap:anywhere}
 .formation-source .quiet{color:#53615e}
 .formation-sheet{position:relative;isolation:isolate;transform:none;background:transparent;padding:clamp(20px,2.7vw,36px) clamp(14px,2.3vw,30px);color:#263d36;overflow:visible}
 .formation-sheet::before,.formation-sheet::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1}
@@ -570,7 +570,6 @@ html[dir=ltr] #formed-works .formed-work{background:linear-gradient(270deg,trans
  body[data-phase=private][data-forming=yes] #fold-mass{translate:0 -18px}
  .formation-composition{grid-template-columns:1fr;gap:28px}
  .formation-source{padding:12px 14px}
- .formation-source blockquote{max-height:165px}
  .formation-source::after{inset-block-start:auto;inset-block-end:-28px;inset-inline-start:18px;inset-inline-end:auto;width:1px;height:28px;border:0;background:#a7805e}
  .formation-sheet{padding:20px 16px 24px}
  #formation-draft{font-size:24px;min-height:120px}
