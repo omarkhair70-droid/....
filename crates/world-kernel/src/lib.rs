@@ -107,6 +107,27 @@ pub struct OwnerView {
     pub shares: Vec<OwnerShareView>,
 }
 
+/// Minimal navigation references. Not an authorization grant or a public directory.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct WorkReference {
+    pub work_id: Id,
+    pub title: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct DisclosureReference {
+    pub work_id: Id,
+    pub share_id: Id,
+    pub title: String,
+    pub snapshot_revision: u64,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ArrivalView {
+    pub owned: Vec<WorkReference>,
+    pub incoming: Vec<DisclosureReference>,
+}
+
 struct Share {
     recipient: Id,
     revoked: bool,
@@ -346,6 +367,35 @@ impl Kernel {
     }
 
     /// Only the verified owner can retrieve the full text and share history.
+    /// Scope is calculated from current authority, including every revocation.
+    /// Incoming references contain only the explicitly disclosed title and revision.
+    pub fn arrival(&self, actor: &Id) -> Option<ArrivalView> {
+        if !self.principals.contains(actor) {
+            return None;
+        }
+        let mut owned = Vec::new();
+        let mut incoming = Vec::new();
+        for (work_id, work) in &self.works {
+            if &work.owner == actor {
+                owned.push(WorkReference {
+                    work_id: work_id.clone(),
+                    title: work.title.clone(),
+                });
+            }
+            for share in work.shares.values() {
+                if !share.revoked && &share.recipient == actor {
+                    incoming.push(DisclosureReference {
+                        work_id: work_id.clone(),
+                        share_id: share.view.share_id.clone(),
+                        title: share.view.title.clone(),
+                        snapshot_revision: share.view.snapshot_revision,
+                    });
+                }
+            }
+        }
+        Some(ArrivalView { owned, incoming })
+    }
+
     pub fn owner_view(&self, actor: &Id, work_id: &Id) -> Option<OwnerView> {
         let work = self.works.get(work_id)?;
         if !self.principals.contains(actor) || &work.owner != actor {

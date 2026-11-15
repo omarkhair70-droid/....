@@ -20,6 +20,7 @@ pub trait IdentityVerifier {
 }
 
 pub enum Request<'a> {
+    Arrival,
     OwnerCommand(&'a str),
     ScopedReply(&'a str),
     OwnerView(&'a str),
@@ -62,6 +63,30 @@ impl<'a, V: IdentityVerifier> Access<'a, V> {
             Err(VerifyError::Unavailable) => return error(503, "unavailable"),
         };
         match request {
+            Request::Arrival => match self.memory.arrival(&actor) {
+                Ok(Some(view)) => {
+                    let owned: Vec<_> = view
+                        .owned
+                        .iter()
+                        .map(|w| json!({"work_id":w.work_id,"title":w.title}))
+                        .collect();
+                    let incoming: Vec<_> = view
+                        .incoming
+                        .iter()
+                        .map(|s| {
+                            json!({
+                                "work_id":s.work_id,
+                                "share_id":s.share_id,
+                                "title":s.title,
+                                "snapshot_revision":s.snapshot_revision
+                            })
+                        })
+                        .collect();
+                    ok(json!({"version":"0.1","owned":owned,"incoming":incoming}))
+                }
+                Ok(None) => error(404, "not_found"),
+                Err(err) => memory_error(err),
+            },
             Request::OwnerCommand(raw) => {
                 let Ok(command) = Command::parse(raw) else {
                     return error(400, "invalid_request");

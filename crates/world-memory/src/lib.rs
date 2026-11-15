@@ -4,10 +4,13 @@
 
 pub mod access;
 pub mod expression;
+pub mod transport;
 mod research;
 
 use postgres::{Client, IsolationLevel, Transaction};
-use world_kernel::{Kernel, OwnerView, Receipt, Recorded, Rejection, ScopedReceipt, SharedView};
+use world_kernel::{
+    ArrivalView, Kernel, OwnerView, Receipt, Recorded, Rejection, ScopedReceipt, SharedView,
+};
 use world_language::{Command, Id, Operation, ScopedReply, StoredCommand};
 
 // Deliberately bounded full-replay baseline: no unbounded production workload.
@@ -136,6 +139,10 @@ impl Memory {
         recorded_at_ms: u64,
     ) -> Result<ScopedReceipt, MemoryError> {
         self.transact(|kernel, _tx| Ok(kernel.respond(actor, request, recorded_at_ms)?))
+    }
+
+    pub fn arrival(&mut self, actor: &Id) -> Result<Option<ArrivalView>, MemoryError> {
+        self.transact(|kernel, _tx| Ok(kernel.arrival(actor)))
     }
 
     pub fn owner_view(

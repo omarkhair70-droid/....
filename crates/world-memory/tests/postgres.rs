@@ -49,6 +49,26 @@ const WORK: &str = "00000000-0000-4000-8000-00000000000a";
 const SHARE: &str = "00000000-0000-4000-8000-000000000014";
 const SCOPED_RAW: &str = r#"{"schema_version":"0.1","command_id":"00000000-0000-4000-8000-000000000110","work_id":"00000000-0000-4000-8000-00000000000a","payload":{"share_id":"00000000-0000-4000-8000-000000000014","snapshot_revision":1,"response":"request_change"}}"#;
 
+fn transport_get(
+    mem: &mut Memory,
+    credential: &str,
+    path: &str,
+) -> world_memory::access::AccessResponse {
+    let authorization = format!("Bearer {credential}");
+    let mut access = Access::new(mem, &FixtureVerifier);
+    world_memory::transport::dispatch(
+        &mut access,
+        world_memory::transport::HttpRequest {
+            method: "GET",
+            path,
+            authorization: Some(&authorization),
+            content_type: None,
+            body: b"",
+        },
+        8,
+    )
+}
+
 fn assert_access_boundary(mem: &mut Memory) {
     let mut access = Access::new(mem, &FixtureVerifier);
     let expressed = access.handle("synthetic-owner", Request::OwnerExpression(WORK), 5);
@@ -252,6 +272,47 @@ fn durable_history_scoped_access_and_concurrent_writes() {
     assert_eq!(view.responses.len(), 1);
     assert!(mem.shared_view(&id(3), &id(10), &id(20)).unwrap().is_none());
     assert_access_boundary(&mut mem);
+    // Two separately connected clients discover only their own authorized material.
+    let mut recipient_memory = Memory::new(connection(&runtime_url));
+    let mut owner_memory = Memory::new(connection(&runtime_url));
+    let received = transport_get(&mut recipient_memory, "synthetic-recipient", "/v1/arrival");
+    assert_eq!(received.status, 200);
+    assert_eq!(received.body["owned"], serde_json::json!([]));
+    assert_eq!(
+        received.body["incoming"],
+        serde_json::json!([{
+            "work_id": WORK,
+            "share_id": SHARE,
+            "title": "Excerpt",
+            "snapshot_revision": 1
+        }])
+    );
+    let owner_arrival = transport_get(&mut owner_memory, "synthetic-owner", "/v1/arrival");
+    assert_eq!(owner_arrival.status, 200);
+    assert_eq!(owner_arrival.body["owned"][0]["work_id"], WORK);
+    assert_eq!(owner_arrival.body["incoming"], serde_json::json!([]));
+    let outsider = transport_get(&mut recipient_memory, "synthetic-stranger", "/v1/arrival");
+    assert_eq!(outsider.body["incoming"], serde_json::json!([]));
+    assert_eq!(outsider.body["owned"], serde_json::json!([]));
+    let unauth = transport_get(&mut recipient_memory, "invalid", "/v1/arrival");
+    assert_eq!(unauth.status, 401);
+    let route = format!("/v1/works/{WORK}/disclosures/{SHARE}");
+    let opened = transport_get(&mut recipient_memory, "synthetic-recipient", &route);
+    assert_eq!(opened.status, 200);
+    assert_eq!(opened.body["text"], "Discussion");
+    assert!(opened.body.get("revision").is_none());
+    assert!(!opened.body.to_string().contains("Private"));
+    let private_route = format!("/v1/works/{WORK}");
+    let forbidden = transport_get(
+        &mut recipient_memory,
+        "synthetic-recipient",
+        &private_route,
+    );
+    assert_eq!(forbidden.status, 404);
+    assert_eq!(
+        transport_get(&mut owner_memory, "synthetic-owner", &private_route).body["text"],
+        "Private"
+    );
     mem.submit_owner(
         &id(1),
         command(
@@ -283,6 +344,12 @@ fn durable_history_scoped_access_and_concurrent_writes() {
         assert_eq!(view.status, 404);
         assert_eq!(retry.body, view.body);
     }
+    let reopened = transport_get(&mut recipient_memory, "synthetic-recipient", "/v1/arrival");
+    assert_eq!(reopened.body["incoming"], serde_json::json!([]));
+    assert_eq!(
+        transport_get(&mut recipient_memory, "synthetic-recipient", &route).status,
+        404
+    );
     // Old work revision remains explicitly historical, not current.
     let restored = mem
         .read_research(&authority, &archive.archive_id)
