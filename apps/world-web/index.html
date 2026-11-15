@@ -41,6 +41,13 @@
     <button id="mic" class="mic" type="button" aria-pressed="false"><svg viewBox="0 0 36 36" width="34" height="34" aria-hidden="true"><rect x="14" y="6" width="8" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M10 17v1a8 8 0 0 0 16 0v-1M18 26v5m-5 0h10" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><span id="mic-label"></span></button>
     <span id="voice-state" role="status"></span><output id="voice-duration" aria-hidden="true" hidden>0:00</output><audio id="clip" controls hidden preload="metadata"></audio><button id="clear-clip" hidden></button>
    </div>
+   <div id="dictation" class="dictation">
+    <label id="dictation-opt-wrap" hidden><input id="dictation-opt" type="checkbox"><span id="dictation-opt-label"></span></label>
+    <label id="dictation-language-wrap" hidden><span id="dictation-language-label"></span><select id="dictation-language"><option value="ar-EG">العربية (مصر)</option><option value="en-US">English (US)</option></select></label>
+    <p id="dictation-status" role="status" class="quiet"></p>
+    <p id="dictation-preview" dir="auto" hidden></p>
+    <div id="dictation-review" hidden><label id="dictation-label" for="dictation-draft"></label><textarea id="dictation-draft" dir="auto" maxlength="12000" rows="3"></textarea><button id="dictation-add" type="button"></button></div>
+   </div>
    <div class="actions" id="private-actions"><button id="prepare" class="accent"></button><button id="resume" hidden></button><button id="save"></button><button id="recall"></button></div>
    <p id="private-note" class="quiet"></p>
    <details id="prior" hidden><summary id="prior-label"></summary><label class="sr" for="prior-text" id="prior-input-label"></label><textarea id="prior-text" rows="3" maxlength="6000" dir="auto"></textarea></details>

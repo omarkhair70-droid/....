@@ -18,3 +18,8 @@ let resolve;const late=fake();const pending=createVoiceCapture({getStream:()=>ne
 const start=pending.toggle();assert.equal(pending.snapshot().state,'requesting');await pending.toggle();resolve(late);await start;assert.equal(late.track.stops,1);assert.equal(pending.snapshot().state,'idle');
 const denied=createVoiceCapture({getStream:async()=>{throw Error('denied')},makeRecorder:()=>{throw Error('must not construct')}});await denied.toggle();assert.equal(denied.snapshot().error,'noMic');
 console.log('PASS: voice lifecycle, bounded recording, stop race, permission cancellation and prior clip preservation');
+
+let observed=[];let hooked;
+const hooks=createVoiceCapture({getStream:async()=>fake(),makeRecorder:()=>hooked=new FakeRecorder(),onStart:()=>observed.push('start'),onStop:()=>observed.push('stop'),onComplete:b=>observed.push(b?'clip':'empty'),onCancel:()=>observed.push('cancel'),schedule:()=>1,unschedule:()=>{}});
+await hooks.toggle();hooked.data('x');hooks.stop();hooked.finish();assert.deepEqual(observed,['start','stop','clip']);
+await hooks.toggle();hooks.cancel();assert.equal(observed.at(-1),'cancel');

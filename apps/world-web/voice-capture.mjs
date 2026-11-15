@@ -1,5 +1,5 @@
 // Voice is a local, explicit act. No upload, transcription or implicit storage.
-export function createVoiceCapture({getStream,makeRecorder,onChange=()=>{},schedule=setTimeout,unschedule=clearTimeout,maxMs=90000,maxBytes=12*1024*1024}){
+export function createVoiceCapture({getStream,makeRecorder,onChange=()=>{},onStart=()=>{},onStop=()=>{},onComplete=()=>{},onCancel=()=>{},schedule=setTimeout,unschedule=clearTimeout,maxMs=90000,maxBytes=12*1024*1024}){
  let state='idle',error=null,clip=null,current=null;
  const snapshot=()=>({state,error,clip});
  const publish=()=>onChange(snapshot());
@@ -11,7 +11,7 @@ export function createVoiceCapture({getStream,makeRecorder,onChange=()=>{},sched
  }
  function abandon(reason=null,clear=false){
   const session=current;current=null;
-  if(session){try{if(session.recorder&&session.recorder.state!=='inactive')session.recorder.stop()}catch{}release(session)}
+  if(session){try{onCancel()}catch{} try{if(session.recorder&&session.recorder.state!=='inactive')session.recorder.stop()}catch{}release(session)}
   if(clear)clip=null;
   state=clip?'ready':'idle';error=reason;publish();
  }
@@ -19,6 +19,7 @@ export function createVoiceCapture({getStream,makeRecorder,onChange=()=>{},sched
   const session=current;
   if(!session||state!=='recording')return;
   state='stopping';publish();
+  try{onStop()}catch{}
   try{if(session.recorder.state!=='inactive')session.recorder.stop();release(session)}catch{if(current===session)abandon('noMic')}
  }
  async function toggle(){
@@ -42,12 +43,12 @@ export function createVoiceCapture({getStream,makeRecorder,onChange=()=>{},sched
     current=null;release(session);
     if(session.size){clip=new Blob(session.chunks,{type:recorder.mimeType||session.chunks[0]?.type||''});error=null}
     else error='noMic';
-    state=clip?'ready':'idle';publish();
+    state=clip?'ready':'idle';try{onComplete(session.size?clip:null)}catch{}publish();
    };
    recorder.start(500);
    if(current!==session)return;
    state='recording';
-   session.timer=schedule(()=>{if(current===session)stop()},maxMs);publish();
+   session.timer=schedule(()=>{if(current===session)stop()},maxMs);try{onStart(stream)}catch{}publish();
   }catch{if(current===session)abandon('noMic')}
  }
  return {snapshot,toggle,stop,discard:()=>abandon(null,true),cancel:()=>{if(current)abandon()},clear:()=>{clip=null;if(!current){state='idle';error=null}publish()}};
