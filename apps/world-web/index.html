@@ -127,7 +127,7 @@
 </div>
 <header class="world-edge">
  <span class="signature" aria-label="Telefshen">telef<span>shen.</span></span>
- <div class="edge-actions"><button id="open-encounter" type="button"></button><input id="encounter-file" type="file" accept=".telefshen,application/json" hidden><span id="mode"></span><button id="locale" lang="en">English</button></div>
+ <div class="edge-actions"><button id="open-field" type="button" aria-expanded="false" aria-controls="human-field"></button><button id="open-encounter" type="button"></button><input id="encounter-file" type="file" accept=".telefshen,application/json" hidden><span id="mode"></span><button id="locale" lang="en">English</button></div>
 </header>
 <main id="world" aria-label="Telefshen">
  <div class="center">
@@ -160,7 +160,7 @@
      </div>
      <button id="clear-clip" hidden></button>
     </div><p id="voice-player-status" role="status"></p>
-    <div id="voice-next" hidden><button id="voice-to-thought" type="button"><span id="voice-to-thought-label"></span><span aria-hidden="true">↗</span></button><p id="voice-next-note"></p></div>
+    <div id="voice-next" hidden><button id="voice-to-thought" type="button"><span id="voice-to-thought-label"></span><span aria-hidden="true">↗</span></button><p id="voice-next-note"></p><button id="cast-voice" type="button"></button></div>
    </div>
    <div id="dictation" class="dictation">
     <details id="dictation-options"><summary id="dictation-options-label"></summary>
@@ -180,6 +180,13 @@
    </div>
    <div class="actions" id="private-actions"><button id="resume" hidden></button><button id="save"></button><button id="recall"></button></div>
    <p id="private-note" class="quiet"></p>
+   <section id="human-field" hidden aria-labelledby="field-title" class="human-field">
+    <div class="field-heading"><div><p id="field-kicker"></p><h2 id="field-title"></h2></div><button id="field-close" type="button"></button></div>
+    <p id="field-note"></p>
+    <div id="field-own" class="field-materials"></div>
+    <button id="field-scenarios" type="button" aria-expanded="false" aria-controls="field-samples"></button>
+    <div id="field-samples" class="field-materials" hidden></div>
+   </section>
    <section id="formation" hidden aria-labelledby="formation-title" class="formation">
     <div class="formation-heading"><h2 id="formation-title"></h2><button type="button" id="formation-cancel"></button></div>
     <div class="formation-composition">
@@ -235,12 +242,14 @@
     <div class="object-origin"><span id="idea-origin"></span><span id="object-mark"></span></div>
     <label for="excerpt" id="excerpt-label" class="sr"></label><textarea id="excerpt" maxlength="6000" rows="3" dir="auto"></textarea>
     <p id="carried-text" class="carried-text" dir="auto" hidden></p>
+    <div id="exchange-voice" class="exchange-voice" hidden><p id="exchange-voice-label"></p><audio id="exchange-audio" controls preload="metadata"></audio><p id="exchange-voice-note"></p></div>
     <button id="grip" class="grip" hidden type="button"><svg viewBox="0 0 34 20" width="34" height="20" aria-hidden="true"><path d="M2 10h27m-7-7 7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="grip-label"></span></button>
    </div>
    <div id="preparation" hidden class="preparation">
     <div class="address"><label for="recipient" id="recipient-label"></label><input id="recipient" maxlength="160" dir="auto" autocomplete="off"></div>
     <div class="identity"><label class="check"><input id="masked" type="checkbox" checked><span id="masked-label"></span></label><label for="person-name" id="person-label" hidden></label><input id="person-name" maxlength="120" dir="auto" autocomplete="off" hidden></div>
     <div id="destination" class="destination"><span id="destination-name"></span><button type="button" id="cast" class="accent"></button></div>
+    <div class="field-departure"><button id="release-field" type="button" class="accent"></button><p id="release-note" class="quiet"></p></div>
     <div class="portable-departure"><button id="export-idea" type="button" class="accent"></button><p id="portable-note" class="quiet"></p></div>
     <p id="preview-note" class="quiet"></p>
    </div>
