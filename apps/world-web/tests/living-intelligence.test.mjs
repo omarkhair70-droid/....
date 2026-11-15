@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {captureFragment} from '../formation.mjs';
-import {emptyMind,makeMark,activeMark,correspondences,dismiss,validMind,topicKey,validBasis,captureBasis,rememberedMentions,validFieldBasis,composeFieldWork} from '../living-intelligence.mjs';
+import {emptyMind,makeMark,activeMark,correspondences,dismiss,validMind,topicKey,validBasis,captureBasis,rememberedMentions,validFieldBasis,composeFieldWork,validReality,meetReality} from '../living-intelligence.mjs';
 const a={id:'a',title:'A',body:'Private. Need calibration.',mind:emptyMind()},b={id:'b',title:'B',body:'Offer calibration.',mind:emptyMind()};
 const one='11111111-1111-4111-8111-111111111111',two='22222222-2222-4222-8222-222222222222';
 a.mind.marks.push(makeMark({id:one,kind:'need',topic:'Calibration',fragment:captureFragment(a,9,a.body.length)}));
@@ -47,3 +47,16 @@ assert.throws(()=>composeFieldWork({sources:[materials[0],materials[0]],question
 assert.throws(()=>composeFieldWork({sources:materials,question:' ',body:'A pilot.',id:'field-work',title:'A pilot.'}));
 assert.equal(validFieldBasis({...formedInField.fieldBasis,sources:[{id:'x',kind:'verified',text:'Something'}]}),false);
 console.log('PASS: disclosed field composition, independent evolution, provenance, and explicit uncertainty');
+
+const observed=meetReality(formedInField,{id:'observation-1',kind:'scenario',observation:'No usable history.',source:'Fictional test',reading:'challenges',decision:'revise',revision:'Start with collection.',next:'Test data collection.'});
+assert.equal(observed.body,'Start with collection.');
+assert.equal(formedInField.body,'A revised pilot.');
+assert.equal(observed.reality[0].before,'A revised pilot.');
+assert.equal(observed.fieldBasis.initial,'A pilot.');
+assert.equal(validReality(observed.reality),true);
+const held=meetReality(observed,{id:'observation-2',kind:'reported',observation:'No answer yet.',source:'My own notes',reading:'unclear',decision:'hold',revision:'Do not apply',next:'Ask again.'});
+assert.equal(held.body,observed.body);
+assert.equal(held.reality[1].before,held.reality[1].after);
+assert.throws(()=>meetReality(observed,{id:'bad',kind:'scenario',observation:'x',source:'',reading:'supports',decision:'hold',next:'Ask'}));
+assert.equal(validReality([{...held.reality[0],kind:'verified'}]),false);
+console.log('PASS: reality observations are authored, uncertain, provenance-tagged and independently retained');
