@@ -183,9 +183,11 @@
    <section id="human-field" hidden aria-labelledby="field-title" class="human-field">
     <div class="field-heading"><div><p id="field-kicker"></p><h2 id="field-title"></h2></div><button id="field-close" type="button"></button></div>
     <p id="field-note"></p>
+    <div id="field-intersection" class="field-intersection" hidden aria-labelledby="intersection-title"><div class="intersection-header"><span id="intersection-kicker"></span><button id="intersection-clear" type="button"></button></div><h3 id="intersection-title"></h3><div id="intersection-sources" class="intersection-sources"></div><p id="intersection-note"></p><button id="intersection-open" type="button"></button><div id="intersection-compose" hidden><label for="intersection-draft" id="intersection-draft-label"></label><textarea id="intersection-draft" rows="3" maxlength="12000" dir="auto"></textarea><label for="intersection-question" id="intersection-question-label"></label><textarea id="intersection-question" rows="2" maxlength="2000" dir="auto"></textarea><div class="actions"><button id="intersection-keep" class="accent" type="button"></button><button id="intersection-back" type="button"></button></div><p id="intersection-status" role="status" class="quiet"></p></div></div>
     <div id="field-own" class="field-materials"></div>
     <button id="field-scenarios" type="button" aria-expanded="false" aria-controls="field-samples"></button>
     <div id="field-samples" class="field-materials" hidden></div>
+    <button id="intersection-example" type="button" hidden></button>
    </section>
    <section id="formation" hidden aria-labelledby="formation-title" class="formation">
     <div class="formation-heading"><h2 id="formation-title"></h2><button type="button" id="formation-cancel"></button></div>
@@ -230,6 +232,7 @@
     <div id="mind-marks" class="mind-marks"></div><p id="mind-empty" class="quiet" hidden></p>
     <p id="mind-limit" class="quiet" hidden></p>
    </section>
+   <section id="field-history" hidden class="field-history" aria-labelledby="field-history-title"><h2 id="field-history-title"></h2><p id="field-history-note"></p><div id="field-history-pieces" class="intersection-sources"></div><details><summary id="field-history-initial-label"></summary><blockquote id="field-history-initial" dir="auto"></blockquote></details><div class="field-question"><p id="field-history-question-label"></p><blockquote id="field-history-question" dir="auto"></blockquote></div></section>
    <section id="possibility-basis" hidden aria-labelledby="basis-title" class="possibility-basis"><h2 id="basis-title"></h2><p id="basis-note" class="quiet"></p><div id="basis-pieces"></div>
    </section>
    <details id="prior" hidden><summary id="prior-label"></summary><label class="sr" for="prior-text" id="prior-input-label"></label><textarea id="prior-text" rows="3" maxlength="6000" dir="auto"></textarea></details>
