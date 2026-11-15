@@ -128,7 +128,7 @@ const presenceNarrow=matchMedia('(max-width:760px)');
 const presenceMotion=matchMedia('(prefers-reduced-motion:reduce)');
 function expressLight(){
  const focused=document.activeElement;
- const law=composePresence({phase:document.body.dataset.phase,focus:focused===$('thought')?'thought':focused===$('mic')?'mic':'none',narrow:presenceNarrow.matches,reducedMotion:presenceMotion.matches});
+ const law=composePresence({phase:document.body.dataset.phase,focus:focused?.id||'none',narrow:presenceNarrow.matches,reducedMotion:presenceMotion.matches});
  if(!law){document.body.dataset.attention='rest';return}
  presenceSVG.setAttribute('viewBox',law.frame);
  document.body.dataset.attention=law.attention;
@@ -136,6 +136,7 @@ function expressLight(){
 }
 presenceNarrow.addEventListener('change',expressLight);
 presenceMotion.addEventListener('change',expressLight);
+new MutationObserver(expressLight).observe(document.body,{attributes:true,attributeFilter:['data-phase']});
 document.addEventListener('focusin',expressLight);
 document.addEventListener('focusout',()=>queueMicrotask(expressLight));
 expressLight();

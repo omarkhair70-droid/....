@@ -19,6 +19,8 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(scene.getAttribute('viewBox')==='435 0 570 900','mobile frames same field');
  fresh.getElementById('thought').focus();
  assert(fresh.body.dataset.attention==='express','explicit focus changes local light');
+ assert(frame.contentWindow.getComputedStyle(fresh.getElementById('thought')).outlineStyle==='none','focused writing does not become a rectangular form');
+ assert(frame.contentWindow.getComputedStyle(fresh.getElementById('thought')).backgroundSize==='100% 3px','focused writing retains a visible line');
  fresh.getElementById('thought').blur();
  await Promise.resolve();
  assert(fresh.body.dataset.attention==='rest','light returns at rest');
@@ -65,6 +67,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  set('recipient','Fictional company');assert(!$('cast').disabled,'prepared with anonymous display');
  const id=$('idea-object').dataset.idea;
  click('cast');assert(d.body.dataset.phase==='recipient','recipient review');
+ assert(d.body.dataset.material==='presence-01.4a'&&frame.contentWindow.getComputedStyle(d.getElementById('presence-material')).display!=='none','recipient inhabits the same material');
  assert($('carried-text').textContent==='Shared thought.','exact disclosed excerpt');
  assert($('idea-object').dataset.idea===id,'same idea identity');
  assert($('thought').value===''&&$('prior-text').value==='','private text not rendered in recipient view');
@@ -74,6 +77,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  set('reply','A second human contribution.');click('reply-meet');
  assert(d.body.dataset.phase==='returned'&&!$('accept').hidden,'independent invitation to meet');
  click('accept');assert(d.body.dataset.phase==='meeting','explicit mutual local entry');
+ assert(d.body.dataset.material==='presence-01.4a'&&frame.contentWindow.getComputedStyle(d.getElementById('presence-material')).display!=='none','meeting preserves the material');
  assert($('carried-text').textContent==='Shared thought.'&&$('answer-text').textContent==='A second human contribution.','original contributions remain');
  set('common','A jointly authored possibility.');click('leave');assert($('thought').value==='Private fact. Shared thought.','original restored');
  click('resume');assert($('common').value==='A jointly authored possibility.','same encounter resumes');

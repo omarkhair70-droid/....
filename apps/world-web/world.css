@@ -127,3 +127,15 @@ body[data-phase=private] #thought:focus-visible{outline:2px solid #34476a;outlin
 #voice-duration{font-size:13px;color:#773735;font-variant-numeric:tabular-nums;direction:ltr}
 #mic[aria-disabled=true]{cursor:default;text-decoration:none;opacity:.76}
 @media(forced-colors:active){body[data-phase=private] #thought{background-image:none;border-block-end:1px solid CanvasText}}
+
+/* 01.6 — the carrier is continuous across the local journey. Native controls
+   remain available; the material does not impersonate a person or a response. */
+body[data-phase] .daylight{display:none}
+body[data-phase] .presence-material{display:block;position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:#e5d9d7}
+body[data-attention=express] #focus-light{opacity:1}
+body[data-phase=private] #thought:focus-visible{outline:0;border-radius:0;background-image:linear-gradient(#34476a,#34476a);background-size:100% 3px;background-repeat:no-repeat;background-position:left bottom}
+html[dir=rtl] body[data-phase=private] #thought:focus-visible{background-position:right bottom}
+@media(forced-colors:active){
+ body[data-phase] .presence-material{display:none}
+ body[data-phase=private] #thought:focus-visible{outline:2px solid Highlight;outline-offset:4px;background-image:none}
+}

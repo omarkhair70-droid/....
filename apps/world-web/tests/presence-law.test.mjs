@@ -9,7 +9,15 @@ assert.equal(composePresence({...ctx,focus:'locale'}).attention,'rest');
 assert.equal(mobile.material,rest.material); assert.notEqual(mobile.frame,rest.frame);
 assert.equal(composePresence({...ctx,focus:'mic',reducedMotion:true}).lightOpacity,1);
 assert.equal(composePresence({...ctx,reducedMotion:true}).transitionMs,0);
-assert.equal(composePresence({...ctx,phase:'meeting'}),null);
+for(const phase of ['prepare','recipient','returned','meeting']){
+ const scene=composePresence({...ctx,phase});
+ assert.equal(scene.material,rest.material);
+ assert.equal(scene.frame,rest.frame);
+ assert.equal(scene.attention,'rest');
+}
+assert.equal(composePresence({...ctx,phase:'meeting',focus:'common'}).attention,'express');
+assert.equal(composePresence({...ctx,phase:'recipient',focus:'reply'}).attention,'express');
+assert.equal(composePresence({...ctx,phase:'unknown'}),null);
 assert.equal(contrastRatio([0,0,0],[255,255,255]),21);
 assert.deepEqual(chooseReadableInk([[240,240,240],[41,39,45]],[[240,235,220],[217,204,217]]).ink,[41,39,45]);
 assert.equal(chooseReadableInk([[127,127,127]],[[127,127,127]]),null);
