@@ -85,3 +85,14 @@ export function rememberedMentions(works,active){
  }
  return found;
 }
+
+// A composition retains only deliberately selected, disclosed text (never audio or private source bodies).
+export function validFieldBasis(b){
+ const txt=(s,n)=>typeof s==='string'&&s.length<=n&&!!s.trim();
+ return !!b&&Object.keys(b).length===3&&Array.isArray(b.sources)&&b.sources.length>=2&&b.sources.length<=4&&new Set(b.sources.map(s=>s?.id)).size===b.sources.length&&b.sources.every(s=>!!s&&Object.keys(s).length===3&&txt(s.id,80)&&['local','scenario'].includes(s.kind)&&txt(s.text,6000))&&txt(b.question,2000)&&txt(b.initial,12000);
+}
+export function composeFieldWork({sources,question,body,id,title,parent=null}){
+ const fieldBasis={sources:sources.map(({id,kind,text})=>({id,kind,text})),question,initial:body};
+ if(!validFieldBasis(fieldBasis)||typeof id!=='string'||!id||id.length>80||typeof title!=='string'||!title.trim()||title.length>240||(parent!==null&&(typeof parent!=='string'||!parent||parent.length>80||parent===id)))throw new TypeError('Invalid field composition');
+ return {id,title,body,idea:'',ideaOpen:false,parent,fieldBasis};
+}
