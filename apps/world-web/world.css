@@ -690,3 +690,34 @@ body[data-work-life=born] #thought{color:#244561}
 #birth-parent{padding-inline:0;margin-block-start:6px;color:#375449;font-size:14px}
 @media(max-width:760px){body[data-phase=private][data-work-life=born] #fold-mass{translate:0 -18px}.birth-materials{grid-template-columns:1fr;gap:12px}.work-birth{margin-block:25px}.birth-piece{padding:16px}}
 @media(forced-colors:active){.birth-piece,#birth-emergence{background:Canvas;color:CanvasText;border:1px solid CanvasText}.birth-piece::before{display:none}#voice-to-thought{color:ButtonText}}
+
+
+/* THE LIVING INTELLIGENCE — peripheral recall, voluntary disclosure, authored possibility. */
+#world-periphery{margin-block:6px 12px;position:relative;isolation:isolate}
+#mind-reveal{position:relative;gap:16px;padding:8px 14px 8px 0;border-inline-start:1px solid #77928a;min-height:68px}
+#mind-reveal svg{width:43px;height:34px;transition:transform .5s cubic-bezier(.19,1,.22,1)}
+#mind-reveal:hover svg,#mind-reveal:focus-visible svg{transform:scale(1.12)}
+#mind-reveal span{font-size:clamp(15px,1.4vw,21px);font-weight:500}
+#mind-reveal small{font-weight:400;font-size:12px;margin-block-start:3px}
+body[data-correspondence=echo] #mind-reveal{border-inline-start-color:#b89472}
+body[data-correspondence=echo][data-phase=private] #peripheral-material{translate:13px -9px;opacity:.78}
+body[data-correspondence=present][data-phase=private] #peripheral-material{opacity:1}
+#mind{scroll-margin-block-start:22px;margin-block-start:28px;padding-block-start:22px;border-block-start:1px solid #84938b80}
+#mind .mind-heading h2{font-size:clamp(25px,3vw,43px);font-weight:400;letter-spacing:-.035em;color:#244561}
+.mind-echoes{display:grid;gap:16px;margin-block:24px}
+.mind-echo{position:relative;isolation:isolate;padding:clamp(18px,3vw,32px);color:#244561}
+.mind-echo::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(130deg,#e9ddc0,#e0e5d4 90%);clip-path:polygon(0 2%,98% 0,100% 96%,2% 100%);pointer-events:none}
+.mind-echo h3{font-size:clamp(22px,2.3vw,33px);font-weight:400;margin:0 0 12px}
+.mind-echo .quiet{font-size:13px;line-height:1.7}
+.mind-echo .mind-subject{margin-block-start:20px}
+.mind-echo blockquote{border-inline-start:2px solid #9a9677;padding-inline-start:15px;font-size:clamp(20px,2vw,30px)}
+.mind-hypothesis{color:#87543d;font-size:12px;letter-spacing:.025em;margin:0 0 7px}
+.mind-link h3{font-size:clamp(25px,2.7vw,37px);color:#244561;letter-spacing:-.025em}
+.mind-material{gap:8px}
+.mind-why{padding:6px 0;margin-block-start:12px;border-block-end:1px solid #89968c66}
+.mind-why summary{min-height:44px;padding:9px 0;cursor:pointer;color:#244561;font-size:14px}
+.mind-why p{margin:0 0 10px}
+.possibility-editor{background:linear-gradient(140deg,#d9e6d9b0,#e8dfcb66);padding:clamp(15px,2.5vw,30px);margin-block-start:22px;border-inline-start:2px solid #628479}
+.possibility-editor label{font-size:clamp(19px,2vw,29px);line-height:1.4}
+@media(max-width:760px){#world-periphery{margin-block:8px}#mind-reveal{min-height:62px;padding-inline-start:10px}.mind-echo{padding:18px}}
+@media(forced-colors:active){.mind-echo{border:1px solid CanvasText}.mind-echo::before{display:none}}
