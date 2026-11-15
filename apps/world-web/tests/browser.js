@@ -63,10 +63,13 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  record.finish();assert(get('voice').dataset.capture==='ready'&&!get('clip').hidden&&get('clip').src.startsWith('blob:'),'real local blob exposed to playback control');
  assert(get('thought').value===''&&localStorage.getItem(key)===null,'voice does not transcribe or persist implicitly');
  assert(fresh.body.dataset.expression==='voice','voice alone is a material fact');
+ assert(!get('voice-next').hidden,'finished recording has a visible path into thought');
+ get('voice-to-thought').click();assert(fresh.activeElement===get('thought')&&get('thought').value===''&&localStorage.getItem(key)===null,'voice gesture stays explicit and does not create a transcript');
  assert(!get('voice-player').hidden&&get('voice-play-label').textContent.length>0,'authored playback surface available, not a decorative wave');
  assert(get('voice-trace-label').textContent==='أثر صوتك','finished sound becomes distinct material');
  get('clear-clip').click();assert(get('clip').hidden&&!get('clip').hasAttribute('src'),'explicit removal of clip');
  assert(fresh.body.dataset.expression==='none','removal leaves no invented material');
+ assert(get('voice-next').hidden,'voice-only gesture disappears when the recording is removed');
  assert(get('voice-player').hidden&&get('recorded-voice-path').getAttribute('d')===''&&get('world-recorded-ink').getAttribute('d')==='','removed audio has no residual ink in the instrument or the world');
  // The optional local recognition adapter is exercised with a fake browser service.
  let recognizer, secondCount=0;
@@ -147,10 +150,15 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  click('resume');assert($('common').value==='A jointly authored possibility.','same encounter resumes');
  click('keep');assert(d.body.dataset.phase==='private'&&$('thought').value.includes('A jointly authored possibility.'),'new work is written');
  assert(!$('thought').value.includes('Private fact.'),'new work excludes private excerpt');
+ assert($('thought').value==='A jointly authored possibility.'&&!$('work-birth').hidden&&$('birth-first').textContent==='Shared thought.'&&$('birth-second').textContent==='A second human contribution.','new text is distinct from its birth materials');
+ set('thought','A jointly authored possibility. Revised next step.');assert($('birth-emergence-text').textContent==='A jointly authored possibility.','later edits do not rewrite the birth');
  assert(localStorage.getItem(key)===before,'no automatic save');
  click('save');const saved=JSON.parse(localStorage.getItem(key));assert(saved.works.length===2&&saved.works[1].parent==='prior-work'&&saved.works[0].body==='Private fact. Shared thought.','new work retains origin');
  await load('?scene=formation');d=frame.contentDocument;assert(!d.getElementById('formation-study'),'retired scene');
  assert($('thought').value.includes('A jointly authored possibility.')&&d.documentElement.dir==='ltr','restore saved work');
+ assert($('thought').value.includes('Revised next step.')&&$('birth-first').textContent==='Shared thought.'&&$('birth-emergence-text').textContent==='A jointly authored possibility.','birth and edits restored separately');
+ click('birth-parent');assert($('thought').value==='Private fact. Shared thought.'&&$('formed-works').querySelectorAll('button').length===1,'parent can recall the born work');
+ $('formed-works').querySelector('button').click();assert($('thought').value.includes('Revised next step.'),'child remains reachable from its parent');
  click('recall');set('find','Previous work');assert($('works').querySelectorAll('button').length===1,'recall');
  $('works').querySelector('button').click();assert($('thought').value==='Private fact. Shared thought.','recall original');
  click('prepare');set('recipient','Fictional recipient');$('masked').click();
@@ -212,6 +220,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(d.body.dataset.phase==='returned'&&$('answer-text').textContent==='I can contribute.'&&$('accept').hidden&&!$('portable-keep').hidden,'matched returned trace does not claim live meeting');
  click('portable-keep');
  assert($('thought').value.includes('Carry this only.')&&$('thought').value.includes('I can contribute.')&&!$('thought').value.includes('PRIVATE'),'private new work contains exact disclosed contributions only');
+ assert(!$('work-birth').hidden&&$('birth-first').textContent==='Carry this only.'&&$('birth-second').textContent==='I can contribute.'&&$('birth-emergence').hidden,'file exchange has a distinct historical trace without claiming a joint composition');
  assert(localStorage.getItem(key)===null,'kept contributions not silently persisted');
  localStorage.removeItem(vaultKey);
  await load();d=frame.contentDocument;
