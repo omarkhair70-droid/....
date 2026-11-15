@@ -575,3 +575,88 @@ html[dir=ltr] #formed-works .formed-work{background:linear-gradient(270deg,trans
  #formation-draft{font-size:24px;min-height:120px}
 }
 @media(forced-colors:active){.formation-sheet{background:Canvas;border:1px solid CanvasText}.formation-sheet::before,.formation-sheet::after,.formation-source::after,.gesture-choices button::before{display:none}#formation-keep{color:ButtonText;background:ButtonFace;border:1px solid ButtonText}}
+
+
+/* ENCOUNTER B — a single idea crosses a boundary; a second material appears
+   only when a human contribution exists. The meeting is not a message thread. */
+#encounter-field{opacity:0;transition:opacity 600ms ease;pointer-events:none}
+#encounter-field .encounter-other,#encounter-field .encounter-common{opacity:0;transition:opacity 720ms ease,transform 780ms cubic-bezier(.19,1,.22,1);transform-origin:center;transform-box:fill-box}
+body:not([data-phase=private]) #encounter-field{opacity:1}
+body:not([data-phase=private]) #fold-mass{translate:-118px 0}
+body[data-phase=prepare] #encounter-field .encounter-route{opacity:.55}
+body:is([data-phase=recipient],[data-phase=returned],[data-phase=meeting]) #encounter-field .encounter-other{opacity:.9}
+body[data-phase=recipient] #encounter-field .encounter-other{transform:translate(-32px,42px) rotate(-7deg)}
+body[data-phase=returned] #encounter-field .encounter-other{transform:translate(18px,12px) rotate(-2deg)}
+body[data-phase=meeting] #encounter-field .encounter-other{transform:translate(-38px,-8px)}
+body[data-phase=meeting] #encounter-field .encounter-common{opacity:1}
+body:not([data-phase=private]) #world{padding-block-start:clamp(28px,6vh,65px)}
+#exchange{--first:#dbe5cc;--first-ink:#29493d;--second:#eed6bc;--second-ink:#743f32;--third:#d4e2e5;min-width:0}
+#exchange .exchange-stage{display:flex;align-items:center;gap:12px;color:#53615e;font-size:12px;letter-spacing:.025em;margin-block-end:12px}
+#exchange .exchange-stage::before{content:"";width:22px;height:1px;background:#a66a4c;flex:none}
+#exchange .place-label{font-size:clamp(32px,4.0vw,57px);line-height:1.18;letter-spacing:-.04em;color:#244561;margin-block-end:13px}
+#exchange .place-label .dot{display:none}
+#exchange-intro{font-size:clamp(15px,1.4vw,20px);line-height:1.65;color:#53615e;max-width:55ch;margin:0 0 32px}
+#exchange .idea-object,#exchange .answer,#exchange #reception,#exchange .meeting{position:relative;isolation:isolate;min-width:0;background:none;border:0;box-shadow:none;padding:clamp(20px,3.1vw,40px);margin:0}
+#exchange .idea-object::before,#exchange .idea-object::after,#exchange .answer::before,#exchange #reception::before,#exchange .meeting::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none}
+#exchange .idea-object::before{background:#acbea7;clip-path:polygon(0 5%,95% 0,100% 93%,5% 100%);transform:translateY(6px)}
+#exchange .idea-object::after{background:linear-gradient(150deg,#f3f2df,var(--first));clip-path:polygon(0 0,97% 2%,100% 97%,3% 94%)}
+#exchange .object-origin{color:var(--first-ink);font-size:12px;gap:8px;margin-block-end:20px}
+#exchange #object-mark{font-size:11px;color:#53615e}
+#exchange #excerpt,#exchange .carried-text{color:var(--first-ink);font-size:clamp(24px,2.8vw,40px);line-height:1.55;min-height:88px;border:0;resize:vertical}
+#exchange #excerpt:focus-visible{outline:2px solid #375449;outline-offset:3px}
+#exchange .grip{color:var(--first-ink);margin-block-start:12px;width:100%;border-block-start:1px solid #7c947b77;text-align:start;gap:12px;min-height:48px}
+#exchange .grip:not(:disabled):hover{color:#1a3227}
+#exchange .preparation{margin-block-start:27px;gap:16px 22px}
+#exchange .address,#exchange .identity{min-width:0}
+#exchange .address label,#exchange .identity label:not(.check){font-weight:500;color:#244561}
+#exchange #recipient,#exchange #person-name{border-block-end:1px solid #7b8b84;min-height:48px;color:#244561;font-size:clamp(18px,1.7vw,24px)}
+#exchange .identity input[type=checkbox]{accent-color:#375449}
+#exchange .destination{position:relative;isolation:isolate;padding:16px 18px;border:1px dashed #8b9182;min-height:86px;gap:12px;flex-wrap:wrap;margin-block-start:8px;background:#e7dfd1}
+#exchange .destination.ready{border:1px solid #476b68;background:#d9e1d4}
+#destination-name{font-size:clamp(18px,1.8vw,26px);font-weight:500;min-width:0}
+#exchange #cast{border-radius:2px;background:#244561;color:#fff9ed;border-color:#244561;font-size:13px;white-space:normal;max-width:100%}
+#exchange #cast:disabled{opacity:.48}
+#exchange .portable-departure{border-block-start:1px solid #89968c70;padding-block-start:14px}
+#exchange .portable-departure button{background:transparent;color:#244561;border:1px solid #6c8188;border-radius:2px;font-size:13px}
+#exchange #preview-note{color:#53615e}
+#exchange #reception,#exchange .answer{margin-block-start:clamp(24px,3.8vw,46px)}
+#exchange #reception::before,#exchange .answer::before{background:linear-gradient(145deg,#f5e9d9,var(--second));clip-path:polygon(2% 2%,100% 0,97% 100%,0 95%)}
+#exchange #reply-prompt,#exchange #answer-origin{display:block;color:var(--second-ink);font-size:14px;font-weight:500;margin:0 0 14px}
+#exchange #reply,#exchange #answer-text{font-size:clamp(22px,2.5vw,35px);color:#593a30;line-height:1.6;max-height:none;margin:0}
+#exchange #reply{border-block-end:1px solid #a77b6477;min-height:104px}
+#exchange #reply::placeholder{color:#7c5345}
+#exchange #reception .actions{gap:7px 12px;margin-block-start:13px}
+#exchange #reply-meet,#exchange #accept,#exchange #keep{border-radius:2px;color:#fffaf0;background:#244561;border:1px solid #244561;font-size:14px}
+#exchange #decline{color:#743f32}
+#exchange #return-actions{margin-block-start:20px}
+#exchange .meeting{margin-block-start:32px;padding-block-start:clamp(24px,3vw,40px)}
+#exchange .meeting::before{background:linear-gradient(125deg,#dbe5cc 0%,#d3e0dd 35%,#f1e2cb 100%);clip-path:polygon(0 3%,98% 0,100% 95%,1% 100%)}
+#exchange #common-label{display:block;color:#244561;font-size:clamp(21px,2.5vw,36px);font-weight:400;line-height:1.3;margin-block-end:16px}
+#exchange #common{font-size:clamp(24px,2.7vw,38px);color:#244561;min-height:125px;max-height:none;border-block-end:1px solid #7c959399}
+#exchange #common::placeholder{color:#506a72}
+#exchange #meeting-note,#exchange #portable-context,#exchange .exchange-foot .quiet{font-size:12px;color:#53615e}
+#exchange .exchange-foot{margin-block-start:20px;border-block-start:1px solid #89968c66;padding-block-start:12px}
+@media(prefers-reduced-motion:no-preference){
+ #exchange .idea-object.arrive{animation:encounter-arrive 620ms cubic-bezier(.19,1,.22,1) both}
+ #exchange .idea-object.return{animation:encounter-return 620ms cubic-bezier(.19,1,.22,1) both}
+ body[data-phase=meeting] #exchange .meeting:not([hidden]){animation:material-unfold 600ms cubic-bezier(.19,1,.22,1) both}
+}
+@keyframes encounter-arrive{from{opacity:.48;transform:translate(var(--enter,64px),-13px) rotate(.8deg)}to{opacity:1;transform:none}}
+@keyframes encounter-return{from{opacity:.48;transform:translate(var(--back,-64px),12px) rotate(-.8deg)}to{opacity:1;transform:none}}
+@media(max-width:760px){
+ body:not([data-phase=private]) #world{padding-block-start:clamp(95px,15svh,135px)}
+ body:not([data-phase=private]) #fold-mass{translate:0 -20px}
+ #encounter-field{transform:translate(-760px,-15px) scale(.88);transform-origin:top left}
+ #exchange .place-label{font-size:clamp(31px,7.8vw,42px)}
+ #exchange-intro{margin-block-end:22px}
+ #exchange .idea-object,#exchange .answer,#exchange #reception,#exchange .meeting{padding:19px 16px}
+ #exchange .preparation{grid-template-columns:1fr;gap:12px}
+ #exchange .destination{padding:12px}
+ #exchange .grip{font-size:11px}
+ #exchange #reply,#exchange #common{font-size:23px}
+}
+@media(forced-colors:active){
+ #exchange .idea-object,#exchange .answer,#exchange #reception,#exchange .meeting{background:Canvas;border:1px solid CanvasText}
+ #exchange .idea-object::before,#exchange .idea-object::after,#exchange .answer::before,#exchange #reception::before,#exchange .meeting::before{display:none}
+ #exchange #cast,#exchange #reply-meet,#exchange #accept,#exchange #keep{background:ButtonFace;color:ButtonText;border:1px solid ButtonText}
+}
