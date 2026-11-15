@@ -390,3 +390,112 @@ body[data-correspondence=present][data-phase=private] #peripheral-material{trans
 body[data-phase=private] .signature{color:#f4efe5;text-shadow:0 1px 2px #263a67}
 @media(max-width:760px){.mind-choices button{min-height:106px;padding:10px}.mind-choices button span{font-size:16px}.mind-choices button small{font-size:11px}.mind-choices #mind-need[aria-pressed=true],.mind-choices #mind-ability[aria-pressed=true]{padding:9px}.connection-source{padding:14px}.mind-choices{gap:8px}body[data-phase=private] .signature{color:#182543;text-shadow:0 0 2px #f4efe5}}
 @media(forced-colors:active){.mind-choices button[aria-pressed=true]{outline:2px solid Highlight}.connection-source{background:Canvas;border:1px solid CanvasText}}
+
+/* THE THRESHOLD — an authored spatial relief, not a wallpaper with a form.
+   An aperture opens only on actual capture; silence remains a valid state. */
+:root{--action:#244561;--ink:#172b37;--soft:#53615e;--line:#89968c}
+body[data-phase]{background:#eee7da;color:var(--ink)}
+body[data-phase] .presence-material{background:#eee7da}
+body[data-phase] #world{direction:ltr;align-items:flex-start;justify-content:flex-end;padding:clamp(65px,12vh,137px) clamp(36px,6.1vw,108px) clamp(32px,7vh,80px) 0;min-height:0}
+body[data-phase] .center,body[data-phase=private] .center,html[dir=rtl] body[data-phase=private] .center,body[data-phase]:not([data-phase=private]) .center{width:min(100%,720px);max-width:52%;padding:0;margin:0}
+html[dir=rtl] body[data-phase] .center{direction:rtl}
+body[data-phase] .world-edge{direction:ltr;align-items:center;padding:28px clamp(28px,4vw,68px);min-height:88px}
+body[data-phase] .signature,body[data-phase=private] .signature{color:#fbefdb;text-shadow:none;font-size:clamp(25px,2.5vw,35px)}
+body[data-phase] .edge-actions,body[data-phase=private] .edge-actions{background:#eee7da;padding:3px 10px;gap:12px;border-radius:3px}
+body[data-phase] .world-foot,body[data-phase=private] .world-foot{direction:ltr;align-items:center;padding:18px clamp(26px,4vw,68px);color:#53615e}
+body[data-phase] .world-foot>span:first-child{margin-inline-start:auto;max-width:57%;text-align:end}
+body[data-phase] .coordinate{display:none}
+body[data-phase] #foot-note,body[data-phase=private] #foot-note{background:transparent;color:#53615e}
+#fold-mass{translate:0 0;transition:translate 940ms cubic-bezier(.19,1,.22,1)}
+#aperture-energy{transform-box:fill-box;transform-origin:center;transform:scale(.74);opacity:.43;transition:transform 950ms cubic-bezier(.19,1,.22,1),opacity 950ms cubic-bezier(.19,1,.22,1)}
+#surface-filaments{transition:opacity 850ms ease}
+body[data-scene=oriented] #aperture-energy{transform:scale(.85);opacity:.66}
+body[data-scene=authoring] #aperture-energy,body[data-scene=mixed] #aperture-energy{transform:scale(.89);opacity:.69}
+body[data-capture=requesting] #aperture-energy{transform:scale(.86);opacity:.7}
+body[data-capture=recording] #aperture-energy{transform:scale(1.08);opacity:1}
+body[data-capture=recording] #surface-filaments{opacity:.6}
+body[data-capture=stopping] #aperture-energy{transform:scale(.97);opacity:.9}
+body[data-capture=ready] #aperture-energy{transform:scale(.87);opacity:.81}
+#focus-light{opacity:.45}
+body[data-attention=express] #focus-light{opacity:.95}
+.presence-kicker{display:flex;align-items:center;gap:12px;letter-spacing:.025em;font-size:13px;font-weight:500;color:#53615e;margin-block-end:22px}
+.presence-index{font:500 13px/1.2 Georgia,serif;direction:ltr;color:#9b5848}
+body[data-phase=private] .place-label{font-size:clamp(38px,4.9vw,73px);font-weight:400;letter-spacing:-.05em;line-height:1.15;margin-block-end:20px;color:#1f3d56;min-height:0}
+.arrival-note{color:#53615e;font-size:clamp(14px,1.33vw,20px);margin:0 0 36px;line-height:1.65}
+body[data-phase=private] #thought{font-size:clamp(27px,3vw,43px);letter-spacing:-.025em;line-height:1.55;min-height:80px;margin:0;padding:12px 0 17px;color:#1d2e38}
+body[data-phase=private] #thought::placeholder{color:#65736d}
+body[data-phase=private] #thought:focus-visible{background-image:linear-gradient(#244561,#244561);background-size:100% 3px;background-repeat:no-repeat}
+body[data-phase=private] #name{font-size:13px;letter-spacing:.005em;color:#53615e;margin:0 0 10px;padding:0 0 8px;min-height:36px}
+body[data-phase=private] #voice{display:flex;flex-direction:column;align-items:stretch;gap:12px;min-height:0;border:0;padding:18px 0 0;margin:0}
+.voice-threshold{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:84px}
+body[data-phase=private] #mic{display:inline-flex;min-height:76px;gap:17px;padding:0;text-align:start;color:#244561;line-height:1.3}
+.voice-orb{display:grid;place-items:center;flex:none;width:76px;height:76px;border-radius:50%;background:#244561;color:#f3ede0;transition:background-color 500ms,box-shadow 500ms,transform 500ms}
+body[data-phase=private] #mic svg{padding:0;background:none;color:inherit;width:64px;height:64px;border:0;border-radius:0}
+.voice-invitation{display:flex;flex-direction:column;gap:7px;min-width:0}
+#mic-label{font-size:clamp(18px,1.9vw,27px);font-weight:500}
+#voice-intent{font-size:12px;font-weight:400;color:#53615e;line-height:1.5;max-width:40ch}
+#mic .stop-glyph{display:none}
+#voice[data-capture=recording] #mic .voice-glyph,#voice[data-capture=stopping] #mic .voice-glyph{display:none}
+#voice[data-capture=recording] #mic .stop-glyph,#voice[data-capture=stopping] #mic .stop-glyph{display:block}
+#voice[data-capture=recording] .voice-orb,#voice[data-capture=stopping] .voice-orb{background:#a85140;box-shadow:0 0 0 7px #a8514024;transform:scale(1.06)}
+body[data-phase=private] #voice[data-capture=recording] #mic svg{background:none;color:inherit}
+#voice[data-capture=requesting] .voice-orb{background:#8f7967;color:#fff9ee}
+#voice[data-capture=ready] .voice-orb{background:#3a625d}
+#voice-duration{font-size:clamp(26px,2.2vw,36px);font-weight:400;font-variant-numeric:tabular-nums;color:#a85140;direction:ltr}
+#voice-state:empty{display:none}
+#voice-state{display:block;color:#53615e;font-size:12px}
+#live-voice-ink{max-width:none;height:74px;border-block-end:1px solid #a851404d;transform-origin:center;overflow:visible;color:#a85140}
+#voice-player{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px 14px;align-items:center;padding:22px 20px 17px;background:#dce5d7;border-inline-start:3px solid #486961;box-shadow:5px 5px 0 #48696118}
+.voice-trace-title{grid-column:1/-1;color:#244561;font-weight:500;font-size:19px}
+.voice-trace-title small{display:block;font-size:12px;line-height:1.4;font-weight:400;color:#53615e;margin-top:5px}
+#recorded-voice-ink{height:53px;color:#244561}
+#voice-player #clear-clip{max-width:84px}
+#voice-position::-webkit-slider-runnable-track{height:1px;background:#67786e}
+#voice-position::-webkit-slider-thumb{background:#244561}
+#dictation-options{margin-inline-start:94px}
+#dictation-options summary{font-size:12px;color:#53615e}
+#dictation-review{background:#eee9dd;border-inline-start:3px solid #a85140;padding:16px;margin-block-start:20px}
+#dictation-review label{font-size:14px}
+#material-actions{margin-block:42px 12px;padding-block-start:18px;border-block-start:1px solid #89968c80}
+#gesture-title{color:#244561;font-size:clamp(17px,1.55vw,23px);margin:0 0 22px;line-height:1.4}
+.gesture-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.gesture-choices button,.gesture-choices #mind-mark{display:flex;flex-direction:column;align-items:flex-start;gap:14px;text-align:start;padding:12px 5px 14px;border:0;border-block-end:1px solid #89968c;font-weight:500;color:#244561;font-size:16px;line-height:1.4;min-width:0;text-decoration:none;transition:border-color 240ms,background-color 240ms}
+.gesture-choices button:hover,.gesture-choices #mind-mark:hover{background:#f6efe2;border-color:#a85140;text-decoration:none}
+.gesture-choices button small{display:block;font-size:12px;font-weight:400;color:#53615e;margin-top:7px;line-height:1.6;overflow-wrap:anywhere}
+.gesture-choices button svg{flex:none}
+#private-actions{margin-block-start:15px;gap:6px 14px}
+#private-actions button{color:#53615e;font-size:13px}
+#private-actions:has(>button:not([hidden])){border:0}
+body[data-phase=private] #private-note{color:#53615e;margin-block-start:20px}
+.formation-sheet,.connection-source,.mind-piece,.idea-object{box-shadow:none}
+#exchange .idea-object{box-shadow:6px 7px 0 #24456119}
+@media(max-width:760px){
+ body[data-phase] .world-edge{padding:18px 20px;min-height:75px;align-items:flex-start}
+ body[data-phase] .signature,body[data-phase=private] .signature{color:#f7eadb;font-size:24px}
+ body[data-phase] .edge-actions,body[data-phase=private] .edge-actions{max-width:66%;padding:3px 6px;gap:7px}
+ body[data-phase] #world,body[data-phase=private] #world{padding:clamp(115px,18svh,178px) 24px 32px;justify-content:center;align-items:flex-start}
+ body[data-phase] .center,body[data-phase=private] .center,html[dir=rtl] body[data-phase=private] .center,body[data-phase]:not([data-phase=private]) .center{max-width:none;width:100%;margin:0;padding:0}
+ #fold-mass{transform:translate(-28px,-20px) scale(.8,.22)}
+ #peripheral-material{transform:translate(-1010px,0);opacity:.48}
+ #focus-light{transform:translate(-760px,0)}
+ .presence-kicker{font-size:12px;margin-block-end:14px}
+ body[data-phase=private] .place-label{font-size:clamp(38px,9vw,54px);margin-block-end:13px}
+ .arrival-note{font-size:15px;margin-block-end:20px}
+ body[data-phase=private] #thought{font-size:clamp(23px,6.4vw,33px);min-height:70px}
+ .voice-orb{width:64px;height:64px}
+ body[data-phase=private] #mic svg{width:54px;height:54px}
+ body[data-phase=private] #mic{gap:12px;min-height:70px}
+ #mic-label{font-size:19px}
+ #voice-intent{font-size:11px}
+ #dictation-options{margin-inline-start:76px}
+ #voice-player{padding:18px 12px;gap:8px}
+ .gesture-choices{grid-template-columns:1fr;gap:5px}
+ .gesture-choices button,.gesture-choices #mind-mark{flex-direction:row;align-items:center;gap:14px;min-height:76px;font-size:17px;padding:12px 4px}
+ .gesture-choices button small{margin-top:4px}
+ body[data-phase] .world-foot>span:first-child{max-width:100%}
+}
+@media(forced-colors:active){
+ body[data-phase] .signature,body[data-phase=private] .signature{color:CanvasText}
+ .voice-orb,#voice-player{background:Canvas;color:CanvasText;border:1px solid CanvasText;box-shadow:none}
+ body[data-phase] .center,body[data-phase=private] .center,html[dir=rtl] body[data-phase=private] .center,body[data-phase]:not([data-phase=private]) .center{margin:0 auto;max-width:100%}
+}

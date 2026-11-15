@@ -10,6 +10,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(fresh.body.dataset.presence==='still','first presence without authored work');
  assert(fresh.getElementById('prepare').hidden&&fresh.getElementById('save').hidden&&fresh.getElementById('recall').hidden,'no premature business actions');
  assert(!fresh.getElementById('thought').hidden&&!fresh.getElementById('mic').hidden,'first expression remains available');
+ assert(!fresh.getElementById('arrival-note').hidden&&fresh.getElementById('material-actions').hidden,'arrival has no premature gestures');
  assert(localStorage.getItem(key)===null,'no passive persistence');
  assert(fresh.body.dataset.expression==='none','presence is not material');
  fresh.getElementById('thought').value='   ';
@@ -56,12 +57,14 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  await tick();
  assert(fresh.body.dataset.capture==='recording'&&fresh.body.dataset.attention==='express','actual capture stays present without focus');
  assert(fresh.body.dataset.scene==='speaking','actual capture changes the field');
+ assert(get('voice-intent').textContent.includes('صوتك هو المادة')&&frame.contentWindow.getComputedStyle(get('mic').querySelector('.stop-glyph')).display!=='none','an explicit voice threshold reflects recording');
  get('mic').click();assert(get('voice').dataset.capture==='stopping'&&get('mic').getAttribute('aria-disabled')==='true','waits for final data');
  get('mic').click();assert(requests===2,'no overlapping recording');
  record.finish();assert(get('voice').dataset.capture==='ready'&&!get('clip').hidden&&get('clip').src.startsWith('blob:'),'real local blob exposed to playback control');
  assert(get('thought').value===''&&localStorage.getItem(key)===null,'voice does not transcribe or persist implicitly');
  assert(fresh.body.dataset.expression==='voice','voice alone is a material fact');
  assert(!get('voice-player').hidden&&get('voice-play-label').textContent.length>0,'authored playback surface available, not a decorative wave');
+ assert(get('voice-trace-label').textContent==='أثر صوتك','finished sound becomes distinct material');
  get('clear-clip').click();assert(get('clip').hidden&&!get('clip').hasAttribute('src'),'explicit removal of clip');
  assert(fresh.body.dataset.expression==='none','removal leaves no invented material');
  assert(get('voice-player').hidden&&get('recorded-voice-path').getAttribute('d')==='','removed audio has no residual ink');
@@ -95,6 +98,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  fresh.getElementById('thought').value='A new thought';
  fresh.getElementById('thought').dispatchEvent(new Event('input',{bubbles:true}));
  assert(fresh.body.dataset.presence==='working'&&!fresh.getElementById('prepare').hidden,'first act reveals relevant actions');
+ assert(!fresh.getElementById('material-actions').hidden&&fresh.getElementById('arrival-note').hidden,'gesture meaning follows expression');
  assert(localStorage.getItem(key)===null,'authoring is not implicit storage');
  assert(fresh.body.dataset.expression==='text','written expression exists');
  await Promise.resolve();
@@ -211,7 +215,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  click('mind-mark');click('mind-ability');set('mind-topic','calibration');
  assert($('mind-ability').getAttribute('aria-pressed')==='true'&&!$('mind-keep').disabled,'explicit capability choice');
  click('mind-keep');
- assert($('mind-links').children.length===1&&$('mind-links').textContent.includes('We need a calibration partner.')&&!$('mind-links').textContent.includes('Private note.'),'actual related excerpt only; count='+$('mind-links').children.length+' mark='+$('mind-marks').textContent+' status='+$('status').textContent);
+ assert($('mind-links').children.length===1&&$('mind-links').textContent.includes('We need a calibration partner.')&&!$('mind-links').textContent.includes('Private note.'),'actual related excerpt only, excluding unrelated title');
  assert(JSON.parse(localStorage.getItem(key)).works.length===1,'no implicit storage');
  click('save');await load();d=frame.contentDocument;
  assert($('mind-links').children.length===1,'relationship restored from explicitly saved work');

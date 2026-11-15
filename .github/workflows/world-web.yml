@@ -43,6 +43,7 @@ jobs:
           cat /tmp/world-web-result.html
           grep -F 'PASS: local world, exact disclosure, distinct contributions, continuity, RTL/LTR, 320px' /tmp/world-web-result.html
       - name: Capture actual browser surfaces
+        if: always()
         run: |
           mkdir -p visual
           python3 -m http.server 8765 --bind 127.0.0.1 --directory apps/world-web >/tmp/world-visual-http.log 2>&1 &
@@ -63,6 +64,7 @@ jobs:
           base64 -w 512 visual/02-work-synthetic.png
           echo 'END_WORK_PNG'
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
         with:
           name: world-d01-visual-review
           path: visual/*.png

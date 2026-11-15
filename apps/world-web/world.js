@@ -24,6 +24,11 @@ const mindWords={
  en:{mark:'Leave meaning for the world',title:'What might connect',note:'The world connects a need and a capability you marked in different works, on this device only. A connection is a hypothesis, not proof or an internet suggestion.',need:'Need',ability:'Proposed capability',topic:'Shared subject (a short phrase)',keep:'Allow this connection',cancel:'Return',remove:'Withdraw meaning',stale:'The text changed; this meaning is inactive until marked again.',related:'A possibility worth considering',open:'Recall the other work',reject:'This connection is not relevant',limit:'More connections exist beyond the display limit.',invalid:'Choose a clear passage of up to 1,200 characters and a short subject.',full:'This work reached the meaning or challenge limit.',changed:'The text changed; select the passage again.',saved:'Meaning added to this work. It is retained only when you explicitly save your work.',dismissed:'This connection no longer appears between the two works.',challenge:'Leave the unfinished meaning?'}
 };
 const mt=k=>mindWords[lang][k];
+const sensoryWords={
+ ar:{kicker:'مساحة للحضور',arrival:'لا تحتاج أن تعرف إلى أين سيأخذك التفكير.',write:'ابدأ من أي مكان…',speak:'دع صوتك يبدأ',idle:'تقدر تتكلم من غير ما ترتّب كلامك.',requesting:'الميكروفون ينتظر إذنك.',recording:'خذ وقتك. صوتك هو المادة الآن.',stopping:'ينتهي الصوت، ويبقى أثره.',ready:'تقدر تضيف صوتًا جديدًا باختيارك.',trace:'أثر صوتك',traceNote:'استمع إليه أو امسحه. يظل مؤقتًا على جهازك.',gesture:'إلى أين يمكن أن يأخذك هذا التفكير؟',form:'شكّل فكرة',formNote:'افصل منها شيئًا يستحق أن يعيش.',mind:'اكتشف صلة',mindNote:'انظر إلى ما قد يتصل بها.',cast:'وجّهها إلى إنسان',castNote:'اختر ما يغادر مساحتك.'},
+ en:{kicker:'A space for presence',arrival:'You need not know where your thinking will take you.',write:'Begin anywhere…',speak:'Let your voice begin',idle:'Speak without arranging your thoughts.',requesting:'The microphone is waiting for your permission.',recording:'Take your time. Your voice is the material now.',stopping:'The sound ends; its trace remains.',ready:'Begin another recording if you choose.',trace:'The trace of your voice',traceNote:'Listen or remove it. It remains temporary on this device.',gesture:'Where might this thinking take you?',form:'Shape a thought',formNote:'Give one part a life of its own.',mind:'Discover a connection',mindNote:'See what might connect to it.',cast:'Reach toward someone',castNote:'Choose what leaves your space.'}
+};
+const st=k=>sensoryWords[lang][k];
 const connectionWords={
  ar:{mark:'اكتشف صلة',title:'من فكرة إلى إمكانية',source:'من كلامك',choice:'ما الذي تتحدث عنه؟',need:'شيء أحتاجه',ability:'شيء أستطيع تقديمه',needExample:'مثال: مصنع يحتاج نظامًا',abilityExample:'مثال: فريق يستطيع تطوير نظام',subject:'ما الموضوع المشترك؟',subjectHint:'مثال: إدارة المخزون',otherNeed:'هل تعرف قدرة قد تلبي هذا الاحتياج؟',otherAbility:'هل تعرف احتياجًا يناسب هذه القدرة؟',otherHint:'اكتب ما تعرفه فعلًا، أو اتركه فارغًا.',otherNote:'اختياري. إذا كتبت الطرف الثاني، يصبح عملًا مستقلًا خاصًا بك. لا نختلق أشخاصًا أو نرسل شيئًا.',choose:'اختر احتياجًا أو قدرة أولًا.',enter:'اكتب الموضوع لتجربة الربط.',waiting:'سنحتفظ بالمعنى ونبحث عن مقابل في أعمالك المعلّمة.',ready:'سنكوّن علاقة من المادتين اللتين كتبتهما.',keep:'احتفظ بالمعنى',connect:'أظهر الصلة',none:'لم نجد طرفًا مقابلًا في أعمالك المعلّمة. يمكنك إضافة معنى مقابل باستخدام الموضوع نفسه، أو كتابة الطرف الثاني مباشرة.',created:'اتصلت المادتان. دي فرضية من كلامك، مش فرصة مثبتة.',existing:'يحتفظ العالم بالمعنى الذي سمحت به. لا بحث خارجي هنا.'},
  en:{mark:'Discover a connection',title:'From a thought to a possibility',source:'From your words',choice:'What are you describing?',need:'Something needed',ability:'Something I can offer',needExample:'Example: a factory needs a system',abilityExample:'Example: a team can build a system',subject:'What is the shared subject?',subjectHint:'Example: inventory management',otherNeed:'Do you know a capability that might meet this need?',otherAbility:'Do you know a need that might fit this capability?',otherHint:'Write what you actually know, or leave this blank.',otherNote:'Optional. If written, the counterpart becomes a separate private work. No invented people or sending.',choose:'Choose a need or capability first.',enter:'Enter a subject to try the connection.',waiting:'We will retain the meaning and look for a counterpart in your marked works.',ready:'We will form a relationship from the two passages you authored.',keep:'Keep the meaning',connect:'Reveal the connection',none:'No counterpart in your marked works. Add an opposite meaning with the same subject, or write the counterpart directly.',created:'The two passages connect. This is a hypothesis from your words, not a verified opportunity.',existing:'The world retains meaning you allowed. No external search here.'}
@@ -56,6 +61,8 @@ function presence(){
  $('prepare').hidden=!hasText||!!forming||!!minding;
  $('form-fragment').hidden=!hasText||!!forming||!!minding;
  $('mind-mark').hidden=!hasText||!!forming||!!minding;
+ $('material-actions').hidden=!hasText||!!forming||!!minding;
+ $('arrival-note').hidden=hasText;
  $('save').hidden=!hasWork;
  $('recall').hidden=!works.length&&!hasVault();
  $('resume').hidden=!hasOffer||!!forming||!!minding;
@@ -112,7 +119,10 @@ function micUI(){
  $('voice').dataset.capture=state;
  $('mic').setAttribute('aria-pressed',String(live));
  $('mic').setAttribute('aria-disabled',String(state==='stopping'));
- put('mic-label',state==='requesting'?'cancelMic':live?'stop':state==='stopping'?'stopping':'mic');
+ $('mic-label').textContent=state==='requesting'?t('cancelMic'):live?t('stop'):state==='stopping'?t('stopping'):st('speak');
+ $('voice-intent').textContent=st(state);
+ $('voice-trace-label').textContent=st('trace');
+ $('voice-trace-note').textContent=st('traceNote');
  $('voice-state').textContent=error?t(error):['requesting','recording','stopping','ready'].includes(state)?t(state):'';
  $('clear-clip').hidden=!voiceURL||voiceBusy();
  $('clip').hidden=!voiceURL||voiceBusy();
@@ -173,7 +183,7 @@ window.addEventListener('pagehide',discardVoice);
 function renderFormation(){
  const w=current(),visible=phase==='private'&&!!forming&&forming.fragment.sourceId===active;
  $('formation').hidden=!visible;document.body.dataset.forming=visible?'yes':'no';
- $('form-fragment-label').textContent=ft('form');
+ $('form-fragment-label').textContent=st('form');
  for(const [id,k] of Object.entries({'formation-title':'title','formation-source-label':'source','formation-draft-label':'draft','formation-keep':'keep','formation-cancel':'cancel','formation-note':'note','lineage-label':'lineage','origin-excerpt-label':'excerpt'}))$(id).textContent=ft(k);
  $('formation-quote').textContent=visible?forming.fragment.excerpt:'';
  const draft=visible?forming.text:'';
@@ -226,7 +236,7 @@ function mindStatus(k){$('status').textContent=mt(k)}
 function renderMind(){
  const w=phase==='private'?current():null,visible=!!w&&!!minding&&minding.fragment.sourceId===w.id;
  const marks=w?.mind?.marks??[],result=w?correspondences(works,w.id):{links:[],limited:false};
- for(const [element,k] of Object.entries({'mind-mark':'mark','mind-title':'title','mind-note':'note','mind-need-label':'need','mind-ability-label':'ability','mind-topic-label':'topic','mind-keep':'keep','mind-cancel':'cancel','mind-limit':'limit'}))$(element).textContent=mt(k);
+ for(const [element,k] of Object.entries({'mind-mark-label':'mark','mind-title':'title','mind-note':'note','mind-need-label':'need','mind-ability-label':'ability','mind-topic-label':'topic','mind-keep':'keep','mind-cancel':'cancel','mind-limit':'limit'}))$(element).textContent=mt(k);
  const signal=!!w&&(marks.length>0||result.links.length>0);
  $('world-periphery').hidden=!signal||visible;
  $('world-periphery').setAttribute('aria-label',pt('memory'));
@@ -236,7 +246,7 @@ function renderMind(){
  $('mind-close').textContent=pt('close');
  $('mind-close').hidden=visible;
  $('mind').hidden=!w||(!visible&&(!signal||!mindOpen));
- $('mind-mark').textContent=ct('mark');$('mind-title').textContent=ct('title');
+ $('mind-mark-label').textContent=st('mind');$('mind-title').textContent=ct('title');
  for(const [element,k] of Object.entries({'mind-source-caption':'source','mind-choice-label':'choice','mind-need-label':'need','mind-ability-label':'ability','mind-need-example':'needExample','mind-ability-example':'abilityExample','mind-topic-label':'subject','mind-counterpart-note':'otherNote','mind-empty':'none'}))$(element).textContent=ct(k);
  $('mind-topic').placeholder=ct('subjectHint');
  $('mind-counterpart').placeholder=ct('otherHint');
@@ -266,7 +276,7 @@ function renderMind(){
    piece.append(mindText('p',mt(m.kind)+' · '+m.topic,'mind-subject'),mindText('blockquote',m.excerpt));
    material.append(piece)
   }
-  item.append(mindText('h3',mt('related')),material,mindText('p',link.title,'quiet'));
+  item.append(mindText('h3',mt('related')),material);
   const actions=document.createElement('div');actions.className='actions';
   actions.append(mindButton(mt('open'),()=>switchWork(link.workId)),mindButton(mt('reject'),()=>{if(phase!=='private'||current()!==w)return;try{w.mind=dismiss(w,link.key);renderMind();mindStatus('dismissed');$('mind-mark').focus()}catch{mindStatus('full')}}));
   actions.append(mindButton(pt('explore'),()=>{
@@ -474,8 +484,10 @@ $('cancel').onclick=()=>{if(offer?.portable){goPrivate();return}if(phase==='prep
 $('keep').onclick=()=>{if(phase!=='meeting'||!offer?.accepted)return;const common=$('common').value;if(!common.trim()){status('commonNeed');return}if(works.length>=100){status('limit');return}const body=t('jointA')+'\n'+offer.exposed+'\n\n'+t('jointB')+'\n'+offer.reply+'\n\n'+t('jointC')+'\n'+common;if(body.length>12000){status('limit');return}const w={id:crypto.randomUUID(),title:titleFor(common),body,idea:'',ideaOpen:false,parent:offer.work};works.push(w);discardVoice();active=w.id;offer=null;phase='private';render();status('newMade');$('thought').focus()};
 function translate(){
  document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';$('locale').lang=lang==='ar'?'en':'ar';
- for(const [id,k] of Object.entries({mode:'mode',locale:'locale','private-label':'private','name-label':'name','thought-label':'thought','clear-clip':'clear',prepare:'prepare',resume:'resume',save:'save',recall:'recall','private-note':'privateNote','prior-label':'prior','prior-input-label':'prior','foot-note':'foot','excerpt-label':'thought','grip-label':'grip','recipient-label':'recipientLabel','masked-label':'mask','person-label':'person',cast:'cast','preview-note':'previewNote','reply-label':'reply','reply-only':'replyOnly','reply-meet':'replyMeet',decline:'decline','answer-origin':'answer',accept:'accept','back-private':'back','common-label':'common',keep:'keep',leave:'leave','meeting-note':'meetingNote','exchange-note':'exchangeNote','memory-title':'memory','close-memory':'close','find-label':'find','new-work':'new',forget:'forget','memory-note':'memoryNote'}))put(id,k);
+ for(const [id,k] of Object.entries({mode:'mode',locale:'locale','private-label':'private','name-label':'name','thought-label':'thought','clear-clip':'clear','prepare-label':'prepare',resume:'resume',save:'save',recall:'recall','private-note':'privateNote','prior-label':'prior','prior-input-label':'prior','foot-note':'foot','excerpt-label':'thought','grip-label':'grip','recipient-label':'recipientLabel','masked-label':'mask','person-label':'person',cast:'cast','preview-note':'previewNote','reply-label':'reply','reply-only':'replyOnly','reply-meet':'replyMeet',decline:'decline','answer-origin':'answer',accept:'accept','back-private':'back','common-label':'common',keep:'keep',leave:'leave','meeting-note':'meetingNote','exchange-note':'exchangeNote','memory-title':'memory','close-memory':'close','find-label':'find','new-work':'new',forget:'forget','memory-note':'memoryNote'}))put(id,k);
  for(const [id,k] of Object.entries({thought:'thought',name:'name',recipient:'recipientHint','person-name':'person',reply:'reply',common:'commonHint',find:'find'}))$(id).placeholder=t(k);
+ for(const [element,key] of Object.entries({'presence-kicker':'kicker','arrival-note':'arrival','gesture-title':'gesture','prepare-label':'cast','form-gesture-note':'formNote','mind-gesture-note':'mindNote','cast-gesture-note':'castNote'}))$(element).textContent=st(key);
+ $('thought').placeholder=st('write');
  micUI();renderFormation();renderMind();portableLabels();
 }
 $('locale').onclick=()=>{if(phase==='prepare')captureDraft();if(phase==='recipient'&&offer)offer.replyDraft=$('reply').value;if(phase==='meeting'&&offer)offer.common=$('common').value;lang=lang==='ar'?'en':'ar';translate();render();status(null)};
