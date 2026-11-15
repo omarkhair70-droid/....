@@ -304,7 +304,15 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  set('thought','Revised pilot.');assert($('field-history-initial').textContent==='An authored factory pilot.','editing does not change history');
  click('save');const intersectionSaved=JSON.parse(localStorage.getItem(key));assert(intersectionSaved.works.length===2&&intersectionSaved.works[0].body==='PRIVATE. A thought to reveal.'&&intersectionSaved.works[1].fieldBasis.question==='Will a factory test it?','explicit save preserves the original work and the question');
  await load();d=frame.contentDocument;assert($('thought').value==='Revised pilot.'&&$('field-history-question').textContent==='Will a factory test it?'&&$('field-history-pieces').children.length===2,'restore the revised work and historical basis');
- click('prepare');set('recipient','Reviewer');click('cast');assert($('carried-text').textContent==='Revised pilot.'&&$('field-history').hidden&&$('field-history-pieces').children.length===0&&$('field-history-question').textContent==='','history is not silently disclosed in a subsequent encounter');
+ click('reality-open');assert(!$('reality-compose').hidden&&$('reality-question-text').textContent==='Will a factory test it?','the original question meets reality');
+ click('reality-example');assert($('reality-status').textContent.length>0&&$('reality-keep').disabled,'fictional example stays labelled and requires a human decision');
+ $('reality-decisions').querySelector('[data-decision=revise]').click();
+ set('reality-revision','Collect data before the pilot.');assert(!$('reality-keep').disabled,'explicit revision is ready');
+ click('reality-keep');assert($('thought').value==='Collect data before the pilot.'&&$('reality-history').querySelectorAll('article').length===1&&$('reality-history').textContent.includes('Revised pilot.'),'reality changes work while retaining previous text');
+ assert(JSON.parse(localStorage.getItem(key)).works[1].body==='Revised pilot.','reality change does not implicitly persist');
+ click('save');const realitySaved=JSON.parse(localStorage.getItem(key));assert(realitySaved.works[1].reality[0].kind==='scenario'&&realitySaved.works[1].fieldBasis.initial==='An authored factory pilot.','fictional observation and independent birth are preserved');
+ await load();d=frame.contentDocument;assert($('thought').value==='Collect data before the pilot.'&&$('reality-history').querySelectorAll('article').length===1,'reality history restored');
+ click('prepare');set('recipient','Reviewer');click('cast');assert($('carried-text').textContent==='Collect data before the pilot.'&&$('field-history').hidden&&$('field-history-pieces').children.length===0&&$('field-history-question').textContent===''&&$('reality-history').children.length===0&&$('reality-current-text').textContent==='','history is not silently disclosed in a subsequent encounter');
  localStorage.removeItem(key);
  result.textContent='PASS: local world, exact disclosure, distinct contributions, continuity, RTL/LTR, 320px';
 })().catch(e=>{result.textContent='FAIL: '+e.message});
