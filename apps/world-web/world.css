@@ -721,3 +721,36 @@ body[data-correspondence=present][data-phase=private] #peripheral-material{opaci
 .possibility-editor label{font-size:clamp(19px,2vw,29px);line-height:1.4}
 @media(max-width:760px){#world-periphery{margin-block:8px}#mind-reveal{min-height:62px;padding-inline-start:10px}.mind-echo{padding:18px}}
 @media(forced-colors:active){.mind-echo{border:1px solid CanvasText}.mind-echo::before{display:none}}
+
+
+/* THE OTHER WORLD — human thought first, status second. Local disclosed material only. */
+#open-field{font-weight:600;color:#244561}
+#cast-voice{display:block;text-align:start;padding:9px 0;margin-block-start:10px;color:#375449;font-size:clamp(17px,1.6vw,23px);border-block-end:1px solid #6e8a7b;min-height:44px}
+#cast-voice:hover{text-decoration:none;color:#244561}
+.human-field{position:relative;isolation:isolate;margin-block:36px 28px;padding-block:26px;scroll-margin-block-start:22px;border-block-start:1px solid #89968c90}
+.field-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+#field-kicker{color:#53615e;font-size:12px;letter-spacing:.04em;margin:0 0 12px}
+#field-title{font-weight:400;font-size:clamp(30px,4.1vw,58px);line-height:1.2;letter-spacing:-.04em;color:#244561;margin:0}
+#field-close{font-size:13px;flex:none;color:#53615e}
+#field-note{max-width:62ch;font-size:14px;line-height:1.7;color:#53615e;margin:17px 0 26px}
+.field-materials{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-block:14px 20px}
+.field-material{position:relative;isolation:isolate;min-width:0;padding:clamp(16px,2vw,28px);display:flex;flex-direction:column;align-items:stretch;color:#29463d}
+.field-material::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:#d6e1c9;clip-path:polygon(0 2%,97% 0,100% 96%,2% 100%)}
+.field-material:nth-child(3n+2)::before{background:#ead3ba;clip-path:polygon(2% 0,100% 4%,97% 100%,0 97%)}
+.field-material:nth-child(3n+3)::before{background:#d4e0e2}
+.field-provenance,.field-person{font-size:12px;line-height:1.6;color:#45594e;margin:0}
+.field-material blockquote{white-space:pre-wrap;overflow-wrap:anywhere;font-size:clamp(19px,2vw,29px);line-height:1.55;margin:18px 0;flex:1}
+.field-person{border-block-start:1px solid #84938788;padding-block-start:9px}
+.field-material .actions{margin-block:8px 0;gap:7px}
+.field-material .actions button{padding-inline:0;color:#244561;text-align:start;font-size:13px}
+.field-empty{grid-column:1/-1;color:#53615e;font-size:17px;padding:18px 0}
+#field-scenarios{color:#244561;border-block-end:1px solid #6e8a7b;padding-inline:0;font-size:16px}
+body[data-human-field=open][data-phase=private] #peripheral-material{translate:19px -12px;opacity:.9}
+#exchange .field-departure{grid-column:1/-1;border-block-start:1px solid #89968c70;padding-block-start:14px}
+#exchange .field-departure button{background:#375449;color:#fff9ed;border:1px solid #375449;border-radius:2px;font-size:14px}
+#exchange .field-departure button:disabled{opacity:.48}
+.exchange-voice{border-block:1px solid #7c947b88;padding-block:14px;margin-block:12px}
+.exchange-voice p{font-size:13px;color:#34574a;margin:5px 0}
+#exchange-audio{display:block;width:100%;max-width:100%;height:48px;margin:8px 0}
+@media(max-width:760px){.field-materials{grid-template-columns:1fr}.field-heading{gap:8px}#field-title{font-size:34px}.field-material{padding:18px}#field-close{padding-inline:3px}.human-field{margin-block:25px}}
+@media(forced-colors:active){.field-material{border:1px solid CanvasText;color:CanvasText}.field-material::before{display:none}#exchange .field-departure button{background:ButtonFace;color:ButtonText;border:1px solid ButtonText}}
