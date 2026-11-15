@@ -803,3 +803,39 @@ body[data-human-field=open][data-phase=private] .field-material:nth-child(4n+3){
 .field-question p{font-size:12px;margin:0 0 9px}
 @media(max-width:760px){.intersection-sources{grid-template-columns:1fr}.field-intersection{padding:20px 15px}.intersection-piece{padding:13px}.field-material .actions{flex-wrap:wrap}}
 @media(forced-colors:active){.field-intersection,.intersection-piece,.field-question{background:Canvas;color:CanvasText;border:1px solid CanvasText}.field-intersection::before{display:none}#intersection-keep,#intersection-open,.field-material .field-pick[aria-pressed=true]{background:ButtonFace;color:ButtonText;border:1px solid ButtonText}}
+
+
+/* THE NEW REALITY — the material meets an outside pressure, not a success dashboard. */
+.reality{position:relative;min-width:0;margin-block:32px 18px;padding-block:16px;border-block-start:1px solid #89968c80;scroll-margin-block-start:24px;color:#244561}
+.reality-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+#reality-kicker{font-size:12px;color:#53615e;margin:0 0 5px;letter-spacing:.035em}
+#reality-title{font-size:clamp(24px,2.9vw,43px);line-height:1.2;font-weight:400;letter-spacing:-.04em;margin:0}
+#reality-open{border-block-end:1px solid #8a7960;color:#244561;max-width:45%;white-space:normal;font-size:14px;text-align:start}
+#reality-invitation{font-size:14px;color:#53615e;line-height:1.7;max-width:65ch}
+#reality-compose{isolation:isolate;position:relative;margin-block:24px 16px;padding:clamp(18px,3vw,38px);color:#244561}
+#reality-compose::before{content:"";position:absolute;inset:0;z-index:-1;background:#dcded2;clip-path:polygon(0 0,97% 1%,100% 98%,2% 100%);pointer-events:none}
+.reality-current{padding-block:0 18px;border-block-end:1px solid #8aa39499}
+.reality-current p,.reality-provenance,.reality-source{font-size:12px;color:#53615e;line-height:1.5;margin:0 0 8px}
+.reality-current blockquote,.reality-trace blockquote{font-size:clamp(20px,2vw,29px);line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;margin:0 0 15px}
+#reality-compose label,#reality-reading-label,#reality-decision-label{display:block;font-size:clamp(17px,1.9vw,25px);margin:20px 0 7px;line-height:1.4}
+.reality-observation{border-inline-start:3px solid #9a755b;padding-inline-start:18px;margin-block:23px}
+#reality-compose textarea,#reality-compose input{max-width:100%;min-width:0;border-block-end:1px solid #879a88;background:transparent;padding:8px 0;line-height:1.6;font-size:clamp(16px,1.65vw,22px);min-height:44px}
+.reality-choices{display:flex;flex-wrap:wrap;gap:8px;margin-block:8px 14px}
+.reality-choices button{border:1px solid #879a88;min-height:44px;padding:7px 12px;text-align:start;color:#244561}
+.reality-choices button[aria-pressed=true]{background:#244561;color:#fff8ea;border-color:#244561}
+.reality-choices button[data-reading=challenges][aria-pressed=true]{background:#80513f;border-color:#80513f}
+#reality-example{border-block-end:1px solid #8a7960;color:#6e4b3e;margin-top:10px;padding-inline:0}
+#reality-keep{background:#244561;border:1px solid #244561;color:#fff8ea;padding-inline:14px;border-radius:2px}
+#reality-keep:disabled{opacity:.48}
+#reality-status{font-size:13px;color:#6b493a}
+#reality-history h3{font-weight:400;font-size:20px;margin-block:25px 10px}
+.reality-trace{padding:18px 19px;margin:14px 0;border-inline-start:3px solid #73907d;background:#dce5d1;overflow-wrap:anywhere}
+.reality-trace[data-reading=challenges]{background:#e8d5c2;border-color:#a5765c}
+.reality-trace[data-reading=unclear]{background:#dce2e1;border-color:#789098}
+.reality-decision{color:#244561;font-weight:600;font-size:15px}
+.reality-trace details{border-block-start:1px solid #8a998b99;padding-block-start:10px}
+.reality-trace summary{cursor:pointer;min-height:44px;color:#244561;font-size:14px}
+body[data-reality=open][data-phase=private] #fold-mass{translate:-152px 0}
+body[data-reality=open][data-phase=private] #peripheral-material{opacity:.85;translate:22px -14px}
+@media(max-width:760px){.reality-heading{align-items:flex-start;flex-direction:column;gap:8px}#reality-open{max-width:100%}#reality-compose{padding:18px 15px}.reality-observation{padding-inline-start:10px}body[data-reality=open][data-phase=private] #fold-mass{translate:0 -18px}}
+@media(forced-colors:active){#reality-compose,.reality-trace{background:Canvas;color:CanvasText;border:1px solid CanvasText}#reality-compose::before{display:none}.reality-choices button[aria-pressed=true],#reality-keep{background:ButtonFace;color:ButtonText;border:1px solid ButtonText}}
