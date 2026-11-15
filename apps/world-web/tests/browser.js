@@ -67,7 +67,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(get('voice-trace-label').textContent==='أثر صوتك','finished sound becomes distinct material');
  get('clear-clip').click();assert(get('clip').hidden&&!get('clip').hasAttribute('src'),'explicit removal of clip');
  assert(fresh.body.dataset.expression==='none','removal leaves no invented material');
- assert(get('voice-player').hidden&&get('recorded-voice-path').getAttribute('d')==='','removed audio has no residual ink');
+ assert(get('voice-player').hidden&&get('recorded-voice-path').getAttribute('d')===''&&get('world-recorded-ink').getAttribute('d')==='','removed audio has no residual ink in the instrument or the world');
  // The optional local recognition adapter is exercised with a fake browser service.
  let recognizer, secondCount=0;
  class RecognitionFixture {

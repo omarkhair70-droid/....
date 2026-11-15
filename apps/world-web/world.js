@@ -93,7 +93,7 @@ const dictationText={
 const dt=k=>dictationText[lang][k]||'';
 const soundWords={ar:{play:'استمع إلى صوتك',pause:'أوقف الاستماع مؤقتًا',position:'موضع الاستماع',playError:'تعذر تشغيل الصوت على هذا الجهاز.'},en:{play:'Listen to your voice',pause:'Pause listening',position:'Listening position',playError:'Audio could not play on this device.'}};
 let voiceURL='',displayedClip=null,voiceClock=null,voiceStarted=0;
-const voiceSurface=createVoiceSurface({audio:$('clip'),player:$('voice-player'),play:$('voice-play'),playLabel:$('voice-play-label'),playIcon:$('voice-play-icon'),position:$('voice-position'),positionLabel:$('voice-position-label'),time:$('voice-position-time'),recordedPath:$('recorded-voice-path'),liveInk:$('live-voice-ink'),livePath:$('live-voice-path'),status:$('voice-player-status'),translate:k=>soundWords[lang][k]});
+const voiceSurface=createVoiceSurface({audio:$('clip'),player:$('voice-player'),play:$('voice-play'),playLabel:$('voice-play-label'),playIcon:$('voice-play-icon'),position:$('voice-position'),positionLabel:$('voice-position-label'),time:$('voice-position-time'),recordedPath:$('recorded-voice-path'),liveInk:$('live-voice-ink'),livePath:$('live-voice-path'),status:$('voice-player-status'),translate:k=>soundWords[lang][k],onInk:(kind,path)=>$(kind==='live'?'world-live-ink':'world-recorded-ink').setAttribute('d',path)});
 const dictation=createLocalDictation({getRecognition:()=>window.SpeechRecognition,onChange:dictationUI});
 const voice=createVoiceCapture({
  getStream:()=>navigator.mediaDevices.getUserMedia({audio:true}),

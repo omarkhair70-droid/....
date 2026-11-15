@@ -17,7 +17,7 @@ export function voiceInk(peaks,width=360,height=48){
  return 'M'+peaks.map((p,i)=>x(i)+' '+y(p,-1)).join('L')+'L'+peaks.map((p,i)=>x(i)+' '+y(p,1)).reverse().join('L')+'Z';
 }
 const clock=s=>Number.isFinite(s)&&s>=0?Math.floor(s/60)+':'+String(Math.floor(s)%60).padStart(2,'0'):'—:—';
-export function createVoiceSurface({audio,player,play,playLabel,playIcon,position,positionLabel,time,recordedPath,liveInk,livePath,status,translate}){
+export function createVoiceSurface({audio,player,play,playLabel,playIcon,position,positionLabel,time,recordedPath,liveInk,livePath,status,translate,onInk=()=>{}}){
  let clip=null,length=0,generation=0,context=null,frame=0,source=null,analyser=null,playbackError=false;
  const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
  const forced=matchMedia('(forced-colors: active)');
@@ -42,7 +42,7 @@ export function createVoiceSurface({audio,player,play,playLabel,playIcon,positio
  play.addEventListener('click',async()=>{if(!clip)return;const requested=clip;try{playbackError=false;if(audio.paused||audio.ended){if(audio.ended)audio.currentTime=0;await audio.play()}else audio.pause()}catch{if(clip===requested)playbackError=true}if(clip===requested)render()});
  position.addEventListener('input',()=>{const d=duration();if(d>0){try{audio.currentTime=d*Number(position.value)/1000}catch{playbackError=true}render()}});
  function setClip(next){
-  if(next===clip)return;clip=next;length=0;playbackError=false;recordedPath.setAttribute('d','');const token=++generation;render();if(!next)return;
+  if(next===clip)return;clip=next;length=0;playbackError=false;recordedPath.setAttribute('d','');onInk('recorded','');const token=++generation;render();if(!next)return;
   // Offline decode only, no upload or rendered playback.
   (async()=>{try{
    if(typeof OfflineAudioContext!=='function')return;
@@ -50,11 +50,11 @@ export function createVoiceSurface({audio,player,play,playLabel,playIcon,positio
    if(generation!==token||next!==clip)return;
    length=decoded.duration;
    const channels=Array.from({length:decoded.numberOfChannels},(_,i)=>decoded.getChannelData(i));
-   recordedPath.setAttribute('d',voiceInk(peakEnvelope(channels)));render();
+   const ink=voiceInk(peakEnvelope(channels));recordedPath.setAttribute('d',ink);onInk('recorded',ink);render();
   }catch{/* Native playback may still work; no invented waveform. */}})();
  }
  function stopLive(){
-  if(frame)cancelAnimationFrame(frame);frame=0;liveInk.hidden=true;livePath.setAttribute('d','');
+  if(frame)cancelAnimationFrame(frame);frame=0;liveInk.hidden=true;livePath.setAttribute('d','');onInk('live','');
   try{source?.disconnect();analyser?.disconnect()}catch{}source=null;analyser=null;
   if(context){const old=context;context=null;try{old.close().catch(()=>{})}catch{}}
  }
@@ -68,7 +68,7 @@ export function createVoiceSurface({audio,player,play,playLabel,playIcon,positio
    const tick=now=>{
     if(context!==own)return;
     if(reduced()){stopLive();return}
-    if(own.state==='running'&&now-previous>=45){previous=now;analyser.getFloatTimeDomainData(buf);let peak=0;for(const v of buf)peak=Math.max(peak,Math.abs(v));history.shift();history.push(Math.min(1,peak));liveInk.hidden=false;livePath.setAttribute('d',voiceInk(history))}
+    if(own.state==='running'&&now-previous>=45){previous=now;analyser.getFloatTimeDomainData(buf);let peak=0;for(const v of buf)peak=Math.max(peak,Math.abs(v));history.shift();history.push(Math.min(1,peak));liveInk.hidden=false;const ink=voiceInk(history);livePath.setAttribute('d',ink);onInk('live',ink)}
     frame=requestAnimationFrame(tick)
    };
    frame=requestAnimationFrame(tick)

@@ -16,11 +16,13 @@
   <linearGradient id="ember-rim" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#f2c59b"/><stop offset=".39" stop-color="#d7835d"/><stop offset=".73" stop-color="#ac5044"/><stop offset="1" stop-color="#722e39"/></linearGradient>
   <radialGradient id="aperture-light" cx=".46" cy=".46" r=".63"><stop stop-color="#f6e4b4"/><stop offset=".37" stop-color="#f5bc84"/><stop offset=".75" stop-color="#c86e5a"/><stop offset="1" stop-color="#363851"/></radialGradient>
   <radialGradient id="reading-light"><stop stop-color="#fff9e9" stop-opacity=".9"/><stop offset="1" stop-color="#fff9e9" stop-opacity="0"/></radialGradient>
+  <clipPath id="mobile-window"><path d="M0 0H430V116Q309 181 0 208Z"/></clipPath>
+  <clipPath id="sound-window"><ellipse cx="267" cy="404" rx="117" ry="183"/></clipPath>
   <clipPath id="mass-clip"><path d="M0-40H430C625 89 706 200 612 400C541 552 331 686 406 940H0Z"/></clipPath>
  </defs>
  <rect width="1440" height="900" fill="url(#paper-light)"/>
  <ellipse id="focus-light" cx="1040" cy="430" rx="560" ry="440" fill="url(#reading-light)"/>
- <g id="fold-mass">
+ <g id="fold-frame"><g id="fold-mass">
   <path d="M0-40H430C625 89 706 200 612 400C541 552 331 686 406 940H0Z" fill="url(#deep-fold)"/>
   <g clip-path="url(#mass-clip)">
    <ellipse cx="271" cy="458" rx="265" ry="320" transform="rotate(32 271 458)" fill="#0e223b" opacity=".7"/>
@@ -30,6 +32,9 @@
     <ellipse cx="267" cy="404" rx="154" ry="228" fill="url(#ember-rim)"/>
     <ellipse cx="267" cy="404" rx="121" ry="189" fill="#151f37"/>
     <ellipse id="aperture-energy" cx="267" cy="404" rx="106" ry="169" fill="url(#aperture-light)"/>
+    <g id="sound-inside" clip-path="url(#sound-window)" pointer-events="none">
+     <g transform="translate(144 366) scale(.68 1.6)"><path id="world-live-ink" fill="#fff3ce"/><path id="world-recorded-ink" fill="#f5d5a7"/></g>
+    </g>
     <path d="M194 262C119 365 148 516 245 586C343 616 413 472 409 355" stroke="#f6dbb0" opacity=".8" stroke-width="1.5" fill="none"/>
     <ellipse cx="267" cy="404" rx="144" ry="215" fill="none" stroke="#f2bc99" opacity=".6" stroke-width="1"/>
    </g>
@@ -97,7 +102,7 @@
 <path d="M-30.00 893.00 Q328.00 904.00 537.00 659.00"/></g>
   </g>
   <path d="M430-40C625 89 706 200 612 400C541 552 331 686 406 940" stroke="#af8a6a" stroke-opacity=".8" stroke-width="1.5" fill="none"/>
- </g>
+ </g></g>
  <g id="peripheral-material" opacity=".64">
   <path d="M1440 900H1087C1297 824 1338 759 1440 768Z" fill="#819c91" opacity=".44"/>
   <path d="M1440 900H1209C1325 844 1374 825 1440 831Z" fill="#c59a76" opacity=".55"/>

@@ -499,3 +499,21 @@ body[data-phase=private] #private-note{color:#53615e;margin-block-start:20px}
  .voice-orb,#voice-player{background:Canvas;color:CanvasText;border:1px solid CanvasText;box-shadow:none}
  body[data-phase] .center,body[data-phase=private] .center,html[dir=rtl] body[data-phase=private] .center,body[data-phase]:not([data-phase=private]) .center{margin:0 auto;max-width:100%}
 }
+
+/* Preserve the same spatial body on narrow devices without flattening it into a banner. */
+#world-live-ink,#world-recorded-ink{opacity:0;transition:opacity 360ms ease}
+body[data-phase=private][data-capture=recording] #world-live-ink{opacity:.87}
+body[data-phase=private][data-capture=ready] #world-recorded-ink{opacity:.72}
+body[data-phase=private][data-presence=working] #world{padding-block-start:clamp(30px,5vh,65px)}
+body[data-phase=private][data-presence=working] .place-label{font-size:clamp(28px,3.1vw,48px);margin-block-end:14px}
+body[data-phase=private][data-presence=working] #thought{font-size:clamp(23px,2.55vw,36px);line-height:1.55}
+body[data-phase=private][data-presence=working] .presence-kicker{margin-block-end:12px}
+body[data-phase=private][data-presence=working] #material-actions{margin-block-start:27px}
+@media(max-width:760px){
+ #fold-frame{clip-path:url(#mobile-window)}
+ #fold-mass{transform:translate(-42px,-116px) scale(.76)}
+ body[data-phase=private][data-presence=working] #world{padding-block-start:clamp(105px,17svh,153px)}
+ body[data-phase=private][data-presence=working] .place-label{font-size:33px}
+ body[data-phase=private][data-presence=working] #thought{font-size:clamp(22px,6vw,30px)}
+}
+@media(prefers-reduced-motion:reduce){#world-live-ink{display:none}}
