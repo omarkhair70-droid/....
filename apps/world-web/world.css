@@ -771,3 +771,35 @@ body[data-human-field=open][data-phase=private] .field-material:nth-child(4n+3){
  body[data-human-field=open][data-phase=private] #fold-mass{translate:0 -18px}
  body[data-human-field=open][data-phase=private] .field-material:nth-child(n){margin:0}
 }
+
+
+/* THE INTERSECTION — disclosed materials retain their edges; a possibility takes a third form. */
+.field-intersection{position:relative;isolation:isolate;min-width:0;margin-block:28px 35px;padding:clamp(18px,3vw,36px);scroll-margin-block-start:24px;color:#244561}
+.field-intersection::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(135deg,#dce5d1 0%,#d9e5dc 48%,#eadabf 100%);clip-path:polygon(0 1%,98% 0,100% 98%,1% 100%);pointer-events:none}
+.intersection-header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+#intersection-kicker{font-size:12px;color:#53615e}
+#intersection-clear{color:#53615e;font-size:13px}
+#intersection-title,.field-history h2{font-weight:400;font-size:clamp(27px,3.1vw,46px);letter-spacing:-.035em;line-height:1.23;margin:5px 0 22px}
+.intersection-sources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.intersection-piece{min-width:0;position:relative;isolation:isolate;color:#29463d;padding:15px;border-inline-start:2px solid #688677;background:#f5f3e67d}
+.intersection-piece.scenario{border-inline-start-color:#b18465;color:#614233}
+.intersection-piece p{font-size:12px;margin:0 0 9px;color:#53615e}
+.intersection-piece blockquote,.field-history blockquote{font-size:clamp(16px,1.5vw,23px);line-height:1.65;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+#intersection-note,#field-history-note{color:#53615e;font-size:13px;line-height:1.7;margin:16px 0}
+#intersection-open,#intersection-keep{color:#f9f3e7;background:#244561;border:1px solid #244561;border-radius:2px;padding-inline:16px;font-size:14px}
+#intersection-keep:disabled{opacity:.48}
+#intersection-compose{margin-block-start:20px;padding-block-start:20px;border-block-start:1px solid #8aa39499}
+#intersection-compose label{display:block;font-size:clamp(19px,2.4vw,31px);font-weight:400;line-height:1.4;margin-block:12px 8px}
+#intersection-compose textarea{border-block-end:1px solid #748e83;min-height:110px;font-size:clamp(19px,2vw,27px);line-height:1.6;padding:7px 0;background:transparent}
+#intersection-question{min-height:76px!important}
+#intersection-example{border-block-end:1px solid #6e8a7b;color:#244561;padding-inline:0;font-size:16px}
+.field-material .field-pick{border-inline-start:2px solid #7c9984;padding-inline:10px}
+.field-material .field-pick[aria-pressed=true]{background:#244561;color:#fff8ea;border-color:#244561}
+.field-history{margin-block:36px 24px;padding-block-start:20px;border-block-start:1px solid #89968c80;color:#244561}
+.field-history h2{font-size:clamp(24px,2.8vw,37px);margin:0 0 10px}
+.field-history details{margin-block:20px 12px;border-inline-start:2px solid #779b97;padding-inline-start:14px}
+.field-history summary{font-size:14px;cursor:pointer;min-height:44px;padding-block:10px}
+.field-question{margin-block-start:18px;padding:18px;background:#eadfc5;color:#614233;border-inline-start:2px solid #b38a65}
+.field-question p{font-size:12px;margin:0 0 9px}
+@media(max-width:760px){.intersection-sources{grid-template-columns:1fr}.field-intersection{padding:20px 15px}.intersection-piece{padding:13px}.field-material .actions{flex-wrap:wrap}}
+@media(forced-colors:active){.field-intersection,.intersection-piece,.field-question{background:Canvas;color:CanvasText;border:1px solid CanvasText}.field-intersection::before{display:none}#intersection-keep,#intersection-open,.field-material .field-pick[aria-pressed=true]{background:ButtonFace;color:ButtonText;border:1px solid ButtonText}}
