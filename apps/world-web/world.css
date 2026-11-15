@@ -139,3 +139,8 @@ html[dir=rtl] body[data-phase=private] #thought:focus-visible{background-positio
  body[data-phase] .presence-material{display:none}
  body[data-phase=private] #thought:focus-visible{outline:2px solid Highlight;outline-offset:4px;background-image:none}
 }
+
+/* 01.7 — shared light remains attentive during actual capture, even when the
+   author changes focus. No waveform, automatic sound or inferred emotion. */
+body[data-phase=private][data-capture=recording] #focus-light,
+body[data-phase=private][data-capture=stopping] #focus-light{opacity:1}

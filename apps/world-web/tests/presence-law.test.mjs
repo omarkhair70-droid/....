@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {composePresence, contrastRatio, chooseReadableInk} from '../presence-law.mjs';
+import {composePresence, contrastRatio, chooseReadableInk, expressionState} from '../presence-law.mjs';
 const ctx={phase:'private',focus:'none',narrow:false,reducedMotion:false};
 const rest=composePresence(ctx),focus=composePresence({...ctx,focus:'thought'}),mobile=composePresence({...ctx,narrow:true});
 assert.deepEqual(rest,composePresence(ctx));
@@ -23,3 +23,13 @@ assert.deepEqual(chooseReadableInk([[240,240,240],[41,39,45]],[[240,235,220],[21
 assert.equal(chooseReadableInk([[127,127,127]],[[127,127,127]]),null);
 assert.equal(chooseReadableInk([[0,0,0]],[[255,255,255],[0,0,0]]),null);
 console.log('PASS: Presence expression invariants and declared contrast samples');
+
+assert.deepEqual(expressionState({hasText:false}),{material:'none',capture:'idle',active:false});
+assert.equal(expressionState({hasText:false,capture:'requesting'}).active,false);
+assert.equal(expressionState({hasText:false,capture:'recording'}).active,true);
+assert.equal(expressionState({hasText:true,capture:'ready',hasClip:true}).material,'mixed');
+assert.equal(expressionState({hasText:false,capture:'ready',hasClip:true}).material,'voice');
+assert.equal(composePresence({...ctx,capture:'recording'}).attention,'express');
+assert.equal(composePresence({...ctx,capture:'requesting'}).attention,'rest');
+assert.equal(composePresence({...ctx,phase:'recipient',capture:'recording'}).attention,'rest');
+console.log('PASS: explicit expression facts, independent voice and text');

@@ -11,6 +11,12 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(fresh.getElementById('prepare').hidden&&fresh.getElementById('save').hidden&&fresh.getElementById('recall').hidden,'no premature business actions');
  assert(!fresh.getElementById('thought').hidden&&!fresh.getElementById('mic').hidden,'first expression remains available');
  assert(localStorage.getItem(key)===null,'no passive persistence');
+ assert(fresh.body.dataset.expression==='none','presence is not material');
+ fresh.getElementById('thought').value='   ';
+ fresh.getElementById('thought').dispatchEvent(new Event('input',{bubbles:true}));
+ assert(fresh.body.dataset.presence==='still'&&fresh.getElementById('name').hidden,'whitespace does not create a work');
+ fresh.getElementById('thought').value='';
+ fresh.getElementById('thought').dispatchEvent(new Event('input',{bubbles:true}));
  assert(fresh.getElementById('presence-material').querySelectorAll('svg').length===1,'one authored spatial composition');
  assert(fresh.documentElement.scrollWidth<=frame.clientWidth+1,'empty mobile bounds');
  assert(fresh.body.dataset.attention==='rest','quiet before deliberate focus');
@@ -44,17 +50,30 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(track.stops===1&&!record,'late permission releases microphone');
  get('mic').click();pending({getTracks:()=>[track]});await tick();
  assert(get('voice').dataset.capture==='recording'&&get('mic').getAttribute('aria-pressed')==='true'&&!get('voice-duration').hidden,'recording indication and actual elapsed clock');
+ await tick();
+ assert(fresh.body.dataset.capture==='recording'&&fresh.body.dataset.attention==='express','actual capture stays present without focus');
  get('mic').click();assert(get('voice').dataset.capture==='stopping'&&get('mic').getAttribute('aria-disabled')==='true','waits for final data');
  get('mic').click();assert(requests===2,'no overlapping recording');
  record.finish();assert(get('voice').dataset.capture==='ready'&&!get('clip').hidden&&get('clip').src.startsWith('blob:'),'real local blob exposed to playback control');
  assert(get('thought').value===''&&localStorage.getItem(key)===null,'voice does not transcribe or persist implicitly');
+ assert(fresh.body.dataset.expression==='voice','voice alone is a material fact');
  get('clear-clip').click();assert(get('clip').hidden&&!get('clip').hasAttribute('src'),'explicit removal of clip');
+ assert(fresh.body.dataset.expression==='none','removal leaves no invented material');
  // End-to-end fixture is not an audio codec or hardware test.
 
  fresh.getElementById('thought').value='A new thought';
  fresh.getElementById('thought').dispatchEvent(new Event('input',{bubbles:true}));
  assert(fresh.body.dataset.presence==='working'&&!fresh.getElementById('prepare').hidden,'first act reveals relevant actions');
  assert(localStorage.getItem(key)===null,'authoring is not implicit storage');
+ assert(fresh.body.dataset.expression==='text','written expression exists');
+ fresh.getElementById('thought').value='A new thought developed';
+ fresh.getElementById('thought').dispatchEvent(new Event('input',{bubbles:true}));
+ assert(fresh.getElementById('name').value==='A new thought developed','provisional title follows the author until renamed');
+ fresh.getElementById('name').value='Chosen title';
+ fresh.getElementById('name').dispatchEvent(new Event('input',{bubbles:true}));
+ fresh.getElementById('thought').value='More writing';
+ fresh.getElementById('thought').dispatchEvent(new Event('input',{bubbles:true}));
+ assert(fresh.getElementById('name').value==='Chosen title','explicit title is preserved');
 
  localStorage.setItem(key,JSON.stringify({version:1,lang:'ar',active:'prior-work',works:[{id:'prior-work',title:'Previous work',body:'Private fact. Shared thought.',idea:'Preserved earlier possibility',ideaOpen:false,parent:null}]}));
  await load();let d=frame.contentDocument;

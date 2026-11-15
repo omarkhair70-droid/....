@@ -1,5 +1,5 @@
 'use strict';
-import {composePresence} from './presence-law.mjs';
+import {composePresence,expressionState} from './presence-law.mjs';
 import {createVoiceCapture} from './voice-capture.mjs';
 const $=id=>document.getElementById(id), KEY='one-world.local.v1';
 const text={
@@ -7,16 +7,18 @@ const text={
  en:{mode:'Local review',locale:'العربية',private:'Here, for you',name:'Work name',thought:'What’s on your mind?',mic:'Speak',stop:'Finish recording',requesting:'Waiting for microphone access',cancelMic:'Cancel request',stopping:'Finishing your recording',voiceLimit:'Recording exceeded the limit. Your previous recording is unchanged.',recording:'Local recording',ready:'Your voice stays here · not transcribed',noMic:'Recording is unavailable or permission was denied. You can write.',clear:'Remove recording',prepare:'Cast an idea',resume:'Recall the encounter',save:'Keep here',recall:'Recall',privateNote:'Write, speak, or simply stay.',prior:'Earlier possibility',foot:'A world taking form · writing and recording stay on your device',prepareLabel:'Before the idea leaves',recipientLabel:'To whom?',recipientHint:'A person or company',mask:'Without displaying my name',person:'Name to display',anonymous:'A person without a displayed name',origin:'From you',object:'An idea · your words',grip:'Pull the idea toward its destination',cast:'Cast in review',target:'Destination',previewNote:'A destination chosen for local review only. The visible text is what the other role sees; no real delivery or audio transfer.',receive:'Recipient perspective · you play this role',returned:'The idea has returned',meet:'The space between you · two local roles',cancel:'Return to your space',exit:'End review',exchangeNote:'Two roles on the same device, without connected people.',reply:'What would you add?',replyOnly:'Return the idea',replyMeet:'Return and propose a meeting',decline:'Do not continue',declined:'The other role chose not to continue in this review.',answer:'Contribution from the other role',accept:'Accept the meeting',back:'Continue alone',common:'What could you make together?',commonHint:'Write what became possible after the encounter…',keep:'Keep the new work here',leave:'Return to your space',meetingNote:'Both original contributions remain. This is local coauthoring, not an agreement.',memory:'Recall something',close:'Close',find:'Search local work',new:'Space for another idea',forget:'Remove saved copies',memoryNote:'Local storage is not an account. Encounters and recordings are temporary unless you keep the written work.',empty:'No works yet.',untitled:'Untitled thought',saved:'Text saved on this device only.',failed:'Could not save; your text is still here.',need:'Enter an idea, a destination, and a displayed name if chosen.',emptyThought:'Write something first. Recording does not create a transcript automatically.',replyNeed:'Write a contribution first, or choose not to continue.',commonNeed:'Write what should become a work.',limit:'Local work limit reached.',confirmForget:'Remove saved copies from this browser?',forgot:'Saved copies removed. In-memory writing is still here.',confirmEnd:'End this review? Your original work will remain.',confirmClip:'Recording is temporary and local. Clear it before changing work?',localOnly:'Nothing was actually sent.',newMade:'A new local work exists; the original stays in memory.',mark:'Review, not delivery',from:'From',to:'To',jointA:'Original idea',jointB:'Other contribution',jointC:'Emerging work'}
 };
 let lang='ar',works=[],active=null,phase='private',offer=null;
+const automaticTitles=new Set();
 const t=k=>text[lang][k], put=(id,k)=>{$(id).textContent=t(k)}, status=k=>{$('status').textContent=k?t(k):''}, current=()=>works.find(w=>w.id===active);
 const str=(v,n)=>typeof v==='string'&&v.length<=n;
 function valid(v){return v&&v.version===1&&['ar','en'].includes(v.lang)&&Array.isArray(v.works)&&v.works.length<=100&&new Set(v.works.map(w=>w?.id)).size===v.works.length&&v.works.every(w=>w&&str(w.id,80)&&str(w.title,240)&&w.title.trim()&&str(w.body,12000)&&str(w.idea,6000)&&typeof w.ideaOpen==='boolean'&&(w.parent===null||str(w.parent,80)))&&(v.active===null||v.works.some(w=>w.id===v.active))}
 try{const raw=localStorage.getItem(KEY);if(raw&&raw.length<=2400000){const v=JSON.parse(raw);if(valid(v)){lang=v.lang;works=v.works.map(w=>({id:w.id,title:w.title,body:w.body,idea:w.idea,ideaOpen:w.ideaOpen,parent:w.parent}));active=v.active}}}catch{}
 function titleFor(body){const s=body.trim().split(/\r?\n/)[0];return Array.from(s||t('untitled')).slice(0,90).join('')}
-function ensureWork(){let w=current();if(w)return w;if(works.length>=100){status('limit');return null}w={id:crypto.randomUUID(),title:t('untitled'),body:'',idea:'',ideaOpen:false,parent:null};works.push(w);active=w.id;return w}
+function ensureWork(){let w=current();if(w)return w;if(works.length>=100){status('limit');return null}w={id:crypto.randomUUID(),title:t('untitled'),body:'',idea:'',ideaOpen:false,parent:null};works.push(w);automaticTitles.add(w.id);active=w.id;return w}
 // Presence is not a step to dismiss. Controls derive from what actually exists.
 function presence(){
  const w=current(),hasText=!!w?.body.trim(),hasWork=!!w,hasOffer=!!offer&&offer.work===active;
  document.body.dataset.presence=hasWork?'working':'still';
+ updateExpression();
  $('prepare').hidden=!hasText;
  $('save').hidden=!hasWork;
  $('recall').hidden=!works.length;
@@ -24,8 +26,15 @@ function presence(){
 }
 function loadPrivate(){const w=current();$('name').hidden=!w;$('name').value=w?.title||'';$('thought').value=w?.body||'';$('prior').hidden=!w?.idea;$('prior-text').value=w?.idea||'';$('resume').hidden=!offer;$('resume').disabled=offer?.work!==active;presence()}
 function persist(){try{const raw=JSON.stringify({version:1,lang,works,active});if(raw.length>2400000)throw Error();localStorage.setItem(KEY,raw);status('saved');return true}catch{status('failed');return false}}
-$('thought').addEventListener('input',()=>{const w=ensureWork();if(!w){$('thought').value='';return}w.body=$('thought').value;if($('name').hidden){w.title=titleFor(w.body);$('name').value=w.title;$('name').hidden=false}presence()});
-$('name').addEventListener('input',()=>{if(current())current().title=$('name').value.trim()||titleFor(current().body)});
+$('thought').addEventListener('input',()=>{
+ const value=$('thought').value;
+ if(!current()&&!value.trim()){presence();return}
+ const w=ensureWork();if(!w){$('thought').value='';return}
+ w.body=value;
+ if(automaticTitles.has(w.id)){w.title=titleFor(value);$('name').value=w.title}
+ $('name').hidden=false;presence();
+});
+$('name').addEventListener('input',()=>{const w=current();if(w){automaticTitles.delete(w.id);w.title=$('name').value.trim()||titleFor(w.body)}});
 $('prior-text').addEventListener('input',()=>{if(current())current().idea=$('prior-text').value});
 $('save').onclick=()=>{if(!current()&&!$('thought').value.trim()){status('emptyThought');return}persist()};
 function list(){const root=$('works'),q=$('find').value.trim().toLowerCase();root.replaceChildren();for(const w of works.filter(w=>(w.title+' '+w.body).toLowerCase().includes(q))){const btn=document.createElement('button');btn.className='item';btn.dir='auto';btn.textContent=w.title;btn.onclick=()=>switchWork(w.id);root.append(btn)}if(!root.children.length){const p=document.createElement('p');p.textContent=t('empty');root.append(p)}}
@@ -56,6 +65,13 @@ function micUI(){
  $('voice-state').textContent=error?t(error):['requesting','recording','stopping','ready'].includes(state)?t(state):'';
  $('clear-clip').hidden=!voiceURL||voiceBusy();
  $('clip').hidden=!voiceURL||voiceBusy();
+ updateExpression();
+}
+function updateExpression(){
+ const {state,clip}=voice.snapshot();
+ const fact=expressionState({hasText:!!current()?.body.trim(),capture:state,hasClip:!!clip});
+ document.body.dataset.expression=fact.material;
+ document.body.dataset.capture=fact.capture;
 }
 function updateVoiceClock(live){
  const output=$('voice-duration');
@@ -128,7 +144,7 @@ const presenceNarrow=matchMedia('(max-width:760px)');
 const presenceMotion=matchMedia('(prefers-reduced-motion:reduce)');
 function expressLight(){
  const focused=document.activeElement;
- const law=composePresence({phase:document.body.dataset.phase,focus:focused?.id||'none',narrow:presenceNarrow.matches,reducedMotion:presenceMotion.matches});
+ const law=composePresence({phase:document.body.dataset.phase,focus:focused?.id||'none',narrow:presenceNarrow.matches,reducedMotion:presenceMotion.matches,capture:document.body.dataset.capture||'idle'});
  if(!law){document.body.dataset.attention='rest';return}
  presenceSVG.setAttribute('viewBox',law.frame);
  document.body.dataset.attention=law.attention;
@@ -136,7 +152,7 @@ function expressLight(){
 }
 presenceNarrow.addEventListener('change',expressLight);
 presenceMotion.addEventListener('change',expressLight);
-new MutationObserver(expressLight).observe(document.body,{attributes:true,attributeFilter:['data-phase']});
+new MutationObserver(expressLight).observe(document.body,{attributes:true,attributeFilter:['data-phase','data-capture']});
 document.addEventListener('focusin',expressLight);
 document.addEventListener('focusout',()=>queueMicrotask(expressLight));
 expressLight();
