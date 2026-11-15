@@ -953,3 +953,21 @@ body[data-reality-reading=unclear] #continuum-lines{opacity:.13}
  .field-material,.intersection-piece,#exchange .idea-object,#exchange .answer,#exchange #reception,#exchange .meeting{border-block-start:1px solid CanvasText;color:CanvasText}
  .field-material::before,#exchange .idea-object::after,#exchange .answer::before,#exchange #reception::before,#exchange .meeting::before{display:none}
 }
+
+
+/* Corrections from the actual CONTINUUM browser captures, not a speculative mockup. */
+body[data-human-field=open] #continuum-lines{opacity:.22}
+body:is([data-phase=returned],[data-phase=meeting]) #continuum-lines{opacity:.17}
+@media(min-width:761px){
+ body:is([data-phase=returned],[data-phase=meeting]) #world{direction:ltr;justify-content:flex-end;padding-inline:0 clamp(32px,6vw,100px)}
+ body:is([data-phase=returned],[data-phase=meeting]) #world .center{margin-left:auto;margin-right:0;width:min(100%,900px);max-width:65%}
+ body:is([data-phase=returned],[data-phase=meeting]) #fold-mass{translate:-235px 0}
+ body:is([data-phase=returned],[data-phase=meeting]) #encounter-field .encounter-other{transform:translate(-180px,-8px);opacity:.67}
+ body[data-phase=meeting] #encounter-field .encounter-common{transform:translate(-205px,0);opacity:.72}
+}
+@media(max-width:760px){
+ #fold-frame{transform:translate(-18px,78px) scale(.57);opacity:.9}
+ #encounter-field{transform:translate(-18px,78px) scale(.46)}
+ body[data-phase] .signature{position:relative;z-index:1;color:#244449;text-shadow:none}
+ body[data-human-field=open] #continuum-lines{opacity:.12}
+}
