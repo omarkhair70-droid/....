@@ -97,3 +97,17 @@ body[data-phase=private] #recall:hover{color:#34476a}
 /* A narrow view is a different framing of the same material, preserving its color. */
 .mobile-reading-light{display:none}
 @media(max-width:760px){.mobile-reading-light{display:block;opacity:.72}}
+
+/* Presence 01.4a: one authored material, no foreground room or fixed form column. */
+body[data-phase=private] #world{justify-content:center;padding:clamp(28px,6vh,72px) var(--edge)}
+body[data-phase=private] .center{width:min(100%,760px);padding:0;max-width:none}
+body[data-phase=private] .place-label{margin-block-end:18px}
+body[data-phase=private] #thought{font-size:clamp(27px,3.1vw,45px);letter-spacing:-.018em;border-block-end:1px solid #746572;min-height:100px}
+body[data-phase=private] .presence-material{background:#e5d9d7}
+body[data-phase=private] #voice{align-items:center}
+@media(max-width:760px){
+ body[data-phase=private] #world{padding:clamp(30px,7svh,64px) var(--edge);align-items:center}
+ body[data-phase=private] .center{width:100%;padding:0}
+ body[data-phase=private] #thought{font-size:clamp(26px,6vw,34px)}
+}
+@media(forced-colors:active){body[data-phase=private] .presence-material{display:none}}

@@ -1,4 +1,5 @@
 'use strict';
+import {composePresence} from './presence-law.mjs';
 const $=id=>document.getElementById(id), KEY='one-world.local.v1';
 const text={
  ar:{mode:'معاينة محلية',locale:'English',private:'هنا، لك',name:'اسم العمل',thought:'ما الذي يشغلك؟',mic:'اتكلم',stop:'أنهِ التسجيل',requesting:'بانتظار إذن الميكروفون',recording:'تسجيل محلي',ready:'صوتك هنا فقط · لم يتحول إلى نص',noMic:'التسجيل غير متاح أو لم يُسمح به. تقدر تكتب.',clear:'امسح التسجيل',prepare:'ارمِ فكرة',resume:'استحضر اللقاء',save:'احتفظ هنا',recall:'استحضر',privateNote:'تقدر تكتب، أو تتكلم، أو تفضل ساكت.',prior:'تصوّر سابق',foot:'عالم قيد التشكّل · الكتابة والتسجيل على جهازك فقط',prepareLabel:'الفكرة قبل أن تغادر',recipientLabel:'إلى من؟',recipientHint:'شخص أو شركة',mask:'بدون إظهار اسمي',person:'الاسم الذي سيظهر',anonymous:'إنسان بلا اسم معلن',origin:'منك',object:'فكرة · من كتابتك',grip:'اسحب الفكرة نحو وجهتها',cast:'ارمها في المعاينة',target:'الوجهة',previewNote:'المستلم اسم تختاره للمعاينة فقط. النص الظاهر هو ما سيصل في التجربة؛ لا إرسال حقيقي ولا نقل للصوت.',receive:'منظور الطرف الآخر · أنت تؤدي الدور',returned:'رجعت لك الفكرة',meet:'المساحة بينكما · دورين محليين',cancel:'ارجع لمساحتك',exit:'أنه المعاينة',exchangeNote:'اختبار محلي بين دورين على نفس الجهاز، بلا أشخاص متصلين.',reply:'إيه اللي تحب تضيفه؟',replyOnly:'أعد الفكرة',replyMeet:'أعدها واقترح لقاءً',decline:'لا أريد المتابعة',declined:'اختار الطرف الآخر عدم المتابعة في المعاينة.',answer:'إضافة من الطرف الآخر في المعاينة',accept:'اقبل اللقاء',back:'استمر بمفردك',common:'ما الذي يمكن أن نصنعه معًا؟',commonHint:'اكتب ما أصبح ممكنًا بعد اللقاء…',keep:'احتفظ بالعمل الجديد هنا',leave:'ارجع لمساحتك',meetingNote:'النصان الأصليان باقيان. ما تكتبه هنا تأليف مشترك في المعاينة، وليس اتفاقًا.',memory:'استحضر شيئًا',close:'إغلاق',find:'ابحث في أعمالك المحلية',new:'مساحة لفكرة أخرى',forget:'امسح النسخ المحفوظة',memoryNote:'التخزين محلي، ليس حسابًا. اللقاءات والتسجيلات مؤقتة حتى تحفظ نص عملك.',empty:'لا توجد أعمال.',untitled:'فكرة بلا اسم',saved:'حُفظ النص على هذا الجهاز فقط.',failed:'تعذر الحفظ؛ النص لا يزال هنا.',need:'اكتب فكرة وحدد وجهة واسمًا ظاهرًا إن اخترته.',emptyThought:'اكتب شيئًا أولًا. التسجيل لا يتحول إلى نص تلقائيًا.',replyNeed:'اكتب إضافتك أولًا، أو اختر عدم المتابعة.',commonNeed:'اكتب ما تريد أن يصبح عملًا.',limit:'وصلت لحد الأعمال المحلية.',confirmForget:'امسح النسخ المحفوظة في هذا المتصفح؟',forgot:'أزيلت النسخ المحفوظة. ما في الذاكرة الحالية لا يزال هنا.',confirmEnd:'إنهاء هذه المعاينة؟ سيبقى عملك الأصلي.',confirmClip:'التسجيل محلي ومؤقت. امسحه قبل الانتقال إلى عمل آخر؟',localOnly:'لم يحدث إرسال حقيقي.',newMade:'نشأ عمل محلي جديد؛ الأصل محفوظ في الذاكرة.',mark:'معاينة لا إرسال',from:'من',to:'إلى',jointA:'الفكرة الأصلية',jointB:'إضافة الطرف الثاني',jointC:'العمل المتكوّن'},
@@ -106,18 +107,20 @@ function translate(){
 }
 $('locale').onclick=()=>{if(phase==='prepare')captureDraft();if(phase==='recipient'&&offer)offer.replyDraft=$('reply').value;if(phase==='meeting'&&offer)offer.common=$('common').value;lang=lang==='ar'?'en':'ar';translate();render();status(null)};
 translate();render();
-/* Spatial continuity of Presence. No timer, pointer tracking or passive data
-   collection. On a narrow viewport we frame the same composition toward the
-   illuminated plane. A focused expression changes only the local light. */
+/* The law is now used by the real scene. Layout remains native HTML. */
 const presenceSVG=$('presence-material').querySelector('svg');
 const presenceNarrow=matchMedia('(max-width:760px)');
-function framePresence(){
- presenceSVG.setAttribute('viewBox',presenceNarrow.matches?'155 0 570 900':'0 0 1440 900');
-}
+const presenceMotion=matchMedia('(prefers-reduced-motion:reduce)');
 function expressLight(){
- document.body.dataset.attention=(document.activeElement===$('thought')||document.activeElement===$('mic'))?'express':'rest';
+ const focused=document.activeElement;
+ const law=composePresence({phase:document.body.dataset.phase,focus:focused===$('thought')?'thought':focused===$('mic')?'mic':'none',narrow:presenceNarrow.matches,reducedMotion:presenceMotion.matches});
+ if(!law){document.body.dataset.attention='rest';return}
+ presenceSVG.setAttribute('viewBox',law.frame);
+ document.body.dataset.attention=law.attention;
+ document.body.dataset.material=law.material;
 }
-framePresence();presenceNarrow.addEventListener('change',framePresence);
+presenceNarrow.addEventListener('change',expressLight);
+presenceMotion.addEventListener('change',expressLight);
 document.addEventListener('focusin',expressLight);
 document.addEventListener('focusout',()=>queueMicrotask(expressLight));
 expressLight();
