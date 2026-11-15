@@ -15,6 +15,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(!fresh.getElementById('arrival-note').hidden&&fresh.getElementById('material-actions').hidden,'arrival has no premature gestures');
  assert(localStorage.getItem(key)===null,'no passive persistence');
  assert(fresh.body.dataset.expression==='none','presence is not material');
+ assert(fresh.getElementById('living-material')?.dataset.scene==='rest'&&fresh.getElementById('living-material').children.length===0,'living material has no invented activity at arrival');
  fresh.getElementById('thought').value='   ';
  fresh.getElementById('thought').dispatchEvent(new Event('input',{bubbles:true}));
  assert(fresh.body.dataset.presence==='still'&&fresh.getElementById('name').hidden,'whitespace does not create a work');

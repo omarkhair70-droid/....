@@ -1,5 +1,6 @@
 'use strict';
 import {composePresence,expressionState} from './presence-law.mjs';
+import {attachLivingMaterial,inkPeaks} from './living-material.mjs';
 import {createVoiceCapture} from './voice-capture.mjs';
 import {createLocalDictation} from './local-dictation.mjs';
 import {createVoiceSurface} from './voice-surface.mjs';
@@ -840,3 +841,16 @@ window.addEventListener('pagehide',()=>{soundEnabled=false;silenceScore();soundL
 new MutationObserver(updateScore).observe(document.body,{attributes:true,attributeFilter:['data-phase','data-human-field','data-reality','data-forming','data-correspondence','data-work-life','data-capture','data-encounter-outcome']});
 new MutationObserver(updateScore).observe($('mind'),{attributes:true,attributeFilter:['hidden']});
 soundLabel();lastScore=scoreScene();
+
+// THE WORLD IS ALIVE: only visible, deliberate acts can shape the material.
+attachLivingMaterial({document,matchMedia:window.matchMedia.bind(window),read:()=>{
+ const d=document.body.dataset,privateSpace=d.phase==='private',opened=privateSpace&&d.humanField==='open';
+ const ink=privateSpace&&!opened?$(d.capture==='recording'?'world-live-ink':'world-recorded-ink').getAttribute('d')||'':'';
+ const visibleText=id=>{const el=$(id);return el&&!el.closest('[hidden]')?(el.value??el.textContent??'').trim().length:0};
+ return {phase:d.phase,capture:d.capture,length:opened?0:privateSpace?visibleText('thought'):visibleText('carried-text')||visibleText('excerpt'),peaks:inkPeaks(ink),
+ field:opened,count:opened?document.querySelectorAll('#human-field .field-material').length:0,
+ selected:opened?document.querySelectorAll('#human-field .field-pick[aria-pressed="true"]').length:0,
+ formation:d.forming==='yes',related:!$('mind').hidden&&d.correspondence==='present',
+ born:d.workLife==='born',reality:d.reality==='open'?d.realityReading||'unread':'',
+ outcome:d.encounterOutcome,otherLength:privateSpace?0:visibleText('answer-text')||visibleText('reply'),commonLength:d.phase==='meeting'?visibleText('common'):0};
+}});

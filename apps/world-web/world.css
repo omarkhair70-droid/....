@@ -971,3 +971,8 @@ body:is([data-phase=returned],[data-phase=meeting]) #continuum-lines{opacity:.17
  body[data-phase] .signature{position:relative;z-index:1;color:#244449;text-shadow:none}
  body[data-human-field=open] #continuum-lines{opacity:.12}
 }
+
+/* Living material: the same scene has a causal foreground, never a second UI. */
+#living-material{pointer-events:none}
+@media (prefers-reduced-motion:reduce){#living-material{animation:none!important;transition:none!important}}
+@media (forced-colors:active){#living-material{display:none}}
