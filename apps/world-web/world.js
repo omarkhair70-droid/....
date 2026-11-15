@@ -55,7 +55,7 @@ const voice=createVoiceCapture({
  onChange:()=>micUI(),
  onStart:stream=>dictation.start(stream,$('dictation-language').value,$('dictation-opt').checked),
  onStop:()=>dictation.stop(),
- onComplete:clip=>dictation.complete(clip),
+ onComplete:clip=>{dictation.stop();dictation.complete(clip)},
  onCancel:()=>dictation.cancel()
 });
 const voiceBusy=()=>['requesting','recording','stopping'].includes(voice.snapshot().state);

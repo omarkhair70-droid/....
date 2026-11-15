@@ -42,7 +42,7 @@ export function createLocalDictation({getRecognition,onChange=()=>{},schedule=se
   }catch{finish(s,'failed')}
  }
  function stop(){
-  const s=session;if(!s||terminal(s))return;s.stopped=true;
+  const s=session;if(!s||terminal(s)||s.stopped)return;s.stopped=true;
   if(!s.recognizer){finish(s,'empty');return}
   s.status='finishing';publish();
   s.timer=schedule(()=>{if(session!==s||terminal(s))return;finish(s,s.final?'ready':'empty');try{s.recognizer.abort()}catch{}},3000);

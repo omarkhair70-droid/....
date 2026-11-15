@@ -59,7 +59,32 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert(fresh.body.dataset.expression==='voice','voice alone is a material fact');
  get('clear-clip').click();assert(get('clip').hidden&&!get('clip').hasAttribute('src'),'explicit removal of clip');
  assert(fresh.body.dataset.expression==='none','removal leaves no invented material');
- // End-to-end fixture is not an audio codec or hardware test.
+ // The optional local recognition adapter is exercised with a fake browser service.
+ let recognizer, secondCount=0;
+ class RecognitionFixture {
+  static async available(opts){assert(opts.processLocally===true&&opts.langs[0]==='ar-EG','local selected language only');return 'available'}
+  get processLocally(){return this.local}set processLocally(v){this.local=v}
+  start(track){assert(this.local===true&&track.kind==='audio','same explicit local track');recognizer=this;secondCount++}
+  stop(){}abort(){}
+ }
+ voiceWindow.SpeechRecognition=RecognitionFixture;
+ const audioTrack={kind:'audio',readyState:'live',stop(){}};
+ get('dictation-opt').checked=true;get('dictation-opt').dispatchEvent(new Event('change'));
+ get('mic').click();pending({getTracks:()=>[audioTrack],getAudioTracks:()=>[audioTrack]});await tick();await tick();
+ assert(secondCount===1,'explicit local recognition');
+ recognizer.onresult({results:[Object.assign([{transcript:'نص أولي'}],{isFinal:false})]});
+ assert(get('dictation-preview').textContent==='نص أولي'&&get('thought').value==='','interim text never inserted');
+ get('mic').click();record.finish();
+ recognizer.onresult({results:[Object.assign([{transcript:'نص مقترح'}],{isFinal:true})]});recognizer.onend();
+ assert(!get('dictation-review').hidden&&get('dictation-draft').value==='نص مقترح','final draft is linked to successful clip');
+ get('dictation-draft').value='نص راجعه الإنسان';get('dictation-draft').dispatchEvent(new Event('input'));
+ get('dictation-add').click();
+ assert(get('thought').value==='نص راجعه الإنسان'&&get('dictation-review').hidden,'explicit reviewed insertion');
+ assert(localStorage.getItem(key)===null,'approved passage is not implicit storage');
+ get('clear-clip').click();get('dictation-opt').checked=false;get('dictation-opt').dispatchEvent(new Event('change'));
+ // Fresh fixture preserves the existing blank-start assertions below.
+ await load();fresh=frame.contentDocument;
+ // End-to-end fixtures are not audio codec, speech accuracy or hardware tests.
 
  fresh.getElementById('thought').value='A new thought';
  fresh.getElementById('thought').dispatchEvent(new Event('input',{bubbles:true}));
