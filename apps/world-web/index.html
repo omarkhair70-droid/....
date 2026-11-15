@@ -178,6 +178,18 @@
      <button id="prepare" type="button" hidden><svg viewBox="0 0 36 36" width="36" height="36" aria-hidden="true"><path d="M3 27Q15 27 22 15L32 5M22 5H32V15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="27" r="2" fill="currentColor"/></svg><span><span id="prepare-label"></span><small id="cast-gesture-note"></small></span></button>
     </div>
    </div>
+   <section id="reality" class="reality" hidden aria-labelledby="reality-title">
+    <div class="reality-heading"><div><p id="reality-kicker"></p><h2 id="reality-title"></h2></div><button id="reality-open" type="button" aria-expanded="false" aria-controls="reality-compose"></button></div>
+    <p id="reality-invitation"></p><div id="reality-compose" hidden>
+     <div class="reality-current"><p id="reality-current-label"></p><blockquote id="reality-current-text" dir="auto"></blockquote><p id="reality-question-label"></p><blockquote id="reality-question-text" dir="auto"></blockquote></div>
+     <div class="reality-observation"><label id="reality-observation-label" for="reality-observation"></label><textarea id="reality-observation" maxlength="2000" rows="3" dir="auto"></textarea><label id="reality-source-label" for="reality-source"></label><input id="reality-source" maxlength="500" dir="auto" autocomplete="off"><button id="reality-example" type="button" hidden></button></div>
+     <p id="reality-reading-label"></p><div id="reality-readings" class="reality-choices" role="group" aria-labelledby="reality-reading-label"><button type="button" data-reading="supports" aria-pressed="false"></button><button type="button" data-reading="challenges" aria-pressed="false"></button><button type="button" data-reading="unclear" aria-pressed="false"></button></div>
+     <p id="reality-decision-label"></p><div id="reality-decisions" class="reality-choices" role="group" aria-labelledby="reality-decision-label"><button type="button" data-decision="revise" aria-pressed="false"></button><button type="button" data-decision="hold" aria-pressed="false"></button><button type="button" data-decision="stop" aria-pressed="false"></button></div>
+     <div id="reality-revision-wrap" hidden><label id="reality-revision-label" for="reality-revision"></label><textarea id="reality-revision" maxlength="12000" rows="4" dir="auto"></textarea></div>
+     <label id="reality-next-label" for="reality-next"></label><textarea id="reality-next" maxlength="1000" rows="2" dir="auto"></textarea>
+     <div class="actions"><button id="reality-keep" class="accent" type="button"></button><button id="reality-cancel" type="button"></button></div><p id="reality-status" role="status"></p>
+    </div><div id="reality-history"></div>
+   </section>
    <div class="actions" id="private-actions"><button id="resume" hidden></button><button id="save"></button><button id="recall"></button></div>
    <p id="private-note" class="quiet"></p>
    <section id="human-field" hidden aria-labelledby="field-title" class="human-field">
