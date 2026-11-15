@@ -1,7 +1,7 @@
 {
   "framework": null,
   "installCommand": "true",
-  "buildCommand": "mkdir -p public && cp index.html world.css world.js presence-law.mjs voice-capture.mjs local-dictation.mjs voice-surface.mjs formation.mjs encounter.mjs living-intelligence.mjs public/",
+  "buildCommand": "mkdir -p public && cp index.html world.css world.js living-material.mjs presence-law.mjs voice-capture.mjs local-dictation.mjs voice-surface.mjs formation.mjs encounter.mjs living-intelligence.mjs public/",
   "outputDirectory": "public",
   "git": {
     "deploymentEnabled": {

@@ -31,11 +31,17 @@ jobs:
           node apps/world-web/tests/living-intelligence.test.mjs
           node --check apps/world-web/tests/browser.js
           cd apps/world-web
-          mkdir -p /tmp/world-web-package
-          cp index.html world.css world.js living-material.mjs presence-law.mjs voice-capture.mjs local-dictation.mjs voice-surface.mjs formation.mjs encounter.mjs living-intelligence.mjs /tmp/world-web-package/
-          test -s /tmp/world-web-package/local-dictation.mjs
+          # Exercise the exact configured deployment output, not a second hand-maintained file list.
+          node -e 'const fs=require("node:fs");const c=JSON.parse(fs.readFileSync("vercel.json","utf8"));require("node:child_process").execSync(c.buildCommand,{stdio:"inherit"});if(c.outputDirectory!=="public")process.exit(1)'
+          test -s public/living-material.mjs
+          test -s public/local-dictation.mjs
+          package="$(mktemp -d)"
+          cp -a public/. "$package/"
+          # Test harness is added to the temporary copy only, never to the deployable output.
+          mkdir -p "$package/tests"
+          cp tests/browser.html tests/browser.js "$package/tests/"
           cd ../..
-          python3 -m http.server 8765 --bind 127.0.0.1 --directory apps/world-web >/tmp/world-web-http.log 2>&1 &
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory "$package" >/tmp/world-web-http.log 2>&1 &
           trap 'kill $!' EXIT
           for n in {1..20}; do curl -fsS http://127.0.0.1:8765/ >/dev/null && break; sleep 1; done
           browser="$(command -v google-chrome || command -v chromium)"
