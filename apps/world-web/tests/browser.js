@@ -8,6 +8,8 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  await load();
  let fresh=frame.contentDocument;
  assert(fresh.body.dataset.presence==='still','first presence without authored work');
+ assert(fresh.getElementById('sound-world').getAttribute('aria-pressed')==='false','world sound is opt-in on arrival');
+ assert(fresh.getElementById('continuum-lines')&&fresh.getElementById('continuum-nodes'),'one continuum artwork across the journey');
  assert(fresh.getElementById('prepare').hidden&&fresh.getElementById('save').hidden&&fresh.getElementById('recall').hidden,'no premature business actions');
  assert(!fresh.getElementById('thought').hidden&&!fresh.getElementById('mic').hidden,'first expression remains available');
  assert(!fresh.getElementById('arrival-note').hidden&&fresh.getElementById('material-actions').hidden,'arrival has no premature gestures');
@@ -314,5 +316,23 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  await load();d=frame.contentDocument;assert($('thought').value==='Collect data before the pilot.'&&$('reality-history').querySelectorAll('article').length===1,'reality history restored');
  click('prepare');set('recipient','Reviewer');click('cast');assert($('carried-text').textContent==='Collect data before the pilot.'&&$('field-history').hidden&&$('field-history-pieces').children.length===0&&$('field-history-question').textContent===''&&$('reality-history').children.length===0&&$('reality-current-text').textContent==='','history is not silently disclosed in a subsequent encounter');
  localStorage.removeItem(key);
+ await load();d=frame.contentDocument;
+ let contexts=0,notes=0,stops=0;
+ class SilentScoreFixture{
+  constructor(){contexts++;this.state='suspended';this.currentTime=1;this.destination={}}
+  resume(){this.state='running';return Promise.resolve()}
+  suspend(){this.state='suspended';return Promise.resolve()}
+  createOscillator(){return {frequency:{value:0},connect(){},disconnect(){},start(){notes++},stop(){stops++}}}
+  createGain(){return {gain:{setValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){},disconnect(){}}}
+ }
+ frame.contentWindow.AudioContext=SilentScoreFixture;
+ assert($('sound-world').getAttribute('aria-pressed')==='false'&&contexts===0,'silent default creates no score context');
+ await $('sound-world').onclick();
+ assert(contexts===1&&notes===2&&$('sound-world').getAttribute('aria-pressed')==='true','explicit opt-in produces original presentation cue');
+ click('open-field');await Promise.resolve();
+ assert(notes===5,'intentional transition creates the next cue');
+ await $('sound-world').onclick();const count=notes;
+ click('field-close');await Promise.resolve();
+ assert(notes===count&&stops>0&&$('sound-world').getAttribute('aria-pressed')==='false','mute stops the score with no subsequent cues');
  result.textContent='PASS: local world, exact disclosure, distinct contributions, continuity, RTL/LTR, 320px';
 })().catch(e=>{result.textContent='FAIL: '+e.message});
