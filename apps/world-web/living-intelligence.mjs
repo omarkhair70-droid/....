@@ -55,3 +55,33 @@ export function captureBasis(workId,link){
  if(!validBasis(basis,workId))throw new TypeError('Invalid historical basis');
  return basis;
 }
+
+// A remembered mention is weaker than a correspondence.
+// Only active, explicitly marked local excerpts can be surfaced. No inferred role.
+export function rememberedMentions(works,active){
+ const w=works.find(x=>x.id===active);
+ if(!w||typeof w.body!=='string'||!w.body.trim())return [];
+ const body=topicKey(w.body),known=new Set(validMind(w.mind)?w.mind.marks.map(m=>topicKey(m.topic)):[]);
+ const counts=new Map();
+ for(const source of works)if(validMind(source.mind))for(const m of source.mind.marks)counts.set(m.id,(counts.get(m.id)||0)+1);
+ const seen=new Set(),found=[];
+ for(const source of works){
+  if(source.id===active||!validMind(source.mind))continue;
+  for(const m of source.mind.marks){
+   const topic=topicKey(m.topic);
+   if(topic.length<4||!/\p{L}/u.test(topic)||known.has(topic)||counts.get(m.id)!==1||!activeMark(source,m)||seen.has(m.id))continue;
+   // Match whole Unicode word/phrase boundaries; no substring guesses.
+   const word=/[\p{L}\p{N}\p{M}_]/u;
+   let at=body.indexOf(topic),hit=false;
+   while(at!==-1){
+    const before=Array.from(body.slice(0,at)).pop()||'',after=Array.from(body.slice(at+topic.length))[0]||'';
+    if(!word.test(before)&&!word.test(after)){hit=true;break}
+    at=body.indexOf(topic,at+1);
+   }
+   if(!hit)continue;
+   seen.add(m.id);found.push({key:m.id,workId:source.id,mark:{...m},kind:'mention'});
+   if(found.length>=6)return found;
+  }
+ }
+ return found;
+}
