@@ -92,10 +92,10 @@ function renderField(){
  for(const item of fieldItems)own.append(card(item,false));
  if(fieldExamples)for(const [i,[text,sender]] of scenarioMaterials[lang].entries())samples.append(card({id:'scenario-'+i,text,sender,voice:null,source:null},true));
 }
-function openField(){fieldOpen=true;renderField();$('human-field').scrollIntoView({block:'start',behavior:'instant'});$('field-close').focus({preventScroll:true})}
-$('open-field').onclick=()=>{if(phase==='private'){if(fieldOpen){fieldOpen=false;renderField();$('thought').focus()}else openField()}};
-$('field-close').onclick=()=>{fieldOpen=false;renderField();$('open-field').focus()};
-$('field-scenarios').onclick=()=>{fieldExamples=!fieldExamples;renderField()};
+function openField(){if(voiceBusy()||forming||minding){fieldNotice(lang==='ar'?'أنهِ التعبير أو التشكيل الحالي أولًا.':'Finish the current expression or formation first.');return}fieldOpen=true;renderField();$('human-field').scrollIntoView({block:'start',behavior:'instant'});$('field-close').focus({preventScroll:true})}
+$('open-field').onclick=()=>{if(phase==='private'){if(fieldOpen){fieldOpen=false;renderField();resizeThought();$('thought').focus()}else openField()}};
+$('field-close').onclick=()=>{fieldOpen=false;renderField();resizeThought();$('open-field').focus()};
+$('field-scenarios').onclick=()=>{fieldExamples=!fieldExamples;renderField();$('field-scenarios').focus()};
 function approachField(item,sample){
  if(phase!=='private'||forming||minding)return;
  if(possibilityDraft?.text.trim()&&!confirm(pt('discard')))return;
