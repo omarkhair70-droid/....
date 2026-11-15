@@ -5,6 +5,7 @@ import {createLocalDictation} from './local-dictation.mjs';
 import {createVoiceSurface} from './voice-surface.mjs';
 import {captureFragment,validOrigin,formWork} from './formation.mjs';
 import {VAULT_KEY,MAX_PACKET_BYTES,makeIdea,makeReply,parsePacket,serializePacket,parseVault,matchReply} from './encounter.mjs';
+import {MAX_MARKS,emptyMind,validMind,makeMark,activeMark,correspondences,dismiss} from './living-intelligence.mjs';
 const $=id=>document.getElementById(id), KEY='one-world.local.v1';
 const text={
  ar:{mode:'معاينة محلية',locale:'English',private:'هنا، لك',name:'اسم العمل',thought:'اكتب…',mic:'اتكلم',stop:'أنهِ التسجيل',requesting:'بانتظار إذن الميكروفون',cancelMic:'إلغاء الطلب',stopping:'لحظة، بنحتفظ بالتسجيل هنا',voiceLimit:'التسجيل تجاوز الحد المسموح. التسجيل السابق كما هو.',recording:'تسجيل محلي',ready:'التسجيل هنا على جهازك',noMic:'التسجيل غير متاح أو لم يُسمح به. تقدر تكتب.',clear:'امسح التسجيل',prepare:'ارمِ فكرة',resume:'استحضر اللقاء',save:'احتفظ هنا',recall:'استحضر',privateNote:'تقدر تكتب، أو تتكلم، أو تفضل ساكت.',prior:'تصوّر سابق',foot:'عالم قيد التشكّل · الكتابة والتسجيل على جهازك فقط',prepareLabel:'الفكرة قبل أن تغادر',recipientLabel:'إلى من؟',recipientHint:'شخص أو شركة',mask:'بدون إظهار اسمي',person:'الاسم الذي سيظهر',anonymous:'إنسان بلا اسم معلن',origin:'منك',object:'فكرة · من كتابتك',grip:'اسحب الفكرة نحو وجهتها',cast:'ارمها في المعاينة',target:'الوجهة',previewNote:'المستلم اسم تختاره للمعاينة فقط. النص الظاهر هو ما سيصل في التجربة؛ لا إرسال حقيقي ولا نقل للصوت.',receive:'منظور الطرف الآخر · أنت تؤدي الدور',returned:'رجعت لك الفكرة',meet:'المساحة بينكما · دورين محليين',cancel:'ارجع لمساحتك',exit:'أنه المعاينة',exchangeNote:'اختبار محلي بين دورين على نفس الجهاز، بلا أشخاص متصلين.',reply:'إيه اللي تحب تضيفه؟',replyOnly:'أعد الفكرة',replyMeet:'أعدها واقترح لقاءً',decline:'لا أريد المتابعة',declined:'اختار الطرف الآخر عدم المتابعة في المعاينة.',answer:'إضافة من الطرف الآخر في المعاينة',accept:'اقبل اللقاء',back:'استمر بمفردك',common:'ما الذي يمكن أن نصنعه معًا؟',commonHint:'اكتب ما أصبح ممكنًا بعد اللقاء…',keep:'احتفظ بالعمل الجديد هنا',leave:'ارجع لمساحتك',meetingNote:'النصان الأصليان باقيان. ما تكتبه هنا تأليف مشترك في المعاينة، وليس اتفاقًا.',memory:'استحضر شيئًا',close:'إغلاق',find:'ابحث في أعمالك المحلية',new:'مساحة لفكرة أخرى',forget:'امسح النسخ المحفوظة',memoryNote:'التخزين محلي، ليس حسابًا. اللقاءات والتسجيلات مؤقتة حتى تحفظ نص عملك.',empty:'لا توجد أعمال.',untitled:'فكرة بلا اسم',saved:'حُفظ النص على هذا الجهاز فقط.',failed:'تعذر الحفظ؛ النص لا يزال هنا.',need:'اكتب فكرة وحدد وجهة واسمًا ظاهرًا إن اخترته.',emptyThought:'اكتب شيئًا أولًا. التسجيل لا يتحول إلى نص تلقائيًا.',replyNeed:'اكتب إضافتك أولًا، أو اختر عدم المتابعة.',commonNeed:'اكتب ما تريد أن يصبح عملًا.',limit:'وصلت لحد الأعمال المحلية.',confirmForget:'امسح النسخ المحفوظة في هذا المتصفح؟',forgot:'أزيلت النسخ المحفوظة. ما في الذاكرة الحالية لا يزال هنا.',confirmEnd:'إنهاء هذه المعاينة؟ سيبقى عملك الأصلي.',confirmClip:'التسجيل محلي ومؤقت. امسحه قبل الانتقال إلى عمل آخر؟',localOnly:'لم يحدث إرسال حقيقي.',newMade:'نشأ عمل محلي جديد؛ الأصل محفوظ في الذاكرة.',mark:'معاينة لا إرسال',from:'من',to:'إلى',jointA:'الفكرة الأصلية',jointB:'إضافة الطرف الثاني',jointC:'العمل المتكوّن'},
@@ -12,7 +13,12 @@ const text={
 };
 let lang='ar',works=[],active=null,phase='private',offer=null;
 const automaticTitles=new Set();
-let forming=null;
+let forming=null,minding=null;
+const mindWords={
+ ar:{mark:'اترك معنىً للعالم',title:'ما يمكن أن يتصل',note:'يربط العالم بين احتياج وقدرة علّمتهما أنت في عملين مختلفين، على هذا الجهاز فقط. العلاقة فرضية وليست إثباتًا أو اقتراحًا من الإنترنت.',need:'احتياج',ability:'قدرة مقترحة',topic:'موضوع مشترك (كلمة أو عبارة قصيرة)',keep:'اسمح بهذه الصلة',cancel:'ارجع',remove:'اسحب المعنى',stale:'النص تغير؛ المعنى متوقف حتى تعيد اختياره.',related:'إمكانية تستحق النظر',open:'استحضر العمل الآخر',reject:'هذه الصلة غير مناسبة',limit:'هناك صلات أخرى لم تُعرض ضمن الحد الحالي.',invalid:'اختر مقطعًا واضحًا لا يزيد على ١٢٠٠ حرف وأضف موضوعًا قصيرًا.',full:'بلغت هذه المساحة حد المعاني أو الاعتراضات.',changed:'تغير النص؛ اختر المقطع مرة أخرى.',saved:'أُضيف المعنى إلى هذا العمل. يُحفظ فقط عندما تختار حفظ عملك.',dismissed:'لم تعد هذه الصلة تظهر بين العملين.',challenge:'اترك المعنى غير المكتمل؟'},
+ en:{mark:'Leave meaning for the world',title:'What might connect',note:'The world connects a need and a capability you marked in different works, on this device only. A connection is a hypothesis, not proof or an internet suggestion.',need:'Need',ability:'Proposed capability',topic:'Shared subject (a short phrase)',keep:'Allow this connection',cancel:'Return',remove:'Withdraw meaning',stale:'The text changed; this meaning is inactive until marked again.',related:'A possibility worth considering',open:'Recall the other work',reject:'This connection is not relevant',limit:'More connections exist beyond the display limit.',invalid:'Choose a clear passage of up to 1,200 characters and a short subject.',full:'This work reached the meaning or challenge limit.',changed:'The text changed; select the passage again.',saved:'Meaning added to this work. It is retained only when you explicitly save your work.',dismissed:'This connection no longer appears between the two works.',challenge:'Leave the unfinished meaning?'}
+};
+const mt=k=>mindWords[lang][k];
 const formationWords={
  ar:{form:'شكّل فكرة',title:'شيء بدأ يتكوّن',source:'من كلامك الأصلي',draft:'ما تريد أن تصبح عليه هذه الفكرة',keep:'احتفظ بها كفكرة مستقلة',cancel:'ارجع',note:'الأصل كما هو. الفكرة الجديدة خاصة بك وغير مرسلة. الحفظ على جهازك يتم باختيارك.',lineage:'ما اتصل بهذا العمل',back:'ارجع إلى الأصل',excerpt:'الجزء الذي بدأت منه',child:'واصل في هذه الفكرة',missing:'الأصل غير متاح هنا',empty:'اختر كلامًا أو اكتب شيئًا أولًا.',discard:'اترك صياغة الفكرة التي لم تحتفظ بها؟',created:'تكوّنت فكرة مستقلة. يمكنك مواصلتها أو البقاء هنا.'},
  en:{form:'Shape a thought',title:'Something takes form',source:'From your original words',draft:'What this idea could become',keep:'Keep as a separate idea',cancel:'Return',note:'The original is unchanged. The new idea is private and unsent. Saving on this device is your choice.',lineage:'Connected to this work',back:'Return to the source',excerpt:'The passage it came from',child:'Continue this idea',missing:'Source unavailable here',empty:'Select words or write something first.',discard:'Leave this unfinished formation?',created:'A separate idea exists. Continue it or stay here.'}
@@ -28,8 +34,8 @@ function hasVault(){try{return vault().length>0}catch{return false}}
 function es(k){$('status').textContent=et(k)}
 const t=k=>text[lang][k], put=(id,k)=>{$(id).textContent=t(k)}, status=k=>{$('status').textContent=k?t(k):''}, current=()=>works.find(w=>w.id===active);
 const str=(v,n)=>typeof v==='string'&&v.length<=n;
-function valid(v){return v&&v.version===1&&['ar','en'].includes(v.lang)&&Array.isArray(v.works)&&v.works.length<=100&&new Set(v.works.map(w=>w?.id)).size===v.works.length&&v.works.every(w=>w&&str(w.id,80)&&str(w.title,240)&&w.title.trim()&&str(w.body,12000)&&str(w.idea,6000)&&typeof w.ideaOpen==='boolean'&&(w.parent===null||str(w.parent,80))&&(w.origin===undefined||validOrigin(w.origin,w.parent)))&&(v.active===null||v.works.some(w=>w.id===v.active))}
-try{const raw=localStorage.getItem(KEY);if(raw&&raw.length<=2400000){const v=JSON.parse(raw);if(valid(v)){lang=v.lang;works=v.works.map(w=>({id:w.id,title:w.title,body:w.body,idea:w.idea,ideaOpen:w.ideaOpen,parent:w.parent,...(w.origin?{origin:{sourceId:w.origin.sourceId,start:w.origin.start,end:w.origin.end,excerpt:w.origin.excerpt}}:{})}));active=v.active}}}catch{}
+function valid(v){return v&&v.version===1&&['ar','en'].includes(v.lang)&&Array.isArray(v.works)&&v.works.length<=100&&new Set(v.works.map(w=>w?.id)).size===v.works.length&&v.works.every(w=>w&&str(w.id,80)&&str(w.title,240)&&w.title.trim()&&str(w.body,12000)&&str(w.idea,6000)&&typeof w.ideaOpen==='boolean'&&(w.parent===null||str(w.parent,80))&&(w.origin===undefined||validOrigin(w.origin,w.parent))&&(w.mind===undefined||validMind(w.mind)))&&(v.active===null||v.works.some(w=>w.id===v.active))}
+try{const raw=localStorage.getItem(KEY);if(raw&&raw.length<=2400000){const v=JSON.parse(raw);if(valid(v)){lang=v.lang;works=v.works.map(w=>({id:w.id,title:w.title,body:w.body,idea:w.idea,ideaOpen:w.ideaOpen,parent:w.parent,...(w.origin?{origin:{sourceId:w.origin.sourceId,start:w.origin.start,end:w.origin.end,excerpt:w.origin.excerpt}}:{}),...(w.mind?{mind:{marks:w.mind.marks.map(m=>({id:m.id,kind:m.kind,topic:m.topic,start:m.start,end:m.end,excerpt:m.excerpt})),dismissed:[...w.mind.dismissed]}}:{})}));active=v.active}}}catch{}
 function titleFor(body){const s=body.trim().split(/\r?\n/)[0];return Array.from(s||t('untitled')).slice(0,90).join('')}
 function ensureWork(){let w=current();if(w)return w;if(works.length>=100){status('limit');return null}w={id:crypto.randomUUID(),title:t('untitled'),body:'',idea:'',ideaOpen:false,parent:null};works.push(w);automaticTitles.add(w.id);active=w.id;return w}
 // Presence is not a step to dismiss. Controls derive from what actually exists.
@@ -37,12 +43,13 @@ function presence(){
  const w=current(),hasText=!!w?.body.trim(),hasWork=!!w,hasOffer=!!offer&&offer.work===active;
  document.body.dataset.presence=hasWork?'working':'still';
  updateExpression();
- $('prepare').hidden=!hasText||!!forming;
- $('form-fragment').hidden=!hasText||!!forming;
+ $('prepare').hidden=!hasText||!!forming||!!minding;
+ $('form-fragment').hidden=!hasText||!!forming||!!minding;
+ $('mind-mark').hidden=!hasText||!!forming||!!minding;
  $('save').hidden=!hasWork;
  $('recall').hidden=!works.length&&!hasVault();
- $('resume').hidden=!hasOffer||!!forming;
- renderFormation();
+ $('resume').hidden=!hasOffer||!!forming||!!minding;
+ renderFormation();renderMind();
  resizeThought();
 }
 function loadPrivate(){const w=current();$('name').hidden=!w;$('name').value=w?.title||'';$('thought').value=w?.body||'';$('prior').hidden=!w?.idea;$('prior-text').value=w?.idea||'';$('resume').hidden=!offer;$('resume').disabled=offer?.work!==active;presence()}
@@ -59,7 +66,7 @@ $('name').addEventListener('input',()=>{const w=current();if(w){automaticTitles.
 $('prior-text').addEventListener('input',()=>{if(current())current().idea=$('prior-text').value});
 $('save').onclick=()=>{if(!current()&&!$('thought').value.trim()){status('emptyThought');return}persist()};
 function list(){const root=$('works'),q=$('find').value.trim().toLowerCase();root.replaceChildren();for(const w of works.filter(w=>(w.title+' '+w.body).toLowerCase().includes(q))){const btn=document.createElement('button');btn.className='item';btn.dir='auto';btn.textContent=w.title;btn.onclick=()=>switchWork(w.id);root.append(btn)}if(!root.children.length){const p=document.createElement('p');p.textContent=t('empty');root.append(p)}}
-function switchWork(id){if(forming&&!confirm(ft('discard')))return;if((voice.snapshot().clip||voiceBusy())&&!confirm(t('confirmClip')))return;forming=null;discardVoice();active=id;offer=null;$('memory').close();loadPrivate();$('thought').focus();status(null)}
+function switchWork(id){if(minding&&!confirm(mt('challenge')))return;if(forming&&!confirm(ft('discard')))return;if((voice.snapshot().clip||voiceBusy())&&!confirm(t('confirmClip')))return;forming=null;minding=null;discardVoice();active=id;offer=null;$('memory').close();loadPrivate();$('thought').focus();status(null)}
 $('recall').onclick=()=>{$('find').value='';list();$('memory').showModal();$('find').focus()};$('find').oninput=list;$('close-memory').onclick=()=>$('memory').close();$('new-work').onclick=()=>switchWork(null);
 $('forget').onclick=()=>{if(!confirm(t('confirmForget')))return;try{localStorage.removeItem(KEY);localStorage.removeItem(VAULT_KEY);status('forgot');presence();$('memory').close()}catch{status('failed')}};
 const dictationText={
@@ -180,7 +187,7 @@ function renderFormation(){
 }
 $('form-fragment').onclick=()=>{
  const w=current(),editor=$('thought');
- if(phase!=='private'||!w||forming)return;
+ if(phase!=='private'||!w||forming||minding)return;
  let fragment;try{fragment=captureFragment(w,editor.selectionStart,editor.selectionEnd)}catch{ $('status').textContent=ft('empty');return }
  if(!fragment){$('status').textContent=ft('empty');return}
  forming={fragment,text:fragment.excerpt};
@@ -198,6 +205,66 @@ $('formation-keep').onclick=()=>{
  const buttons=$('formed-works').querySelectorAll('button');buttons[buttons.length-1]?.focus();
 };
 $('origin-back').onclick=()=>{const w=current();if(w?.origin&&works.some(x=>x.id===w.parent))switchWork(w.parent)};
+
+function mindButton(label,action,cls=''){
+ const b=document.createElement('button');b.type='button';b.textContent=label;if(cls)b.className=cls;b.onclick=action;return b;
+}
+function mindText(tag,value,cls=''){
+ const n=document.createElement(tag);n.textContent=value;n.dir='auto';if(cls)n.className=cls;return n;
+}
+function mindStatus(k){$('status').textContent=mt(k)}
+function renderMind(){
+ const w=phase==='private'?current():null,visible=!!w&&!!minding&&minding.fragment.sourceId===w.id;
+ const marks=w?.mind?.marks??[],result=w?correspondences(works,w.id):{links:[],limited:false};
+ for(const [element,k] of Object.entries({'mind-mark':'mark','mind-title':'title','mind-note':'note','mind-need-label':'need','mind-ability-label':'ability','mind-topic-label':'topic','mind-keep':'keep','mind-cancel':'cancel','mind-limit':'limit'}))$(element).textContent=mt(k);
+ $('mind').hidden=!w||(!visible&&!marks.length&&!result.links.length);
+ $('mind-compose').hidden=!visible;$('mind-passage').textContent=visible?minding.fragment.excerpt:'';
+ const input=$('mind-topic'),topic=visible?minding.topic:'';
+ if(input.value!==topic)input.value=topic;
+ $('mind-need').checked=!visible||minding.kind==='need';$('mind-ability').checked=visible&&minding.kind==='ability';
+ $('mind-keep').disabled=!visible||!topic.trim();$('mind-limit').hidden=!result.limited;
+ const markRoot=$('mind-marks'),linkRoot=$('mind-links');
+ markRoot.replaceChildren();linkRoot.replaceChildren();
+ for(const m of marks){
+  const item=document.createElement('div');item.className='mind-mark';
+  item.append(mindText('p',mt(m.kind)+' · '+m.topic,'mind-subject'),mindText('blockquote',m.excerpt));
+  if(!activeMark(w,m))item.append(mindText('p',mt('stale'),'quiet'));
+  item.append(mindButton(mt('remove'),()=>{if(phase!=='private'||current()!==w)return;w.mind={...w.mind,marks:w.mind.marks.filter(x=>x.id!==m.id)};renderMind();$('mind-mark').focus()}));
+  markRoot.append(item)
+ }
+ for(const link of result.links){
+  const item=document.createElement('article');item.className='mind-link';
+  const material=document.createElement('div');material.className='mind-material';
+  for(const m of [link.local,link.other]){
+   const piece=document.createElement('div');piece.className='mind-piece '+m.kind;
+   piece.append(mindText('p',mt(m.kind)+' · '+m.topic,'mind-subject'),mindText('blockquote',m.excerpt));
+   material.append(piece)
+  }
+  item.append(mindText('h3',mt('related')),material,mindText('p',link.title,'quiet'));
+  const actions=document.createElement('div');actions.className='actions';
+  actions.append(mindButton(mt('open'),()=>switchWork(link.workId)),mindButton(mt('reject'),()=>{if(phase!=='private'||current()!==w)return;try{w.mind=dismiss(w,link.key);renderMind();mindStatus('dismissed');$('mind-mark').focus()}catch{mindStatus('full')}}));
+  item.append(actions);linkRoot.append(item)
+ }
+ document.body.dataset.correspondence=result.links.length?'present':'none';
+}
+$('mind-mark').onclick=()=>{
+ const w=current(),editor=$('thought');if(phase!=='private'||!w||forming||minding)return;
+ if((w.mind?.marks.length??0)>=MAX_MARKS){mindStatus('full');return}
+ let fragment;try{fragment=captureFragment(w,editor.selectionStart,editor.selectionEnd)}catch{mindStatus('invalid');return}
+ if(!fragment||fragment.excerpt.length>1200){mindStatus('invalid');return}
+ minding={fragment,kind:'need',topic:''};presence();$('mind-topic').focus()
+};
+$('mind-topic').oninput=()=>{if(minding){minding.topic=$('mind-topic').value;$('mind-keep').disabled=!minding.topic.trim()}};
+$('mind-need').onchange=()=>{if(minding)minding.kind='need'};
+$('mind-ability').onchange=()=>{if(minding)minding.kind='ability'};
+$('mind-cancel').onclick=()=>{minding=null;presence();$('thought').focus()};
+$('mind-keep').onclick=()=>{
+ const w=current();if(phase!=='private'||!w||!minding||minding.fragment.sourceId!==w.id)return;
+ const f=minding.fragment;if(w.body.slice(f.start,f.end)!==f.excerpt){mindStatus('changed');return}
+ const mind=w.mind??emptyMind();if(mind.marks.length>=MAX_MARKS){mindStatus('full');return}
+ let mark;try{mark=makeMark({id:crypto.randomUUID(),kind:minding.kind,topic:minding.topic,fragment:f})}catch{mindStatus('invalid');return}
+ w.mind={...mind,marks:[...mind.marks,mark]};minding=null;presence();mindStatus('saved');$('mind-mark').focus()
+};
 
 function captureDraft(){if(!offer||phase!=='prepare')return;offer.draft=$('excerpt').value;offer.recipient=$('recipient').value;offer.masked=$('masked').checked;offer.sender=$('person-name').value}
 function canCast(){return !!(offer&&offer.draft.trim()&&offer.recipient.trim()&&(offer.masked||offer.sender.trim()))}
@@ -232,17 +299,17 @@ $('open-encounter').onclick=()=>{if(phase==='private')$('encounter-file').click(
 $('encounter-file').onchange=async()=>{
  const file=$('encounter-file').files?.[0];$('encounter-file').value='';
  if(!file||phase!=='private')return;
- const activeAtRead=active,offerAtRead=offer,formingAtRead=forming;
+ const activeAtRead=active,offerAtRead=offer,formingAtRead=forming,mindingAtRead=minding;
  let packet,record;
  try{
   if(file.size>MAX_PACKET_BYTES)throw new RangeError();
   packet=parsePacket(await file.text());
   if(packet.kind==='reply'){record=matchReply(packet,vault());if(!record){es('unmatched');return}}
  }catch{es('invalid');return}
- if(phase!=='private'||active!==activeAtRead||offer!==offerAtRead||forming!==formingAtRead)return;
- if((offer||forming)&&!confirm(et('replace')))return;
+ if(phase!=='private'||active!==activeAtRead||offer!==offerAtRead||forming!==formingAtRead||minding!==mindingAtRead)return;
+ if((offer||forming||minding)&&!confirm(et('replace')))return;
  const idea=packet.kind==='idea'?packet:record.idea;
- forming=null;
+ forming=null;minding=null;
  offer={id:idea.id,work:active,sourceWork:record?.sourceId??null,draft:idea.text,recipient:idea.recipient,masked:idea.sender===null,sender:idea.sender??'',exposed:idea.text,replyDraft:'',reply:packet.kind==='reply'?packet.text:null,invited:packet.kind==='reply'&&packet.outcome==='invite',declined:packet.kind==='reply'&&packet.outcome==='decline',common:'',accepted:false,portable:packet.kind==='idea'?'incoming':'returned',packet:idea};
  offer.resume=packet.kind==='idea'?'recipient':'returned';
  $('idea-object').dataset.idea=offer.id;status(null);setPhase(offer.resume,packet.kind==='idea'?'arrive':'return');
@@ -276,7 +343,7 @@ function render(){
  $('private').hidden=phase!=='private';$('exchange').hidden=phase==='private';
  portableLabels();
  if(phase==='private'){loadPrivate();return}
- renderFormation();
+ renderFormation();renderMind();
  if(!offer){phase='private';render();return}
  const prep=phase==='prepare',receiver=phase==='recipient',returned=phase==='returned',meet=phase==='meeting';
  $('exchange-label').textContent=t(prep?'prepareLabel':receiver?'receive':returned?'returned':'meet');
@@ -301,7 +368,7 @@ function render(){
  // remains in this local tab. This is not an authenticated access boundary.
  $('thought').value='';$('name').value='';$('prior-text').value='';
 }
-$('prepare').onclick=()=>{const w=current(),all=$('thought').value,selection=all.slice($('thought').selectionStart,$('thought').selectionEnd);if(forming)return;if(!w||!all.trim()){status('emptyThought');return}const excerpt=selection.trim()?selection:all;if(excerpt.length>6000){es('long');return}if(offer&&!confirm(t('confirmEnd')))return;offer={id:crypto.randomUUID(),work:w.id,draft:excerpt,recipient:'',masked:true,sender:'',exposed:null,replyDraft:'',reply:null,invited:false,declined:false,common:'',accepted:false};$('idea-object').dataset.idea=offer.id;status(null);setPhase('prepare')};
+$('prepare').onclick=()=>{const w=current(),all=$('thought').value,selection=all.slice($('thought').selectionStart,$('thought').selectionEnd);if(forming||minding)return;if(!w||!all.trim()){status('emptyThought');return}const excerpt=selection.trim()?selection:all;if(excerpt.length>6000){es('long');return}if(offer&&!confirm(t('confirmEnd')))return;offer={id:crypto.randomUUID(),work:w.id,draft:excerpt,recipient:'',masked:true,sender:'',exposed:null,replyDraft:'',reply:null,invited:false,declined:false,common:'',accepted:false};$('idea-object').dataset.idea=offer.id;status(null);setPhase('prepare')};
 function cast(){if(phase!=='prepare')return;captureDraft();if(!canCast()){status('need');return}offer.exposed=offer.draft;offer.recipient=offer.recipient.trim();offer.sender=offer.masked?'':offer.sender.trim();offer.resume='recipient';setPhase('recipient','arrive');status('localOnly')}
 $('cast').onclick=cast;$('grip').onclick=e=>{if(e.detail===0)cast()};
 let drag=null;const grip=$('grip'),obj=$('idea-object');
@@ -313,14 +380,14 @@ function returnIdea(invite,decline){if(phase!=='recipient')return;if(offer.porta
 $('reply-only').onclick=()=>returnIdea(false,false);$('reply-meet').onclick=()=>returnIdea(true,false);$('decline').onclick=()=>returnIdea(false,true);
 $('accept').onclick=()=>{if(phase!=='returned'||!offer?.invited||offer.portable)return;offer.accepted=true;offer.resume='meeting';setPhase('meeting');status(null)};
 function goPrivate(){if(offer)offer.resume=phase;setPhase('private');status(null)}
-$('back-private').onclick=goPrivate;$('leave').onclick=goPrivate;$('resume').onclick=()=>{if(!forming&&offer&&offer.work===active)setPhase(offer.resume||'prepare')};
+$('back-private').onclick=goPrivate;$('leave').onclick=goPrivate;$('resume').onclick=()=>{if(!forming&&!minding&&offer&&offer.work===active)setPhase(offer.resume||'prepare')};
 $('cancel').onclick=()=>{if(offer?.portable){goPrivate();return}if(phase==='prepare'){offer=null;phase='private';render();$('thought').focus();return}if(confirm(t('confirmEnd'))){const prev=offer.work;offer=null;active=prev;phase='private';render();status(null);$('thought').focus()}};
 $('keep').onclick=()=>{if(phase!=='meeting'||!offer?.accepted)return;const common=$('common').value;if(!common.trim()){status('commonNeed');return}if(works.length>=100){status('limit');return}const body=t('jointA')+'\n'+offer.exposed+'\n\n'+t('jointB')+'\n'+offer.reply+'\n\n'+t('jointC')+'\n'+common;if(body.length>12000){status('limit');return}const w={id:crypto.randomUUID(),title:titleFor(common),body,idea:'',ideaOpen:false,parent:offer.work};works.push(w);discardVoice();active=w.id;offer=null;phase='private';render();status('newMade');$('thought').focus()};
 function translate(){
  document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';$('locale').lang=lang==='ar'?'en':'ar';
  for(const [id,k] of Object.entries({mode:'mode',locale:'locale','private-label':'private','name-label':'name','thought-label':'thought','clear-clip':'clear',prepare:'prepare',resume:'resume',save:'save',recall:'recall','private-note':'privateNote','prior-label':'prior','prior-input-label':'prior','foot-note':'foot','excerpt-label':'thought','grip-label':'grip','recipient-label':'recipientLabel','masked-label':'mask','person-label':'person',cast:'cast','preview-note':'previewNote','reply-label':'reply','reply-only':'replyOnly','reply-meet':'replyMeet',decline:'decline','answer-origin':'answer',accept:'accept','back-private':'back','common-label':'common',keep:'keep',leave:'leave','meeting-note':'meetingNote','exchange-note':'exchangeNote','memory-title':'memory','close-memory':'close','find-label':'find','new-work':'new',forget:'forget','memory-note':'memoryNote'}))put(id,k);
  for(const [id,k] of Object.entries({thought:'thought',name:'name',recipient:'recipientHint','person-name':'person',reply:'reply',common:'commonHint',find:'find'}))$(id).placeholder=t(k);
- micUI();renderFormation();portableLabels();
+ micUI();renderFormation();renderMind();portableLabels();
 }
 $('locale').onclick=()=>{if(phase==='prepare')captureDraft();if(phase==='recipient'&&offer)offer.replyDraft=$('reply').value;if(phase==='meeting'&&offer)offer.common=$('common').value;lang=lang==='ar'?'en':'ar';translate();render();status(null)};
 translate();render();
