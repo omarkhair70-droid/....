@@ -303,11 +303,7 @@ fn durable_history_scoped_access_and_concurrent_writes() {
     assert!(opened.body.get("revision").is_none());
     assert!(!opened.body.to_string().contains("Private"));
     let private_route = format!("/v1/works/{WORK}");
-    let forbidden = transport_get(
-        &mut recipient_memory,
-        "synthetic-recipient",
-        &private_route,
-    );
+    let forbidden = transport_get(&mut recipient_memory, "synthetic-recipient", &private_route);
     assert_eq!(forbidden.status, 404);
     assert_eq!(
         transport_get(&mut owner_memory, "synthetic-owner", &private_route).body["text"],

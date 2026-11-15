@@ -4,8 +4,8 @@
 
 pub mod access;
 pub mod expression;
-pub mod transport;
 mod research;
+pub mod transport;
 
 use postgres::{Client, IsolationLevel, Transaction};
 use world_kernel::{
