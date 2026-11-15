@@ -486,7 +486,7 @@ function setPhase(next,move){
  if(phase==='recipient'&&offer)offer.replyDraft=$('reply').value;
  if(phase==='meeting'&&offer)offer.common=$('common').value;
  phase=next;render();if(move)animate(move);
- const focus=next==='private'?'thought':next==='prepare'?'excerpt':next==='recipient'?'reply':next==='meeting'?'common':'back-private';$(focus).focus({preventScroll:true});
+ const focus=next==='private'?(fieldOpen?'field-close':'thought'):next==='prepare'?'excerpt':next==='recipient'?'reply':next==='meeting'?'common':'back-private';$(focus).focus({preventScroll:true});
  if(next!=='private')window.scrollTo({top:0,behavior:'instant'});
 }
 function exportPacket(packet){
@@ -545,7 +545,7 @@ $('portable-keep').onclick=()=>{
  const parent=works.some(w=>w.id===offer.sourceWork)?offer.sourceWork:null;
  const birth=birthOf('file-reply',offer);if(!validBirth(birth)){es('invalid');return}
  const w={id:crypto.randomUUID(),title:titleFor(offer.exposed),body,idea:'',ideaOpen:false,parent,birth};
- works.push(w);discardVoice();active=w.id;offer=null;phase='private';render();es('kept');$('thought').focus()
+ works.push(w);discardVoice();active=w.id;offer=null;phase='private';fieldOpen=false;render();es('kept');$('thought').focus()
 };
 function displaySender(){return offer?.masked?t('anonymous'):offer?.sender||t('anonymous')}
 // Cinematic language follows explicit human actions, never invents a remote person.
@@ -630,7 +630,7 @@ $('accept').onclick=()=>{if(phase!=='returned'||!offer?.invited||offer.portable)
 function goPrivate(){if(offer)offer.resume=phase;setPhase('private');status(null)}
 $('back-private').onclick=goPrivate;$('leave').onclick=goPrivate;$('resume').onclick=()=>{if(!forming&&!minding&&offer&&offer.work===active){if(possibilityDraft?.text.trim()&&!confirm(pt('discard')))return;possibilityDraft=null;mindOpen=false;setPhase(offer.resume||'prepare')}};
 $('cancel').onclick=()=>{if(offer?.portable){goPrivate();return}if(phase==='prepare'){offer=null;phase='private';render();$('thought').focus();return}if(confirm(t('confirmEnd'))){const prev=offer.work;offer=null;active=prev;phase='private';render();status(null);$('thought').focus()}};
-$('keep').onclick=()=>{if(phase!=='meeting'||!offer?.accepted)return;const common=$('common').value;if(!common.trim()){status('commonNeed');return}if(works.length>=100){status('limit');return}const birth=birthOf(offer.voice?'local-voice-review':'local-review',offer,common);if(!validBirth(birth)){status('limit');return}const w={id:crypto.randomUUID(),title:titleFor(common),body:common,idea:'',ideaOpen:false,parent:offer.fieldId?offer.sourceWork:offer.work,birth};works.push(w);discardVoice();active=w.id;offer=null;phase='private';render();status('newMade');$('thought').focus()};
+$('keep').onclick=()=>{if(phase!=='meeting'||!offer?.accepted)return;const common=$('common').value;if(!common.trim()){status('commonNeed');return}if(works.length>=100){status('limit');return}const birth=birthOf(offer.voice?'local-voice-review':'local-review',offer,common);if(!validBirth(birth)){status('limit');return}const w={id:crypto.randomUUID(),title:titleFor(common),body:common,idea:'',ideaOpen:false,parent:offer.fieldId?offer.sourceWork:offer.work,birth};works.push(w);discardVoice();active=w.id;offer=null;phase='private';fieldOpen=false;render();status('newMade');$('thought').focus()};
 function translate(){
  document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';$('locale').lang=lang==='ar'?'en':'ar';
  for(const [id,k] of Object.entries({mode:'mode',locale:'locale','private-label':'private','name-label':'name','thought-label':'thought','clear-clip':'clear','prepare-label':'prepare',resume:'resume',save:'save',recall:'recall','private-note':'privateNote','prior-label':'prior','prior-input-label':'prior','foot-note':'foot','excerpt-label':'thought','grip-label':'grip','recipient-label':'recipientLabel','masked-label':'mask','person-label':'person',cast:'cast','preview-note':'previewNote','reply-label':'reply','reply-only':'replyOnly','reply-meet':'replyMeet',decline:'decline','answer-origin':'answer',accept:'accept','back-private':'back','common-label':'common',keep:'keep',leave:'leave','meeting-note':'meetingNote','exchange-note':'exchangeNote','memory-title':'memory','close-memory':'close','find-label':'find','new-work':'new',forget:'forget','memory-note':'memoryNote'}))put(id,k);
