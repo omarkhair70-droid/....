@@ -67,6 +67,10 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  get('voice-to-thought').click();assert(fresh.activeElement===get('thought')&&get('thought').value===''&&localStorage.getItem(key)===null,'voice gesture stays explicit and does not create a transcript');
  assert(!get('voice-player').hidden&&get('voice-play-label').textContent.length>0,'authored playback surface available, not a decorative wave');
  assert(get('voice-trace-label').textContent==='أثر صوتك','finished sound becomes distinct material');
+ get('cast-voice').click();assert(fresh.body.dataset.phase==='prepare'&&get('excerpt').value===''&&!get('exchange-voice').hidden,'voice itself crosses without requiring a transcript');
+ get('recipient').value='Review reader';get('recipient').dispatchEvent(new Event('input',{bubbles:true}));assert(!get('cast').disabled&&get('export-idea').disabled,'voice review possible, text-only export explicitly unavailable');
+ get('cast').click();assert(fresh.body.dataset.phase==='recipient'&&get('exchange-audio').src.startsWith('blob:')&&get('carried-text').textContent==='','receiver sees actual selected recording, no invented transcript');
+ get('decline').click();get('back-private').click();assert(fresh.body.dataset.phase==='private'&&get('exchange-voice').hidden,'return to private voice');
  get('clear-clip').click();assert(get('clip').hidden&&!get('clip').hasAttribute('src'),'explicit removal of clip');
  assert(fresh.body.dataset.expression==='none','removal leaves no invented material');
  assert(get('voice-next').hidden,'voice-only gesture disappears when the recording is removed');
@@ -276,6 +280,17 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  assert($('mind-links').children.length===1&&$('mind-links').textContent.includes('A team can build inventory software.'),'direct paired relationship is visible');
  assert($('thought').value==='A factory needs inventory management.'&&localStorage.getItem(key)===null,'source intact and no silent persistence');
  click('save');const direct=JSON.parse(localStorage.getItem(key));assert(direct.works.length===2&&direct.works[1].body==='A team can build inventory software.','counterpart retained as separate work only on save');
+ localStorage.removeItem(key);
+ await load();d=frame.contentDocument;
+ click('open-field');assert(!$('human-field').hidden&&$('field-samples').hidden&&$('field-own').querySelectorAll('article').length===0,'empty shared field never fabricates presence');
+ click('field-scenarios');assert($('field-samples').querySelectorAll('article').length===4,'explicit fictional scenario materials');
+ click('field-close');
+ set('thought','PRIVATE. A thought to reveal.');$('thought').setSelectionRange(9,29);click('prepare');
+ assert(!$('release-field').disabled&&$('cast').disabled,'field has no named destination requirement');
+ click('release-field');assert(d.body.dataset.phase==='private'&&!$('human-field').hidden&&$('field-own').textContent.includes('A thought to reveal.')&&!$('field-own').textContent.includes('PRIVATE'),'only the explicitly revealed material enters the local world');
+ assert(localStorage.getItem(key)===null,'field release is not implicit storage or delivery');
+ $('field-own').querySelector('article button').click();assert(d.body.dataset.phase==='recipient'&&$('carried-text').textContent==='A thought to reveal.'&&$('field-own').children.length===0,'approach is the existing encounter, with no private field data in receiver view');
+ click('decline');click('back-private');$('field-own').querySelectorAll('article button')[1].click();assert($('field-own').querySelectorAll('article').length===0,'withdraw the locally released material');
  localStorage.removeItem(key);
  result.textContent='PASS: local world, exact disclosure, distinct contributions, continuity, RTL/LTR, 320px';
 })().catch(e=>{result.textContent='FAIL: '+e.message});
