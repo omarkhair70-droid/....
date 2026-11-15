@@ -25,6 +25,7 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
 
  // Synthetic recorder exercises the real product controls, not a second interface.
  const voiceWindow=frame.contentWindow, get=id=>fresh.getElementById(id);
+ const tick=()=>new Promise(resolve=>setTimeout(resolve,0));
  let pending, record, requests=0;
  const track={stops:0,stop(){this.stops++}};
  Object.defineProperty(voiceWindow.navigator,'mediaDevices',{configurable:true,value:{getUserMedia:()=>{requests++;return new Promise(resolve=>{pending=resolve})}}});
@@ -37,9 +38,9 @@ const load=(query='')=>new Promise(resolve=>{frame.addEventListener('load',resol
  voiceWindow.MediaRecorder=RecorderFixture;
  get('mic').click();assert(get('voice').dataset.capture==='requesting'&&requests===1,'explicit microphone request');
  get('mic').click();assert(get('voice').dataset.capture==='idle','cancel microphone permission request');
- pending({getTracks:()=>[track]});await Promise.resolve();await Promise.resolve();
+ pending({getTracks:()=>[track]});await tick();
  assert(track.stops===1&&!record,'late permission releases microphone');
- get('mic').click();pending({getTracks:()=>[track]});await Promise.resolve();await Promise.resolve();
+ get('mic').click();pending({getTracks:()=>[track]});await tick();
  assert(get('voice').dataset.capture==='recording'&&get('mic').getAttribute('aria-pressed')==='true'&&!get('voice-duration').hidden,'recording indication and actual elapsed clock');
  get('mic').click();assert(get('voice').dataset.capture==='stopping'&&get('mic').getAttribute('aria-disabled')==='true','waits for final data');
  get('mic').click();assert(requests===2,'no overlapping recording');
