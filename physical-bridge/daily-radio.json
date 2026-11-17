@@ -1,13 +1,13 @@
 {
   "version": 1,
   "action": "scheduled-program",
-  "id": "radio-message-1794879861119",
-  "issued_at": "2026-11-17T01:44:21.119Z",
+  "id": "radio-message-1794879910697",
+  "issued_at": "2026-11-17T01:45:10.697Z",
   "segments": [
     {
       "kind": "speech",
       "rate": 0,
-      "text": "قومي يا شيماء نامي."
+      "text": "قومي يا شيماء نامي حالا."
     }
   ]
 }
