@@ -1,13 +1,13 @@
 {
   "version": 1,
   "action": "scheduled-program",
-  "id": "radio-repeat-1794878894216",
-  "issued_at": "2026-11-17T01:28:14.216Z",
+  "id": "radio-joke-1794878950606",
+  "issued_at": "2026-11-17T01:29:10.606Z",
   "segments": [
     {
       "kind": "speech",
       "rate": 0,
-      "text": "شيماء دي وشها شبه فردة الكوتش."
+      "text": "شيماء قلبها أسود."
     }
   ]
 }
