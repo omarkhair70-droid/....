@@ -1,13 +1,13 @@
 {
   "version": 1,
   "action": "scheduled-program",
-  "id": "radio-joke-1794878840107",
-  "issued_at": "2026-11-17T01:27:20.107Z",
+  "id": "radio-joke-1794878874720",
+  "issued_at": "2026-11-17T01:27:54.720Z",
   "segments": [
     {
       "kind": "speech",
       "rate": 0,
-      "text": "شيماء أم شخة"
+      "text": "شيماء دي وشها شبه فردة الكوتش."
     }
   ]
 }
