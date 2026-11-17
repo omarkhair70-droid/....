@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "action": "idle",
-  "session": "",
-  "id": "initial"
+  "action": "beep",
+  "session": "ff5bb567ab35",
+  "id": "sound-001"
 }
