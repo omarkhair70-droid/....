@@ -1,13 +1,13 @@
 {
   "version": 1,
   "action": "scheduled-program",
-  "id": "radio-direct-1794878616113",
-  "issued_at": "2026-11-17T01:23:36.113Z",
+  "id": "shimaa-20261117-unique-04",
+  "issued_at": "2026-11-17T01:25:00Z",
   "segments": [
     {
       "kind": "speech",
       "rate": 0,
-      "text": "شيماء اتجننت!"
+      "text": "شيماء اتجننت"
     }
   ]
 }
