@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "action": "idle",
-  "session": "",
-  "id": "initial"
+  "action": "diagnose-connectivity-audio",
+  "session": "8c6e47dd67c749b7",
+  "id": "health-8c6e47dd67c749b7-01"
 }
