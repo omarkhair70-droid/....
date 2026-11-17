@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "action": "idle",
-  "session": "",
-  "id": "initial"
+  "action": "repair-transport",
+  "session": "a23a7237404f43ae",
+  "id": "transport-a23a7237404f43ae-01"
 }
