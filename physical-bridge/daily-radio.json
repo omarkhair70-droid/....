@@ -1,13 +1,13 @@
 {
   "version": 1,
   "action": "scheduled-program",
-  "id": "shimaa-20261117-unique-04",
-  "issued_at": "2026-11-17T01:25:00Z",
+  "id": "radio-joke-1794878840107",
+  "issued_at": "2026-11-17T01:27:20.107Z",
   "segments": [
     {
       "kind": "speech",
       "rate": 0,
-      "text": "شيماء اتجننت"
+      "text": "شيماء أم شخة"
     }
   ]
 }
