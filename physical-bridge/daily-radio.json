@@ -1,16 +1,13 @@
 {
   "version": 1,
   "action": "scheduled-program",
-  "id": "radio-joke-repeat-20261117-0322",
-  "issued_at": "2026-11-17T01:22:00Z",
+  "id": "radio-direct-1794878616113",
+  "issued_at": "2026-11-17T01:23:36.113Z",
   "segments": [
-    {
-      "kind": "ident"
-    },
     {
       "kind": "speech",
       "rate": 0,
-      "text": "خبر عاجل من فقرة الهزار. شيماء اتجننت! نكرر الخبر مرة أخرى. شيماء اتجننت. كان معكم راديو سان وي."
+      "text": "شيماء اتجننت!"
     }
   ]
 }
