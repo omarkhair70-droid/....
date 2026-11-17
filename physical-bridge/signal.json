@@ -1,6 +1,7 @@
 {
   "version": 1,
-  "action": "arrival",
-  "session": "3c4aa2c089d4",
-  "id": "arrival-3c4aa2c089d4-01"
+  "action": "broadcast",
+  "session": "7ff07ac4ac7d",
+  "id": "radio-7ff07ac4ac7d-01",
+  "text": "Good morning. This is San Wei Radio, broadcasting from ChatGPT through your Bluetooth radio. We are now connected to a physical device. Welcome to our first broadcast."
 }
